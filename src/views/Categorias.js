@@ -40,6 +40,12 @@ function Categorias () {
         }
     }, [key])
 
+    function actualizarTabla () {
+        if (categorias.length !== 0 || typeof(categorias) !== 'undefined'){
+            getCategoryTable()
+        }
+    }
+
     useEffect(() => {
         getCategoryTable();
     },[])
@@ -60,7 +66,6 @@ function Categorias () {
                                 <td>{a.code}</td>
                                 <td>{a.name}</td>
                                 <td>{a.description}</td>
-                                <td>{a.products.length}</td>
                                 <td>{a.creationTime}</td>
                                 <td>{a.modifiedTime}</td>
                                 <td>
@@ -80,9 +85,8 @@ function Categorias () {
                             </tr>
                         )
                     })
-                } else {
-                    filas.push(<tr><td></td><td></td><td></td><td>No data.</td><td></td></tr>)
                 }
+                console.log(filas)
                 setCategorias(filas);
             } else if(response.status === 401) {
                 console.log("NOT AUTHORIZED, AUTH AGAIN OR REDIRECT TO LOGIN")
@@ -155,7 +159,7 @@ function Categorias () {
                             </rs.CardBody>
                         </rs.Card>
                     </rs.Col>
-                    {action ? <RegistroCategoria /> :
+                    {action ? <RegistroCategoria actualizaResultados={actualizarTabla}/> :
                         <rs.Col sm={3}>
                             <rs.Card>
                                 <rs.CardHeader className="h4 card-filters">
