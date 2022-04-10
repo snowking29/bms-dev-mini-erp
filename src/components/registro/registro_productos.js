@@ -16,6 +16,7 @@ function Registro_Producto(props){
     const [cost, setCost] = useState("");
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("");
+    const [keyCategory, setKeyCategory] = useState("");
     const [creationTime, setCreationTime] = useState("");
     const [showLoader, setShowLoader] = useState(false);
     const [categories, setCategories] = useState([]);
@@ -37,10 +38,18 @@ function Registro_Producto(props){
                 setShowLoader (false);
                 if (response) {
                     if (response.status === 200) {
+                        let dataCategory = {
+                            "products":[code]
+                        }
+                        category_service.putCategories(keyCategory,dataCategory)
                         props.actualizaResultados();
                     }
                 }
             }))
+    }
+
+    function saveCategoryData (e) {
+        setCategory(e.target.value)
     }
 
     useEffect(() => {
@@ -50,7 +59,7 @@ function Registro_Producto(props){
                     var filas = [];
                     response.data.data.forEach( c => {
                         filas.push(
-                            <option key= {c.code} value={c.name}>{c.name}</option>
+                            <option value={c.name}>{c.name}</option>
                         )
                     })
                     setCategories(filas);
@@ -152,7 +161,7 @@ function Registro_Producto(props){
                                     name="selectCategory"
                                     id="selectCategory"
                                     type="select"
-                                    onChange={(e) => setCategory(e.target.value)}
+                                    onChange={(e) => saveCategoryData(e)}
                                 >
                                     <option value = "-">[Seleccione]</option>
                                     {categories}

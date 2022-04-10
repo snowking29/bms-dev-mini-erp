@@ -13,10 +13,10 @@ const Topbar = ({ toggleSidebar }) => {
 
     return (
         <rs.Navbar
-        color="light"
-        light
-        className="navbar shadow-sm p-3 mb-5 bg-white rounded"
-        expand="md"
+            color="light"
+            light
+            className="navbar shadow-sm p-3 mb-5 bg-white rounded"
+            expand="md"
         >
         <rs.Button color="primary" onClick={toggleSidebar}>
             <FontAwesomeIcon icon={faAlignJustify} />

@@ -72,7 +72,7 @@ function Productos () {
                                         type="button" 
                                         title="Eliminar producto" 
                                         onClick = { () => {
-                                            if (window.confirm('¿Está seguro que desea eliminar el producto?'))
+                                            if (window.confirm('ï¿½Estï¿½ seguro que desea eliminar el producto?'))
                                                 eliminarProducto(a.code)
                                         }}/>
                                 </td>
@@ -134,10 +134,10 @@ function Productos () {
                                                         <th style={{width: "15%"}}>
                                                             Nombre
                                                         </th>
-                                                        <th style={{width: "20%"}}>
+                                                        <th style={{width: "15%"}}>
                                                             Descripcion
                                                         </th>
-                                                        <th style={{width: "5%"}}>
+                                                        <th style={{width: "0%"}}>
                                                             Stock
                                                         </th>
                                                         <th style={{width: "5%"}}>
@@ -155,8 +155,8 @@ function Productos () {
                                                         <th style={{width: "15%"}}>
                                                             F. de Modificacion
                                                         </th>
-                                                        <th style={{width: "0%"}}>
-                                                            
+                                                        <th style={{width: "5%"}}>
+                                                            Acciones
                                                         </th>
                                                     </tr>
                                                 </thead>

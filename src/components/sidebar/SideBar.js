@@ -7,54 +7,52 @@ import classNames from "classnames";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as icon from '@fortawesome/free-solid-svg-icons';
 
-const SideBar = ({ isOpen, toggle }) => {
+const SideBar = () => {
     const user = localStorage.getItem("name");
     return(
-        <div className={classNames("sidebar", { "is-open": isOpen })}>
-          <div className="sidebar-header">
-            <span color="info" onClick={toggle} style={{ color: "#fff" }}>
-              &times;
-            </span>
-            <h3>VISION SOFTWARE</h3>
-            <hr/>
+        <div className="sidebar">
+          <div className="logo-details">
+            <i><FontAwesomeIcon icon={icon.faEye}/></i>
+            <h6 className='logo-name'>VisionSW</h6>
           </div>
-          <div className='sidebar-menu'>
+          <hr/>
+          <div className='nav-list'>
             <h6>General</h6>
-            <rs.Nav vertical className='list-unstyled pb-3'>
-              {SideBarData.map((item,index) => {
-                  return (
-                    <rs.NavItem>
-                      <rs.NavLink className='nav-item-link' tag={Link} to={item.path}>
-                        <FontAwesomeIcon icon={item.icon} className="mr-2" />
-                        {' '}
-                        {item.title}
-                      </rs.NavLink>
-                    </rs.NavItem>
-                  )
-                }
-              )}
+              <rs.Nav vertical className='nav-li' >
+                {SideBarData.map((item,index) => {
+                    return (
+                      <rs.NavItem >
+                        <rs.NavLink  className='li-a li-a-links_name'  tag={Link} to={item.path}>
+                          <div className='li-icon'><FontAwesomeIcon icon={item.icon}/></div>
+                          {' '}
+                          {item.title}
+                        </rs.NavLink>
+                      </rs.NavItem>
+                    )
+                  }
+                )}
               <hr/>
-            <h6>Administracion</h6>
-              {SideBarDataAdmin.map((item,index) => {
-                  return (
-                    <rs.NavItem>
-                      <rs.NavLink className='nav-item-link' tag={Link} to={item.path}>
-                        <FontAwesomeIcon icon={item.icon} className="mr-2" />
-                        {' '}
-                        {item.title}
-                      </rs.NavLink>
-                    </rs.NavItem>
-                  )
-                }
-              )}
-            </rs.Nav>
-          </div>
-          
-          <div className='sidebar-footer'>
+              <h6>Administracion</h6>
+                {SideBarDataAdmin.map((item,index) => {
+                    return (
+                      <rs.NavItem >
+                        <rs.NavLink  className='li-a li-a-links_name'  tag={Link} to={item.path}>
+                          <div className='li-icon'><FontAwesomeIcon icon={item.icon}/></div>
+                          {' '}
+                          {item.title}
+                        </rs.NavLink>
+                      </rs.NavItem>
+                    )
+                  }
+                )}
             <hr/>
-            <h6>Bienvenido {user}</h6>
-            <br/>
-            <rs.Button color="primary" value='Buscar'><FontAwesomeIcon icon={icon.faSignOut}/> Salir</rs.Button>
+              <h6>Bienvenido {user}</h6>
+              <rs.NavItem >
+                <rs.NavLink className='li-a li-a-links_name' tag={Link} to='/logout'>
+                  <div className='li-icon'><FontAwesomeIcon icon={icon.faSignOut}/>{' '}Salir</div>
+                </rs.NavLink>
+              </rs.NavItem>
+            </rs.Nav>
           </div>
         </div>
     )

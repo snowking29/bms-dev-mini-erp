@@ -19,6 +19,7 @@ function Registro_Categoria(props){
             "code": code,
             "name": name,
             "description": description,
+            "products":[],
             "creationTime": creationTime,
         }
         setShowLoader(true);

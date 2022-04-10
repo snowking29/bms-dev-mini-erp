@@ -53,6 +53,35 @@ export const postCategories = ( dataCategory ) => {
     )
 }
 
+
+export const putCategories = ( key, dataCategory ) => {
+    let config = {
+        method : "put",
+        url : global.config.API_AWS_URL + RESOURCE_URL,
+        headers: headers,
+        params: {
+            "key": key
+        },
+        data : dataCategory,
+        validateStatus: function (status) {
+            return status >= 200 && status < 400
+        }
+    }
+    
+    return axios(config).then(
+        function(response){
+            return response
+        }
+    ).catch(
+        function(error){
+            if (!error.response.status !== undefined && !error.response.status === 403){
+                console.log("Error : "+error);
+            }
+        }
+    )
+}
+
+
 export const deleteCategory = (key) => {
     let config = {
         method : "delete",

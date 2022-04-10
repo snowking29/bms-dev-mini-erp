@@ -61,11 +61,12 @@ function Categorias () {
                 if (Array.isArray(body)) {
                     body.forEach( a => {
                         filas.push(
-                            <tr key= {a.code}>
+                            <tr key= {a.key}>
                                 <td>{body.indexOf(a)+1}</td>
                                 <td>{a.code}</td>
                                 <td>{a.name}</td>
                                 <td>{a.description}</td>
+                                <td>{a.products.length}</td>
                                 <td>{a.creationTime}</td>
                                 <td>{a.modifiedTime}</td>
                                 <td>
@@ -78,8 +79,8 @@ function Categorias () {
                                         type="button" 
                                         title="Eliminar categoria" 
                                         onClick = { () => {
-                                            if (window.confirm('¿Está seguro que desea eliminar la categoria?'))
-                                                eliminarCategoria(a.code)
+                                            if (window.confirm('ï¿½Estï¿½ seguro que desea eliminar la categoria?'))
+                                                eliminarCategoria(a.key)
                                         }}/>
                                 </td>
                             </tr>

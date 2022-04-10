@@ -37,11 +37,16 @@
   margin-right: 0px;
 }
 
+
+
+
+/* ---------------------------------------------------
+    BODY STYLE
+----------------------------------------------------- */
 body {
   font-family: "Poppins", sans-serif;
   background: #fafafa;
 }
-
 a,
 a:hover,
 a:focus {
@@ -49,109 +54,121 @@ a:focus {
   text-decoration: none;
   transition: all 0.3s;
 }
-
-.sidebar-menu h6{
-  text-align: center;
-  position: relative;
-  padding: 0.5em;
-}
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
 .sidebar {
-  min-width: 250px;
-  max-width: 250px;
-  background-image: url("./assets/bg2.jpg");
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 200px;
+  padding: 6px 14px;
+  z-index: 99;
+  background: #11101D;
   color: #fff;
-  margin-left: -250px;
-  transition: all 0.5s;
+  transition: all 0.5s ease;
 }
 
-.sidebar.is-open {
-  margin-left: 0;
-  transition: 0.5s;
+.sidebar .logo-details{
+  height: 30px;
+  display: flex;
+  align-items: center;
+  position: relative;
 }
 
-.sidebar-header {
+.sidebar .logo-name{
+  color: #fff;
+  height: 50px;
+  font-size: 20px;
   text-align: center;
+  line-height: 50px;
+  position: relative;
+  padding: 0.5em;
 }
 
-.sidebar-header h3 {
-  color: #fff;
-  padding: 1em;
-}
-
-.sidebar ul p {
-  color: #fff;
-  padding: 10px;
-}
-
-.sidebar-footer {
+.sidebar .button{
   text-align: center;
-  padding-top: 30%;
   position: relative;
 }
 
-.menu-open {
-  background: #1f1f1f;
-}
-
-.nav-item:hover {
-  color: #7386d5;
-  background: #fff;
-}
-
-.items-menu {
+.sidebar i{
   color: #fff;
-  background: #1f1f1f;
+  height: 50px;
+  min-width: 30px;
+  font-size: 25px;
+  text-align: center;
+  line-height: 60px;
 }
 
-li a.dropdown-toggle::after {
-  display: inline-flex;
+.sidebar .nav-list{
+  margin-top: 20px;
+  height: 100%;
+}
+
+.sidebar .nav-li{
   position: relative;
-  left: 60%;
-  top: 10%;
+  margin: 8px 0;
+  list-style: none;
 }
 
-.sidebar-header > span {
-  position: relative;
-  float: right;
-  margin: 0.5em;
-  font-size: 2rem;
-  cursor: pointer;
-  display: none;
+.sidebar .li-a{
+  display: flex;
+  height: 100%;
+  width: 100%;
+  border-radius: 12px;
+  align-items: center;
+  text-decoration: none;
+  transition: all 0.4s ease;
+  background: #11101D;
 }
 
-.side-menu {
-  height: calc(100vh - 130px);
-  overflow-y: scroll;
+.sidebar .li-a:hover{
+  background: #FFF;
 }
 
-.side-menu::-webkit-scrollbar {
-  width: 10px;
+.sidebar .li-a-links_name{
+  color: #fff;
+  font-size: 15px;
+  font-weight: 400;
+  white-space: nowrap;
+  opacity: 1;
+  pointer-events: none;
+  transition: 0.4s;
 }
 
-.side-menu::-webkit-scrollbar-thumb {
-  background: #5466b3;
-  border-radius: 3px;
+.sidebar .li-a-links_name{
+  opacity: 1;
+  pointer-events: auto;
 }
 
-.side-menu::-webkit-scrollbar-thumb:hover {
-  background: #3a4c99;
+.sidebar .li-a-links_name:hover,
+.sidebar .li-a:hover{
+  transition: all 0.5s ease;
+  color: #11101D;
 }
 
-.nav-item-link{
-  color: #fafafa;
+.sidebar .li-icon{
+  padding: 3%;
+  line-height: 5px;
+  font-size: 15px;
+  border-radius: 12px;
 }
+
+
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
 .content {
-  padding: 15px;
-  margin-left: 0;
-  height: 100vh;
+  background: white;
+  position: relative;
+  min-height: 95vh;
+  top: 0;
+  left: 170px;
+  width: calc(100% - 190px);
+  transition: all 0.5s ease;
+  z-index: 2;
+  margin: 18px
 }
 
 @media only screen and (max-width: 500px) {
@@ -159,20 +176,6 @@ li a.dropdown-toggle::after {
     overflow: hidden;
   }
 
-  .content.is-open {
-    margin-left: 100%;
-  }
-
-  .sidebar.is-open {
-    min-width: 100%;
-    max-width: 100%;
-    margin-left: 0;
-    transition: all 0.5s, height 0s;
-  }
-
-  .sidebar.is-open > .sidebar-header span {
-    display: unset;
-  }
 
   li a.dropdown-toggle::after {
     display: inline-block;

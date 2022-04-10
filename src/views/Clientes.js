@@ -29,7 +29,7 @@ function Clientes () {
                                 <td>{a.phone.replace(/\s/g, '')}</td>
                                 <td>{a.email}</td>
                                 <td>{a.identifyID}</td>
-                                <td>{a.comments}</td>
+                                <td>{a.details}</td>
                                 <td>{a.creationTime}</td>
                                 <td>{a.modifiedTime}</td>
                                 <td>
@@ -42,7 +42,7 @@ function Clientes () {
                                         type="button" 
                                         title="Eliminar cliente" 
                                         onClick = { () => {
-                                            if (window.confirm('¿Está seguro que desea eliminar el cliente?'))
+                                            if (window.confirm('ï¿½Estï¿½ seguro que desea eliminar el cliente?'))
                                                 eliminarCliente(a.code)
                                         }}/>
                                 </td>
@@ -131,7 +131,7 @@ function Clientes () {
                                                         DNI/RUC
                                                     </th>
                                                     <th style={{width: "20%"}}>
-                                                        Detalle
+                                                        Detalles
                                                     </th>
                                                     <th style={{width: "10%"}}>
                                                         F. de creacion

@@ -14,9 +14,8 @@ import TopBar from "./TopBar";
 const Content = ({ sidebarIsOpen, toggleSidebar }) => (
     <Container 
         fluid 
-        className={classNames("content", {"is-open":sidebarIsOpen})}
+        className="content"
     >
-        <TopBar toggleSidebar={toggleSidebar}/>
         <Routes>
             <Route path ="/login" element={<Login />} exact/>
             <Route element={<PrivateRoute component={Home} />}>
