@@ -6,9 +6,10 @@ import * as product_service from '../../api/services/product-services';
 import * as category_service from '../../api/services/category-services';
 import Alerta from "../utils/alerta";
 import Loader from "../utils/loader";
+import {removeEmptyData} from "../utils/RemoveEmptyData";
 
-function Registro_Producto(props){
-
+function Detalle_Producto(props){
+    
     const [code,setCode] = useState("");
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -17,25 +18,29 @@ function Registro_Producto(props){
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("");
     const [keyCategory, setKeyCategory] = useState("");
-    const [creationTime, setCreationTime] = useState("");
-    const [showLoader, setShowLoader] = useState(false);
     const [categories, setCategories] = useState([]);
-    
+    const [showLoader, setShowLoader] = useState(false);
+    var key = props.dataProducto.key;
+
     function saveProduct() {
-        var date = new Date(creationTime)
-        let dataProduct = {
+
+        var date = new Date()
+        
+        var temporaryDataProduct = {
             "code": code,
             "name": name,
-            "category": category,
             "description": description,
             "stock": stock,
             "priceCost": cost,
             "priceSale": price,
-            "creationTime": date.toLocaleString('es-PE'),
-            "modifiedTime": ""
+            "category": category,
+            "modifiedTime": date.toLocaleString('es-PE')
         }
+        
+        var dataProduct = removeEmptyData(temporaryDataProduct)
+
         setShowLoader(true);
-        product_service.postProducts(dataProduct)
+        product_service.putProducts(dataProduct)
             .then((response => {
                 setShowLoader (false);
                 if (response) {
@@ -43,11 +48,33 @@ function Registro_Producto(props){
                         let dataCategory = {
                             "products":[code]
                         }
+                        clearFields()
                         category_service.putCategories(keyCategory,dataCategory)
-                        props.actualizaResultados();
                     }
                 }
             }))
+    }
+
+    function clearFields(){
+        setCode("")
+        setName("")
+        setDescription("")
+        setStock("")
+        setCost("")
+        setPrice("")
+        setCategory("")
+    }
+
+    function deleteProduct (){
+        setShowLoader(true);
+        product_service.deleteProduct(key).then((response) => {
+            if (response) {
+                setShowLoader (false);
+                if ( response.data.meta.status.code === "00" ) {
+                    props.actualizaResultados();
+                }
+            }
+        })
     }
 
     function saveCategoryData (e) {
@@ -74,15 +101,16 @@ function Registro_Producto(props){
             }
         })
     }, [])
-
+    
+    
     return (
         <rs.Col sm={3}>
             {showLoader ? <Loader /> : 
                 <rs.Card className='card'>
-                    <rs.CardHeader className="h4 register">
-                        <FontAwesomeIcon icon={icon.faBoxesPacking}/>
+                    <rs.CardHeader className="h4 editing">
+                        <FontAwesomeIcon icon={icon.faFileEdit}/>
                         {' '}
-                        Registrar Producto
+                        Detalle Producto
                     </rs.CardHeader>
                     <rs.CardBody>
                         <rs.Form>
@@ -94,6 +122,7 @@ function Registro_Producto(props){
                                     name="txtCode"
                                     id="txtCode"
                                     type="text"
+                                    placeholder={props.dataProducto.code}
                                     onChange={(e) => setCode(e.target.value)}
                                 />
                             </rs.FormGroup>
@@ -136,7 +165,7 @@ function Registro_Producto(props){
                                 <rs.Col sm={4}>
                                     <rs.FormGroup>
                                         <rs.Label>
-                                            <FontAwesomeIcon icon={icon.faHandHoldingDollar}/> Costo
+                                            <FontAwesomeIcon icon={icon.faHandHoldingDollar}/> P. Costo
                                         </rs.Label>
                                         <rs.Input
                                             name="txtCost"
@@ -149,7 +178,7 @@ function Registro_Producto(props){
                                 <rs.Col sm={4}>
                                     <rs.FormGroup>
                                         <rs.Label>
-                                            <FontAwesomeIcon icon={icon.faMoneyBill}/> Precio
+                                            <FontAwesomeIcon icon={icon.faMoneyBill}/> P. Venta
                                         </rs.Label>
                                         <rs.Input
                                             name="txtPrice"
@@ -174,22 +203,16 @@ function Registro_Producto(props){
                                     {categories}
                                 </rs.Input>
                             </rs.FormGroup>
-                            <rs.FormGroup>
-                                <rs.Label>
-                                    <FontAwesomeIcon icon={icon.faCalendar}/> Fecha de creacion
-                                </rs.Label>
-                                <rs.Input
-                                    name="txtFCreation"
-                                    id="txtFCreation"
-                                    type="datetime-local"
-                                    onChange={(e) => setCreationTime(e.target.value)}
-                                />
-                            </rs.FormGroup>
                             <hr/>
                             <rs.FormGroup className='actions'>
                                 <div className='left'>
-                                    <rs.Button color="success" onClick={saveProduct}>
-                                        <FontAwesomeIcon icon={icon.faSave}/>{' '}Grabar
+                                    <rs.Button color='success'onClick={() => saveProduct()}>
+                                        <FontAwesomeIcon icon={icon.faSave}/>{' '}Guardar
+                                    </rs.Button>
+                                </div>
+                                <div className='right'>
+                                    <rs.Button color='danger' onClick={() => deleteProduct()}>
+                                        <FontAwesomeIcon icon={icon.faTrash}/>{' '}Eliminar
                                     </rs.Button>
                                 </div>
                             </rs.FormGroup>
@@ -201,4 +224,4 @@ function Registro_Producto(props){
     )
 }
 
-export default Registro_Producto;
+export default Detalle_Producto;

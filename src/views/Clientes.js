@@ -4,25 +4,54 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
 import RegistroClientes from "../components/registro/registro_clientes";
 import * as customer_services from '../api/services/customer-services';
+import Loader from "../components/utils/loader";
+import DetalleCliente from "../components/detalle/detalle_clientes";
 
 function Clientes () {
     
     const [action, setAction] = useState(false);
     const [btnActionTxt, setBtnActionTxt] = useState("Agregar");
     const [btnIcon, setBtnIcon] = useState(<FontAwesomeIcon icon={icon.faPlusCircle}/>);
+    const [showLoader, setShowLoader] = useState(false);
     const [searchCust, setSearchCust] = useState("");
     const [clientes, setClientes] = useState([]);
-    const [key, setKey] = useState([]);
+    const initialFormState = {}
+    const [currentCustomer , setCurrentCustomer] = useState(initialFormState)
+
+    function showRegistroClientes(){
+        if (btnActionTxt === "Agregar"){
+            setBtnIcon(<FontAwesomeIcon icon={icon.faFilter}/>)
+            setBtnActionTxt("Filtros")
+            setAction("registrar")
+        }else{
+            setBtnIcon(<FontAwesomeIcon icon={icon.faPlusCircle}/>)
+            setBtnActionTxt("Agregar")
+            setAction("filtrar")
+        }
+    }
+
+    function actualizarTabla () {
+        if (clientes.length !== 0 || typeof(clientes) !== 'undefined'){
+            getCustomers()
+        }
+    }
+
 
     useEffect(() => {
+        getCustomers();
+    },[])
+
+    function getCustomers () {
+        setShowLoader(true);
         customer_services.getCustomers().then( (response) => {
+            setShowLoader(false);
             if (response.status === 200) {
                 var filas = [];
                 let body = response.data.data
                 if (Array.isArray(body)) {
                     body.forEach( a => {
                         filas.push(
-                            <tr key= {a.code}>
+                            <tr key= {a.key}>
                                 <td>{body.indexOf(a)+1}</td>
                                 <td>{a.name} {a.lastname}</td>
                                 <td>{a.address} - {a.city} </td>
@@ -33,18 +62,16 @@ function Clientes () {
                                 <td>{a.creationTime}</td>
                                 <td>{a.modifiedTime}</td>
                                 <td>
-                                    <FontAwesomeIcon icon={icon.faEdit}
+                                    <FontAwesomeIcon icon={icon.faCheckSquare}
+                                        className= 'select-button'
                                         type="button" 
-                                        title="Editar cliente"
-                                    />
-                                    {' '}
-                                    <FontAwesomeIcon icon={icon.faTrash}
-                                        type="button" 
-                                        title="Eliminar cliente" 
+                                        title="Seleccionar"
                                         onClick = { () => {
-                                            if (window.confirm('�Est� seguro que desea eliminar el cliente?'))
-                                                eliminarCliente(a.code)
-                                        }}/>
+                                            setAction("detalle")
+                                            setCurrentCustomer(a)
+                                        }}
+                                    />
+                                    
                                 </td>
                             </tr>
                         )
@@ -55,58 +82,35 @@ function Clientes () {
                 console.log("NOT AUTHORIZED, AUTH AGAIN OR REDIRECT TO LOGIN")
             }
         })
-    },[])
-
-    function showRegistroClientes(){
-        if (btnActionTxt === "Agregar"){
-            setBtnIcon(<FontAwesomeIcon icon={icon.faFilter}/>)
-            setBtnActionTxt("Filtros")
-        }else{
-            setBtnIcon(<FontAwesomeIcon icon={icon.faPlusCircle}/>)
-            setBtnActionTxt("Agregar")
-        }
-        setAction(!action)
     }
 
     function getCustomerSearched(value){
         setSearchCust(value)
     }
 
-    function eliminarCliente(key){
-        setKey(key)
-    }
-
-    useEffect(() => {
-        return () => {
-            if (key.length !== 0) {
-                customer_services.deleteCustomer(key).then((response) => {
-                    if (response) {
-                        if ( response.status === 200 ) {
-                            setKey(null)
-                        }
-                    }
-                })
-            }
-        }
-    }, [key])
-
     return (
         <div>
-            <rs.Container fluid className="p-8" responsive>
-                <rs.Row>
-                    <rs.Col sm={9}>
-                        <rs.Card>
-                            <rs.CardHeader className='card-header'>
-                                <rs.Row>
-                                    <rs.Col sm={10}>
-                                        <h2>&nbsp;Administrar Clientes</h2>
-                                    </rs.Col>
-                                    <rs.Col sm={2}>
-                                            <rs.Button color="primary" value={btnActionTxt} onClick={showRegistroClientes}>{btnIcon} {btnActionTxt} </rs.Button>
-                                    </rs.Col>
-                                </rs.Row>
-                            </rs.CardHeader>
-                            <rs.CardBody>
+            <rs.Row>
+                <rs.Col sm={9}>
+                    <rs.Card className='card'>
+                        <rs.CardHeader className='header'>
+                            <rs.Row>
+                                <rs.Col sm={10}>
+                                    <h2>&nbsp;Administrar Clientes</h2>
+                                </rs.Col>
+                                <rs.Col sm={2}>
+                                        <rs.Button 
+                                            className='button'
+                                            value={btnActionTxt} 
+                                            onClick={showRegistroClientes}
+                                        >
+                                            {btnIcon} {btnActionTxt} 
+                                        </rs.Button>
+                                </rs.Col>
+                            </rs.Row>
+                        </rs.CardHeader>
+                        <rs.CardBody className='body'>
+                            {showLoader ? <Loader /> :
                                 <rs.Form>
                                     <rs.FormGroup>
                                         <rs.Table responsive className='styled-table'>
@@ -149,13 +153,15 @@ function Clientes () {
                                         </rs.Table>
                                     </rs.FormGroup>
                                 </rs.Form>
-                            </rs.CardBody>
-                        </rs.Card>
-                    </rs.Col>
-                    {action ? <RegistroClientes /> :
+                            }
+                        </rs.CardBody>
+                    </rs.Card>
+                </rs.Col>
+                {action === "detalle" ? <DetalleCliente dataCliente={currentCustomer} actualizaResultados={actualizarTabla}/> :
+                    action === "registrar" ? <RegistroClientes actualizaResultados={actualizarTabla}/> :
                         <rs.Col sm={3}>
-                            <rs.Card>
-                                <rs.CardHeader className="h4 card-filters">
+                            <rs.Card className='card'>
+                                <rs.CardHeader className="h4 filters">
                                     <FontAwesomeIcon icon={icon.faFilter}/>
                                     {' '}
                                     Filtros
@@ -163,7 +169,7 @@ function Clientes () {
                                 <rs.CardBody>
                                     <rs.Form>
                                         <rs.FormGroup>
-                                            <rs.Col sm={12} className='card-header-search-input'>
+                                            <rs.Col sm={12} className='search-input'>
                                                 <rs.InputGroup>
                                                     <rs.Input
                                                         id="searchCust"
@@ -224,16 +230,20 @@ function Clientes () {
                                                 />
                                             </rs.Col>
                                         </rs.FormGroup>
-                                        <rs.Button color="success">
-                                            <FontAwesomeIcon icon={icon.faCheck}/>{' '}Aplicar
-                                        </rs.Button>
+                                        <hr/>
+                                        <rs.FormGroup className='actions'>
+                                            <div className='left'>
+                                                <rs.Button color="success">
+                                                    <FontAwesomeIcon icon={icon.faCheck}/>{' '}Aplicar
+                                                </rs.Button>
+                                            </div>
+                                        </rs.FormGroup>
                                     </rs.Form>
                                 </rs.CardBody>
                             </rs.Card>
                         </rs.Col>
-                    }
-                </rs.Row>
-            </rs.Container>
+                }
+            </rs.Row>
         </div>
     )
 }

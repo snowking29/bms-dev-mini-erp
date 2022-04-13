@@ -1,5 +1,4 @@
 import React from 'react';
-import * as FaIcons from 'react-icons/fa';
 import {Link} from 'react-router-dom';
 import {SideBarData, SideBarDataAdmin} from './SideBarData';
 import * as rs from "reactstrap";
@@ -7,54 +6,52 @@ import classNames from "classnames";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as icon from '@fortawesome/free-solid-svg-icons';
 
-const SideBar = () => {
-    const user = localStorage.getItem("name");
-    return(
-        <div className="sidebar">
-          <div className="logo-details">
-            <i><FontAwesomeIcon icon={icon.faEye}/></i>
-            <h6 className='logo-name'>VisionSW</h6>
-          </div>
-          <hr/>
-          <div className='nav-list'>
-            <h6>General</h6>
-              <rs.Nav vertical className='nav-li' >
-                {SideBarData.map((item,index) => {
-                    return (
-                      <rs.NavItem >
-                        <rs.NavLink  className='li-a li-a-links_name'  tag={Link} to={item.path}>
-                          <div className='li-icon'><FontAwesomeIcon icon={item.icon}/></div>
-                          {' '}
-                          {item.title}
-                        </rs.NavLink>
-                      </rs.NavItem>
-                    )
-                  }
-                )}
-              <hr/>
-              <h6>Administracion</h6>
-                {SideBarDataAdmin.map((item,index) => {
-                    return (
-                      <rs.NavItem >
-                        <rs.NavLink  className='li-a li-a-links_name'  tag={Link} to={item.path}>
-                          <div className='li-icon'><FontAwesomeIcon icon={item.icon}/></div>
-                          {' '}
-                          {item.title}
-                        </rs.NavLink>
-                      </rs.NavItem>
-                    )
-                  }
-                )}
-            <hr/>
-              <h6>Bienvenido {user}</h6>
-              <rs.NavItem >
-                <rs.NavLink className='li-a li-a-links_name' tag={Link} to='/logout'>
-                  <div className='li-icon'><FontAwesomeIcon icon={icon.faSignOut}/>{' '}Salir</div>
-                </rs.NavLink>
-              </rs.NavItem>
-            </rs.Nav>
-          </div>
-        </div>
-    )
-};
+const user = localStorage.getItem("name");
+
+const SideBar = ({isOpen, toggle}) => (
+  <div className={classNames("sidebar", { "is-open": isOpen })}>
+    <div className="sidebar-header">
+      <span color="info" onClick={toggle} style={{ color: "#fff" }}>
+        &times;
+      </span>
+      <h3>VisionSW</h3>
+    </div>
+    <hr/>
+    <div className="side-menu">
+      <rs.Nav vertical className="nav-li list-unstyled pb-3">
+        
+        <h6>General</h6>
+          {SideBarData.map((item,index) => {
+              return (
+                <rs.NavItem key={item.title}>
+                  <rs.NavLink className='li-a li-a-links_name' tag={Link} to={item.path}>
+                    <FontAwesomeIcon icon={item.icon} className="mr-2 li-icon"/>
+                    {' '}
+                    {item.title}
+                  </rs.NavLink>
+                </rs.NavItem>
+              )
+            }
+          )}
+        <hr/>
+        <h6>Admininistrador</h6>
+          {SideBarDataAdmin.map((item,index) => {
+              return (
+                <rs.NavItem key={item.title}>
+                  <rs.NavLink className='li-a li-a-links_name' tag={Link} to={item.path}>
+                    <FontAwesomeIcon icon={item.icon} className="mr-2 li-icon"/>
+                    {' '}
+                    {item.title}
+                  </rs.NavLink>
+                </rs.NavItem>
+              )
+            }
+          )}
+        <hr/>
+        <h6>Bienvenido {user}</h6>
+      </rs.Nav>
+    </div>
+  </div>
+);
+
 export default SideBar;

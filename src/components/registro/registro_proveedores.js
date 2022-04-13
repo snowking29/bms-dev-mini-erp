@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import * as rs from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
-import * as customer_services from '../../api/services/customer-services';
+import * as provider_services from '../../api/services/provider-services';
 import Alerta from "../utils/alerta";
 import Loader from "../utils/loader";
 
-function Registro_Clientes(props){
+function Registro_Proveedor(props){
 
     const [name, setName] = useState("");
-    const [lastname, setLastName] = useState("");
     const [address, setAddress] = useState("");
     const [city, setCity] = useState("");
     const [details, setDetails] = useState("");
@@ -19,12 +18,11 @@ function Registro_Clientes(props){
     const [creationTime, setCreationTime] = useState("");
     const [showLoader, setShowLoader] = useState(false);
 
-    function saveCustomer() {
+    function saveProvider() {
         var date = new Date(creationTime)
 
-        let dataCustomer = {
+        let dataProvider = {
             "name": name,
-            "lastname": lastname,
             "address": address,
             "city": city,
             "phone": phone,
@@ -35,7 +33,7 @@ function Registro_Clientes(props){
             "modifiedTime": ""
         }
         setShowLoader(true);
-        customer_services.postCustomer(dataCustomer)
+        provider_services.postProviders(dataProvider)
             .then((response => {
                 setShowLoader (false);
                 if (response) {
@@ -51,9 +49,9 @@ function Registro_Clientes(props){
             {showLoader ? <Loader /> : 
                 <rs.Card className='card'>
                     <rs.CardHeader className="h4 register">
-                        <FontAwesomeIcon icon={icon.faUserCheck}/>
+                        <FontAwesomeIcon icon={icon.faTruckMoving}/>
                         {' '}
-                        Registrar Cliente
+                        Registrar Proveedor
                     </rs.CardHeader>
                     <rs.CardBody>
                         <rs.Form>
@@ -69,16 +67,6 @@ function Registro_Clientes(props){
                             </rs.FormGroup>
                             <rs.FormGroup>
                                 <rs.Label>
-                                    <FontAwesomeIcon icon={icon.faFileText}/> Apellidos
-                                </rs.Label>
-                                <rs.Input
-                                    name="txtLastname"
-                                    type="text"
-                                    onChange={(e) => setLastName(e.target.value)}
-                                />
-                            </rs.FormGroup>
-                            <rs.FormGroup>
-                                <rs.Label>
                                     <FontAwesomeIcon icon={icon.faAddressCard}/> Direccion
                                 </rs.Label>
                                 <rs.Input
@@ -87,7 +75,6 @@ function Registro_Clientes(props){
                                     onChange={(e) => setAddress(e.target.value)}
                                 />
                             </rs.FormGroup>
-                            
                             <rs.FormGroup>
                                 <rs.Row>
                                     <rs.Col sm={6}>
@@ -134,7 +121,7 @@ function Registro_Clientes(props){
                             </rs.FormGroup>
                             <rs.FormGroup>
                                 <rs.Label>
-                                    <FontAwesomeIcon icon={icon.faComment}/> Detalle
+                                    <FontAwesomeIcon icon={icon.faComment}/> Detalles
                                 </rs.Label>
                                 <rs.Input
                                     name="txtDetail"
@@ -155,7 +142,7 @@ function Registro_Clientes(props){
                             <hr/>
                             <rs.FormGroup className='actions'>
                                 <div className='left'>
-                                    <rs.Button color="success" onClick={saveCustomer}>
+                                    <rs.Button color="success" onClick={saveProvider}>
                                         <FontAwesomeIcon icon={icon.faSave}/>{' '}Grabar
                                     </rs.Button>
                                 </div>
@@ -168,4 +155,4 @@ function Registro_Clientes(props){
     )
 }
 
-export default Registro_Clientes;
+export default Registro_Proveedor;

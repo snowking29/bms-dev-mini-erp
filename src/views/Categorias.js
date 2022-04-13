@@ -5,6 +5,7 @@ import * as icon from '@fortawesome/free-solid-svg-icons';
 import RegistroCategoria from "../components/registro/registro_categorias";
 import * as category_services from '../api/services/category-services';
 import Loader from "../components/utils/loader";
+import DetalleCategoria from "../components/detalle/detalle_categorias";
 
 function Categorias () {
 
@@ -13,32 +14,20 @@ function Categorias () {
     const [btnIcon, setBtnIcon] = useState(<FontAwesomeIcon icon={icon.faPlusCircle}/>);
     const [showLoader, setShowLoader] = useState(false);
     const [categorias, setCategorias] = useState([]);
-    const [key, setKey] = useState([]);
+    const initialFormState = {}
+    const [currentCategory , setCurrentCategory] = useState(initialFormState)
 
     function showRegistroCategorias(){
         if (btnActionTxt === "Agregar"){
             setBtnIcon(<FontAwesomeIcon icon={icon.faFilter}/>)
             setBtnActionTxt("Filtros")
+            setAction("registrar")
         }else{
             setBtnIcon(<FontAwesomeIcon icon={icon.faPlusCircle}/>)
             setBtnActionTxt("Agregar")
+            setAction("filtrar")
         }
-        setAction(!action)
     }
-
-    useEffect(() => {
-        return () => {
-            if (key.length !== 0) {
-                category_services.deleteCategory(key).then((response) => {
-                    if (response) {
-                        if ( response.status === 200 ) {
-                            setKey(null)
-                        }
-                    }
-                })
-            }
-        }
-    }, [key])
 
     function actualizarTabla () {
         if (categorias.length !== 0 || typeof(categorias) !== 'undefined'){
@@ -70,24 +59,21 @@ function Categorias () {
                                 <td>{a.creationTime}</td>
                                 <td>{a.modifiedTime}</td>
                                 <td>
-                                    <FontAwesomeIcon icon={icon.faEdit}
+                                    <FontAwesomeIcon icon={icon.faCheckSquare}
+                                        className= 'select-button'
                                         type="button" 
-                                        title="Editar categoria"
-                                    />
-                                    {' '}
-                                    <FontAwesomeIcon icon={icon.faTrash}
-                                        type="button" 
-                                        title="Eliminar categoria" 
+                                        title="Seleccionar"
                                         onClick = { () => {
-                                            if (window.confirm('�Est� seguro que desea eliminar la categoria?'))
-                                                eliminarCategoria(a.key)
-                                        }}/>
+                                            setAction("detalle")
+                                            setCurrentCategory(a)
+                                        }}
+                                    />
+                                    
                                 </td>
                             </tr>
                         )
                     })
                 }
-                console.log(filas)
                 setCategorias(filas);
             } else if(response.status === 401) {
                 console.log("NOT AUTHORIZED, AUTH AGAIN OR REDIRECT TO LOGIN")
@@ -95,75 +81,77 @@ function Categorias () {
         })
     }
     
-    function eliminarCategoria(key){
-        setKey(key)
-    }
-
     return (
         <div>
-            <rs.Container fluid className="p-8" >
-                <rs.Row>
-                    <rs.Col sm={9}>
-                        <rs.Card>
-                            <rs.CardHeader className='card-header'>
-                                <rs.Row>
-                                    <rs.Col sm={10}>
-                                        <h2>&nbsp;Administrar Categorias</h2>
-                                    </rs.Col>
-                                    <rs.Col sm={2}>
-                                            <rs.Button color="primary" value={btnActionTxt} onClick={showRegistroCategorias}>{btnIcon} {btnActionTxt} </rs.Button>
-                                    </rs.Col>
-                                </rs.Row>
-                            </rs.CardHeader>
-                            <rs.CardBody>
-                                {showLoader ? <Loader /> :
-                                    <rs.Form>
+            <rs.Row>
+                <rs.Col sm={9}>
+                    <rs.Card className='card'>
+                        <rs.CardHeader className='header'>
+                            <rs.Row>
+                                <rs.Col sm={10}>
+                                    <h2>&nbsp;Administrar Categorias</h2>
+                                </rs.Col>
+                                <rs.Col sm={2}>
+                                    <rs.Button 
+                                        className='button' 
+                                        value={btnActionTxt} 
+                                        onClick={showRegistroCategorias}
+                                    >
+                                        {btnIcon} {btnActionTxt} 
+                                    </rs.Button >
+                                </rs.Col>
+                            </rs.Row>
+                        </rs.CardHeader>
+                        <rs.CardBody className='body'>
+                            {showLoader ? <Loader /> :
+                                <rs.Form>
+                                    <rs.FormGroup>
                                         <rs.FormGroup>
-                                            <rs.FormGroup>
-                                                <rs.Table responsive className='styled-table'>
-                                                    <thead>
-                                                        <tr>
-                                                            <th style={{width: "0%"}}>
-                                                                #
-                                                            </th>
-                                                            <th style={{width: "0%"}}>
-                                                                Codigo
-                                                            </th>
-                                                            <th style={{width: "20%"}}>
-                                                                Nombre
-                                                            </th>
-                                                            <th style={{width: "20%"}}>
-                                                                Descripcion
-                                                            </th>
-                                                            <th style={{width: "20%"}}>
-                                                                Cant. productos
-                                                            </th>
-                                                            <th style={{width: "20%"}}>
-                                                                F. de Creacion
-                                                            </th>
-                                                            <th style={{width: "20%"}}>
-                                                                F. de Modificacion
-                                                            </th>
-                                                            <th>
-                                                                
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {categorias}
-                                                    </tbody>
-                                                </rs.Table>
-                                            </rs.FormGroup>
+                                            <rs.Table responsive className='styled-table'>
+                                                <thead>
+                                                    <tr>
+                                                        <th style={{width: "0%"}}>
+                                                            #
+                                                        </th>
+                                                        <th style={{width: "0%"}}>
+                                                            Codigo
+                                                        </th>
+                                                        <th style={{width: "20%"}}>
+                                                            Nombre
+                                                        </th>
+                                                        <th style={{width: "20%"}}>
+                                                            Descripcion
+                                                        </th>
+                                                        <th style={{width: "20%"}}>
+                                                            Cant. productos
+                                                        </th>
+                                                        <th style={{width: "20%"}}>
+                                                            F. de Creacion
+                                                        </th>
+                                                        <th style={{width: "20%"}}>
+                                                            F. de Modificacion
+                                                        </th>
+                                                        <th>
+                                                            
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {categorias}
+                                                </tbody>
+                                            </rs.Table>
                                         </rs.FormGroup>
-                                    </rs.Form>
-                                }
-                            </rs.CardBody>
-                        </rs.Card>
-                    </rs.Col>
-                    {action ? <RegistroCategoria actualizaResultados={actualizarTabla}/> :
+                                    </rs.FormGroup>
+                                </rs.Form>
+                            }
+                        </rs.CardBody>
+                    </rs.Card>
+                </rs.Col>
+                {action === "detalle" ? <DetalleCategoria dataCategoria={currentCategory} actualizaResultados={actualizarTabla}/> :
+                    action === "registrar" ? <RegistroCategoria actualizaResultados={actualizarTabla}/> :
                         <rs.Col sm={3}>
-                            <rs.Card>
-                                <rs.CardHeader className="h4 card-filters">
+                            <rs.Card className='card'>
+                                <rs.CardHeader className="h4 filters">
                                     <FontAwesomeIcon icon={icon.faFilter}/>
                                     {' '}
                                     Filtros
@@ -171,7 +159,7 @@ function Categorias () {
                                 <rs.CardBody>
                                     <rs.Form>
                                         <rs.FormGroup>
-                                            <rs.Col sm={12} className='card-header-search-input'>
+                                            <rs.Col sm={12} className='search-input'>
                                                 <rs.InputGroup>
                                                     <rs.Input
                                                         id="searchCat"
@@ -206,11 +194,11 @@ function Categorias () {
                                         </rs.FormGroup>
                                         <rs.FormGroup>
                                             <rs.Col sm={12}>
-                                                <rs.Label for="customerFromDate">
+                                                <rs.Label for="categoryFromDate">
                                                     Desde
                                                 </rs.Label>
                                                 <rs.Input
-                                                    id="customerFromDate"
+                                                    id="categoryFromDate"
                                                     name="date"
                                                     placeholder="date placeholder"
                                                     type="date"
@@ -218,27 +206,31 @@ function Categorias () {
                                             </rs.Col>
                                             <br/>
                                             <rs.Col sm={12}>
-                                                <rs.Label for="customerToDate">
+                                                <rs.Label for="categoryToDate">
                                                     Hasta
                                                 </rs.Label>
                                                 <rs.Input
-                                                    id="customerToDate"
+                                                    id="categoryToDate"
                                                     name="date"
                                                     placeholder="date placeholder"
                                                     type="date"
                                                 />
                                             </rs.Col>
                                         </rs.FormGroup>
-                                        <rs.Button color="success">
-                                            <FontAwesomeIcon icon={icon.faCheck}/>{' '}Aplicar
-                                        </rs.Button>
+                                        <hr/>
+                                        <rs.FormGroup className='actions'>
+                                            <div className='left'>
+                                                <rs.Button color="success">
+                                                    <FontAwesomeIcon icon={icon.faCheck}/>{' '}Aplicar
+                                                </rs.Button>
+                                            </div>
+                                        </rs.FormGroup>
                                     </rs.Form>
                                 </rs.CardBody>
                             </rs.Card>
                         </rs.Col>
-                    }
-                </rs.Row>
-            </rs.Container>
+                }
+            </rs.Row>
         </div>
     )
 }

@@ -2,54 +2,76 @@ import React, { useState, useEffect } from 'react';
 import * as rs from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
-import * as category_service from '../../api/services/category-services';
+import * as category_services from '../../api/services/category-services';
 import Loader from "../utils/loader";
+import {removeEmptyData} from "../utils/RemoveEmptyData";
 
-function Registro_Categoria(props){
+function Detalle_Categoria(props){
 
-    const [code,setCode] = useState("");
+    const [code, setCode] = useState("");
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [creationTime, setCreationTime] = useState("");
     const [showLoader, setShowLoader] = useState(false);
+    var key = props.dataCategoria.key;
 
     function saveCategory() {
-
-        var date = new Date(creationTime)
         
-        let dataCategory = {
+        var date = new Date()
+
+        var temporaryDataCategory = {
             "code": code,
             "name": name,
-            "description": description,
-            "products":[],
-            "creationTime": date.toLocaleString('es-PE'),
-            "modifiedTime": ""
+            "description": description,          
+            "modifiedTime": date.toLocaleString('es-PE')
         }
-        setShowLoader(true);
-        category_service.postCategories(dataCategory)
-            .then((response => {
-                setShowLoader (false);
-                if (response) {
-                    if (response.status === 200) {
-                        props.actualizaResultados();
-                    }
-                }
-            }))
 
+        var dataCategory = removeEmptyData(temporaryDataCategory)
+
+        setShowLoader(true);
+        category_services.putCategories(key, dataCategory)
+            .then(
+                (response => {
+                    setShowLoader (false);
+                    if (response) {
+                        if (response.data.meta.status.code === "00") {
+                            clearFields();
+                            props.actualizaResultados();
+                        }
+                    }
+                })
+            )
+    }
+
+    function clearFields(){
+        setCode("")
+        setName("")
+        setDescription("")
+    }
+
+    function deleteCategory (){
+        setShowLoader(true);
+        category_services.deleteCategories(key).then((response) => {
+            if (response) {
+                setShowLoader (false);
+                if ( response.data.meta.status.code === "00" ) {
+                    props.actualizaResultados();
+                }
+            }
+        })
     }
 
     return (
         <rs.Col sm={3}>
             {showLoader ? <Loader /> : 
                 <rs.Card className='card'>
-                    <rs.CardHeader className="h4 register">
-                        <FontAwesomeIcon icon={icon.faTags}/>
+                    <rs.CardHeader className="h4 editing">
+                        <FontAwesomeIcon icon={icon.faFileEdit}/>
                         {' '}
-                        Registrar Categoria
+                        Detalle Categoria
                     </rs.CardHeader>
                     <rs.CardBody>
                         <rs.Form>
-                            <rs.FormGroup>
+                        <rs.FormGroup>
                                 <rs.Label>
                                     <FontAwesomeIcon icon={icon.faBarcode}/> Codigo
                                 </rs.Label>
@@ -57,6 +79,7 @@ function Registro_Categoria(props){
                                     name="txtCode"
                                     id="txtCode"
                                     type="text"
+                                    placeholder={props.dataCategoria.code}
                                     onChange={(e) => setCode(e.target.value)}
                                 />
                             </rs.FormGroup>
@@ -82,22 +105,16 @@ function Registro_Categoria(props){
                                     onChange={(e) => setDescription(e.target.value)}
                                 />
                             </rs.FormGroup>
-                            <rs.FormGroup>
-                                <rs.Label>
-                                    <FontAwesomeIcon icon={icon.faCalendar}/> Fecha de creacion
-                                </rs.Label>
-                                <rs.Input
-                                    name="txtFCreation"
-                                    id="txtDescription"
-                                    type="datetime-local"
-                                    onChange={(e) => setCreationTime(e.target.value)}
-                                />
-                            </rs.FormGroup>
                             <hr/>
                             <rs.FormGroup className='actions'>
                                 <div className='left'>
-                                    <rs.Button color="success" onClick={saveCategory}>
-                                        <FontAwesomeIcon icon={icon.faSave}/>{' '}Grabar
+                                    <rs.Button color='success'onClick={() => saveCategory()}>
+                                        <FontAwesomeIcon icon={icon.faSave}/>{' '}Guardar
+                                    </rs.Button>
+                                </div>
+                                <div className='right'>
+                                    <rs.Button color='danger' onClick={() => deleteCategory()}>
+                                        <FontAwesomeIcon icon={icon.faTrash}/>{' '}Eliminar
                                     </rs.Button>
                                 </div>
                             </rs.FormGroup>
@@ -109,4 +126,4 @@ function Registro_Categoria(props){
     )
 }
 
-export default Registro_Categoria;
+export default Detalle_Categoria;

@@ -82,10 +82,13 @@ export const putCategories = ( key, dataCategory ) => {
 }
 
 
-export const deleteCategory = (key) => {
+export const deleteCategories = (key) => {
     let config = {
         method : "delete",
-        url : global.config.API_URL + RESOURCE_URL + key,
+        url : global.config.API_AWS_URL + RESOURCE_URL,
+        params: {
+            "key": key
+        },
         validateStatus: function (status) {
             return status >= 200 && status < 400
         }

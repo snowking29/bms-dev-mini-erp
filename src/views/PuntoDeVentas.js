@@ -3,7 +3,7 @@ import * as rs from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
 
-class Ventas extends Component {
+class PuntoDeVentas extends Component {
     render() {
         return (
             <div>
@@ -174,4 +174,4 @@ class Ventas extends Component {
         )
     }
 }
-export default Ventas;
+export default PuntoDeVentas;

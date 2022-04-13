@@ -7,39 +7,40 @@ export const SideBarData = [
     icon: icon.faHome
   },
   {
-    title: 'Ventas',
-    path: '/ventas',
-    icon: icon.faCartPlus
+    title: 'Salidas',
+    path: '/salidas',
+    icon: icon.faTruckRampBox
   },
   {
-    title: 'Compras',
-    path: '/compras',
-    icon: icon.faShoppingBag
-  },
-  {
-    title: 'Productos',
-    path: '/productos',
-    icon: icon.faBox
-  },
-  {
-    title: 'Categorias',
-    path: '/categorias',
-    icon: icon.faBoxArchive
+    title: 'Entradas',
+    path: '/entradas',
+    icon: icon.faBoxOpen
   },
   {
     title: 'Clientes',
     path: '/clientes',
-    icon: icon.faUserAlt
-  },
-  {
-    title: 'Inventario',
-    path: '/inventario',
-    icon: icon.faBoxes
+    icon: icon.faUsers
   },
   {
     title: 'Proveedores',
     path: '/proveedores',
-    icon: icon.faTruckLoading
+    icon: icon.faTruckMoving
+  },
+  {
+    title: 'Productos',
+    path: '/productos',
+    icon: icon.faBoxesPacking
+  },
+  {
+    title: 'Categorias',
+    path: '/categorias',
+    icon: icon.faTags
+  },
+  
+  {
+    title: 'Inventario',
+    path: '/inventario',
+    icon: icon.faBoxes
   }
 ];
 

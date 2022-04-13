@@ -34,17 +34,7 @@ export const postCustomer = ( dataCustomer ) => {
         method : "post",
         url : global.config.API_AWS_URL + RESOURCE_URL,
         headers : headers,
-        body : {
-            "code": dataCustomer.code,
-            "name": dataCustomer.name,
-            "lastname": dataCustomer.lastname,
-            "address": dataCustomer.address,
-            "city": dataCustomer.city,
-            "phone": dataCustomer.phone,
-            "email": dataCustomer.email,
-            "identifyID": dataCustomer.identifyID,
-            "comments": dataCustomer.comments
-        },
+        data : dataCustomer,
         validateStatus: function (status) {
             return status >= 200 && status < 400
         }
@@ -63,10 +53,16 @@ export const postCustomer = ( dataCustomer ) => {
     )
 }
 
-export const deleteCustomer = (key) => {
+export const putCustomers = ( key, dataCustomer ) => {
+    console.log(dataCustomer)
     let config = {
-        method : "delete",
-        url : global.config.API_URL + RESOURCE_URL + key,
+        method : "put",
+        url : global.config.API_AWS_URL + RESOURCE_URL,
+        headers: headers,
+        params: {
+            "key": key
+        },
+        data : dataCustomer,
         validateStatus: function (status) {
             return status >= 200 && status < 400
         }
@@ -79,6 +75,31 @@ export const deleteCustomer = (key) => {
     ).catch(
         function(error){
             if (!error.response.status !== undefined && !error.response.status === 403){
+                console.log("Error : "+error);
+            }
+        }
+    )
+}
+
+export const deleteCustomer = (key) => {
+    let config = {
+        method : "delete",
+        url : global.config.API_AWS_URL + RESOURCE_URL,
+        params: {
+            "key": key
+        },
+        validateStatus: function (status) {
+            return status >= 200 && status < 400
+        }
+    }
+    
+    return axios(config).then(
+        function(response){
+            return response
+        }
+    ).catch(
+        function(error){
+            if (error.response.status !== undefined && error.response.status === 403){
                 console.log("Error : "+error);
             }
         }

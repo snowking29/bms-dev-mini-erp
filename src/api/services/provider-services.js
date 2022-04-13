@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const RESOURCE_URL = "products/";
+const RESOURCE_URL = "providers/";
 
 const headers = {
     "Access-Control-Allow-Origin": "*",
 }
 
-export const getProducts = () => {
+export const getProviders = () => {
     let config = {
         method : "get",
         url : global.config.API_AWS_URL + RESOURCE_URL,
@@ -29,12 +29,12 @@ export const getProducts = () => {
     )
 }
 
-export const postProducts = ( dataProduct ) => {
+export const postProviders = ( dataProvider ) => {
     let config = {
         method : "post",
         url : global.config.API_AWS_URL + RESOURCE_URL,
         headers: headers,
-        data : dataProduct,
+        data : dataProvider,
         validateStatus: function (status) {
             return status >= 200 && status < 400
         }
@@ -53,7 +53,7 @@ export const postProducts = ( dataProduct ) => {
     )
 }
 
-export const putProducts = ( key, dataProduct ) => {
+export const putProviders = ( key, dataProvider ) => {
     let config = {
         method : "put",
         url : global.config.API_AWS_URL + RESOURCE_URL,
@@ -61,7 +61,7 @@ export const putProducts = ( key, dataProduct ) => {
         params: {
             "key": key
         },
-        data : dataProduct,
+        data : dataProvider,
         validateStatus: function (status) {
             return status >= 200 && status < 400
         }
@@ -80,7 +80,7 @@ export const putProducts = ( key, dataProduct ) => {
     )
 }
 
-export const deleteProduct = (key) => {
+export const deleteProvider = (key) => {
     let config = {
         method : "delete",
         url : global.config.API_AWS_URL + RESOURCE_URL,

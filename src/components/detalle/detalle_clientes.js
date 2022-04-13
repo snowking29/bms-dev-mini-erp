@@ -3,10 +3,10 @@ import * as rs from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
 import * as customer_services from '../../api/services/customer-services';
-import Alerta from "../utils/alerta";
 import Loader from "../utils/loader";
+import {removeEmptyData} from "../utils/RemoveEmptyData";
 
-function Registro_Clientes(props){
+function Detalle_Cliente(props){
 
     const [name, setName] = useState("");
     const [lastname, setLastName] = useState("");
@@ -14,49 +14,87 @@ function Registro_Clientes(props){
     const [city, setCity] = useState("");
     const [details, setDetails] = useState("");
     const [email, setEmail] = useState("");
-    const [identifyID, setIdentifyID] = useState("");
     const [phone, setPhone] = useState("");
-    const [creationTime, setCreationTime] = useState("");
     const [showLoader, setShowLoader] = useState(false);
+    var key = props.dataCliente.key;
 
     function saveCustomer() {
-        var date = new Date(creationTime)
+        
 
-        let dataCustomer = {
+        var date = new Date()
+        
+        var temporaryDataCustomer = {
             "name": name,
             "lastname": lastname,
             "address": address,
             "city": city,
-            "phone": phone,
-            "email": email,
-            "identifyID": identifyID,
             "details": details,
-            "creationTime": date.toLocaleString('es-PE'),
-            "modifiedTime": ""
+            "email": email,
+            "phone": phone,            
+            "modifiedTime": date.toLocaleString('es-PE')
         }
+
+        var dataCustomer = removeEmptyData(temporaryDataCustomer)
+
         setShowLoader(true);
-        customer_services.postCustomer(dataCustomer)
-            .then((response => {
-                setShowLoader (false);
-                if (response) {
-                    if (response.status === 200) {
-                        props.actualizaResultados();
+        customer_services.putCustomers(key, dataCustomer)
+            .then(
+                (response => {
+                    setShowLoader (false);
+                    if (response) {
+                        if (response.data.meta.status.code === "00") {
+                            clearFields();
+                            props.actualizaResultados();
+                        }
                     }
+                })
+            )
+    }
+
+    function clearFields(){
+        setName("")
+        setLastName("")
+        setAddress("")
+        setCity("")
+        setDetails("")
+        setEmail("")
+        setPhone("")
+    }
+
+    function deleteCustomer (){
+        setShowLoader(true);
+        customer_services.deleteCustomer(key).then((response) => {
+            if (response) {
+                setShowLoader (false);
+                if ( response.data.meta.status.code === "00" ) {
+                    props.actualizaResultados();
                 }
-            }))
+            }
+        })
     }
 
     return (
         <rs.Col sm={3}>
-            {showLoader ? <Loader /> : 
+            {showLoader ? <Loader /> :
                 <rs.Card className='card'>
-                    <rs.CardHeader className="h4 register">
-                        <FontAwesomeIcon icon={icon.faUserCheck}/>
+                    <rs.CardHeader className="h4 editing">
+                        <FontAwesomeIcon icon={icon.faFileEdit}/>
                         {' '}
-                        Registrar Cliente
+                        Editar Cliente
                     </rs.CardHeader>
                     <rs.CardBody>
                         <rs.Form>
+                            <rs.FormGroup>
+                                <rs.Label>
+                                    <FontAwesomeIcon icon={icon.faIdCard}/> DNI / RUC
+                                </rs.Label>
+                                <rs.Input
+                                    name="txtIdentifyID"
+                                    type="number"
+                                    disabled
+                                    value={props.dataCliente.identifyID}
+                                />
+                            </rs.FormGroup>
                             <rs.FormGroup>
                                 <rs.Label>
                                     <FontAwesomeIcon icon={icon.faFileText}/> Nombre
@@ -124,16 +162,6 @@ function Registro_Clientes(props){
                             </rs.FormGroup>
                             <rs.FormGroup>
                                 <rs.Label>
-                                    <FontAwesomeIcon icon={icon.faIdCard}/> DNI / RUC
-                                </rs.Label>
-                                <rs.Input
-                                    name="txtIdentifyID"
-                                    type="number"
-                                    onChange={(e) => setIdentifyID(e.target.value)}
-                                />
-                            </rs.FormGroup>
-                            <rs.FormGroup>
-                                <rs.Label>
                                     <FontAwesomeIcon icon={icon.faComment}/> Detalle
                                 </rs.Label>
                                 <rs.Input
@@ -142,21 +170,16 @@ function Registro_Clientes(props){
                                     onChange={(e) => setDetails(e.target.value)}
                                 />
                             </rs.FormGroup>
-                            <rs.FormGroup>
-                                <rs.Label>
-                                    <FontAwesomeIcon icon={icon.faCalendar}/> Fecha de creacion
-                                </rs.Label>
-                                <rs.Input
-                                    name="txtFCreation"
-                                    type="datetime-local"
-                                    onChange={(e) => setCreationTime(e.target.value)}
-                                />
-                            </rs.FormGroup>
                             <hr/>
                             <rs.FormGroup className='actions'>
                                 <div className='left'>
-                                    <rs.Button color="success" onClick={saveCustomer}>
-                                        <FontAwesomeIcon icon={icon.faSave}/>{' '}Grabar
+                                    <rs.Button color='success'onClick={() => saveCustomer()}>
+                                        <FontAwesomeIcon icon={icon.faSave}/>{' '}Guardar
+                                    </rs.Button>
+                                </div>
+                                <div className='right'>
+                                    <rs.Button color='danger' onClick={() => deleteCustomer()}>
+                                        <FontAwesomeIcon icon={icon.faTrash}/>{' '}Eliminar
                                     </rs.Button>
                                 </div>
                             </rs.FormGroup>
@@ -168,4 +191,4 @@ function Registro_Clientes(props){
     )
 }
 
-export default Registro_Clientes;
+export default Detalle_Cliente;
