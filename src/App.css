@@ -266,7 +266,7 @@ li a.dropdown-toggle::after {
     ACTIONS STYLE
 ----------------------------------------------------- */
 .actions{
-  text-align: center;
+  text-align: right;
   position: relative;
   font-family: sans-serif;
 }

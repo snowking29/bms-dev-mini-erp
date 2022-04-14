@@ -53,7 +53,7 @@ function Registro_Clientes(props){
                     <rs.CardHeader className="h4 register">
                         <FontAwesomeIcon icon={icon.faUserCheck}/>
                         {' '}
-                        Registrar Cliente
+                        Nuevo Cliente
                     </rs.CardHeader>
                     <rs.CardBody>
                         <rs.Form>

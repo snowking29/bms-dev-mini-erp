@@ -45,7 +45,7 @@ function Registro_Categoria(props){
                     <rs.CardHeader className="h4 register">
                         <FontAwesomeIcon icon={icon.faTags}/>
                         {' '}
-                        Registrar Categoria
+                        Nueva Categoria
                     </rs.CardHeader>
                     <rs.CardBody>
                         <rs.Form>

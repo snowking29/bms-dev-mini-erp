@@ -82,7 +82,7 @@ function Registro_Producto(props){
                     <rs.CardHeader className="h4 register">
                         <FontAwesomeIcon icon={icon.faBoxesPacking}/>
                         {' '}
-                        Registrar Producto
+                        Nuevo Producto
                     </rs.CardHeader>
                     <rs.CardBody>
                         <rs.Form>

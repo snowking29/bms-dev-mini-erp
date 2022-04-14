@@ -15,7 +15,7 @@ const Topbar = ({ toggleSidebar }) => {
         <rs.Navbar
             color="light"
             light
-            className="navbar shadow-sm p-3 mb-5 bg-white rounded"
+            className="navbar shadow-sm p-3 mb-3 bg-white rounded"
             expand="md"
         >
         <rs.Button color="primary" onClick={toggleSidebar}>
@@ -29,7 +29,7 @@ const Topbar = ({ toggleSidebar }) => {
                         return (
                             <rs.NavItem>
                                 <rs.NavLink tag={Link} to={item.path}>
-                                /{item.title}
+                                    Administrar {item.title}
                                 </rs.NavLink>
                             </rs.NavItem>
                         )

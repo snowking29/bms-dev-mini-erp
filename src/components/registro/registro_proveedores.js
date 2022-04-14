@@ -51,7 +51,7 @@ function Registro_Proveedor(props){
                     <rs.CardHeader className="h4 register">
                         <FontAwesomeIcon icon={icon.faTruckMoving}/>
                         {' '}
-                        Registrar Proveedor
+                        Nuevo Proveedor
                     </rs.CardHeader>
                     <rs.CardBody>
                         <rs.Form>
