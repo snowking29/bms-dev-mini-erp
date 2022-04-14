@@ -9,6 +9,7 @@ import Productos from '../../views/Productos';
 import Categorias from '../../views/Categorias';
 import Clientes from '../../views/Clientes';
 import Proveedores from '../../views/Proveedores';
+import Entradas from '../../views/Entradas';
 import TopBar from "./TopBar";
 
 const Content = ({ sidebarIsOpen, toggleSidebar }) => (
@@ -33,6 +34,9 @@ const Content = ({ sidebarIsOpen, toggleSidebar }) => (
             </Route>
             <Route element={<PrivateRoute component={Proveedores} exact/>}>
                 <Route path="/proveedores" element={<Proveedores />}/>
+            </Route>
+            <Route element={<PrivateRoute component={Entradas} exact/>}>
+                <Route path="/entradas" element={<Entradas />}/>
             </Route>
         </Routes>
     </Container>

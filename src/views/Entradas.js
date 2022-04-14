@@ -2,22 +2,22 @@ import React, { useState, useEffect } from 'react';
 import * as rs from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
-import RegistroProducto from "../components/registro/registro_productos";
-import * as product_services from '../api/services/product-services';
+import RegistroEntrada from "../components/registro/registro_entradas";
+import * as entry_services from '../api/services/entry-services';
 import Loader from "../components/utils/loader";
 import DetalleProducto from "../components/detalle/detalle_productos";
 
-function Productos () {
+function Entradas () {
 
     const [action, setAction] = useState("filtros");
     const [btnActionTxt, setBtnActionTxt] = useState("Agregar");
     const [btnIcon, setBtnIcon] = useState(<FontAwesomeIcon icon={icon.faPlusCircle}/>);
     const [showLoader, setShowLoader] = useState(false);
-    const [productos, setProductos] = useState([]);
+    const [entradas, setEntradas] = useState([]);
     const initialFormState = {}
-    const [currentProduct , setCurrentProduct] = useState(initialFormState)
+    const [currentEntry , setCurrentEntry] = useState(initialFormState)
 
-    function showRegistroProductos(){
+    function showRegistroEntradas(){
         if (btnActionTxt === "Agregar"){
             setBtnIcon(<FontAwesomeIcon icon={icon.faFilter}/>)
             setBtnActionTxt("Filtros")
@@ -30,12 +30,12 @@ function Productos () {
     }
 
     useEffect(() => {
-        getProductTable();
+        getEntryTable();
     },[])
 
-    function getProductTable () {
+    function getEntryTable () {
         setShowLoader(true);
-        product_services.getProducts().then( (response) => {
+        entry_services.getEntries().then( (response) => {
             setShowLoader(false);
             if (response.status === 200){
                 var filas = [];
@@ -44,17 +44,12 @@ function Productos () {
                 if (Array.isArray(body)) {
                     body.forEach( a => {
                         filas.push(
-                            <tr key= {a.code}>
+                            <tr key= {a.key}>
                                 <td>{body.indexOf(a)+1}</td>
-                                <td>{a.code}</td>
-                                <td>{a.name}</td>
-                                <td>{a.description}</td>
-                                <td>{a.stock}</td>
-                                <td>{a.priceCost}</td>
-                                <td>{a.priceSale}</td>
-                                <td>{a.category}</td>
                                 <td>{a.creationTime}</td>
-                                <td>{a.modifiedTime}</td>
+                                <td>{a.code}</td>
+                                <td>{a.user}</td>
+                                <td>{a.total}</td>
                                 <td>
                                     <FontAwesomeIcon icon={icon.faCheckSquare}
                                         type="button" 
@@ -62,7 +57,7 @@ function Productos () {
                                         title="Seleccionar"
                                         onClick = { () => {
                                             setAction("detalle")
-                                            setCurrentProduct(a)
+                                            setCurrentEntry(a)
                                         }}
                                     />
                                 </td>
@@ -70,7 +65,7 @@ function Productos () {
                         )
                     })
                 }
-                setProductos(filas);
+                setEntradas(filas);
             } else if(response.status === 401) {
                 console.log("NOT AUTHORIZED, AUTH AGAIN OR REDIRECT TO LOGIN")
             }
@@ -78,8 +73,8 @@ function Productos () {
     }
 
     function actualizarTabla () {
-        if (productos.length !== 0 || typeof(productos) !== 'undefined'){
-            getProductTable()
+        if (entradas.length !== 0 || typeof(entradas) !== 'undefined'){
+            getEntryTable()
         }
     }
 
@@ -91,13 +86,13 @@ function Productos () {
                         <rs.CardHeader className='header'>
                             <rs.Row>
                                 <rs.Col sm={10}>
-                                    <h2>&nbsp;Administrar Productos</h2>
+                                    <h2>&nbsp;Administrar Entradas</h2>
                                 </rs.Col>
                                 <rs.Col sm={2}>
                                         <rs.Button 
                                             className='button'
                                             value={btnActionTxt} 
-                                            onClick={showRegistroProductos}
+                                            onClick={showRegistroEntradas}
                                         >
                                             {btnIcon} {btnActionTxt} 
                                         </rs.Button>
@@ -111,43 +106,49 @@ function Productos () {
                                         <rs.Table responsive className='styled-table'>
                                             <thead>
                                                 <tr>
-                                                    <th style={{width: "0%"}}>
+                                                    <th>
                                                         #
                                                     </th>
+                                                    <th style={{width: "10%"}}>
+                                                        Fecha de Registro
+                                                    </th>
+                                                    <th style={{width: "10%"}}>
+                                                        Nro de Documento
+                                                    </th>
+                                                    <th style={{width: "10%"}}>
+                                                        Usuario Registro
+                                                    </th>
+                                                    <th style={{width: "10%"}}>
+                                                        Monto Total
+                                                    </th>
+                                                    <th style={{width: "10%"}}>
+                                                        Proveedor
+                                                    </th>
+                                                    <th style={{width: "10%"}}>
+                                                        Codigo Producto
+                                                    </th>
+                                                    <th style={{width: "10%"}}>
+                                                        Descripcion Producto
+                                                    </th>
+                                                    <th style={{width: "10%"}}>
+                                                        Categoria Producto
+                                                    </th>
                                                     <th style={{width: "5%"}}>
-                                                        Codigo
+                                                        Precio Compra
                                                     </th>
-                                                    <th style={{width: "15%"}}>
-                                                        Nombre
+                                                    <th style={{width: "5%"}}>
+                                                        Precio Venta
                                                     </th>
-                                                    <th style={{width: "15%"}}>
-                                                        Descripcion
+                                                    <th style={{width: "5%"}}>
+                                                        Cantidad
                                                     </th>
-                                                    <th style={{width: "0%"}}>
-                                                        Stock
-                                                    </th>
-                                                    <th style={{width: "10%"}}>
-                                                        P. de Costo
-                                                    </th>
-                                                    <th style={{width: "10%"}}>
-                                                        P. de Venta
-                                                    </th>
-                                                    <th style={{width: "15%"}}>
-                                                        Categoria
-                                                    </th>
-                                                    <th style={{width: "15%"}}>
-                                                        F. de Creacion
-                                                    </th>
-                                                    <th style={{width: "15%"}}>
-                                                        F. de Modificacion
-                                                    </th>
-                                                    <th>
-
+                                                    <th style={{width: "5%"}}>
+                                                        Sub Total
                                                     </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {productos}
+                                                {entradas}
                                             </tbody>
                                         </rs.Table>
                                     </rs.FormGroup>
@@ -156,8 +157,8 @@ function Productos () {
                         </rs.CardBody>
                     </rs.Card>
                 </rs.Col>
-                {action === "detalle" ? <DetalleProducto dataProducto={currentProduct} actualizaResultados={actualizarTabla}/> : 
-                    action === "registrar" ? <RegistroProducto actualizaResultados={actualizarTabla}/> :
+                {action === "detalle" ? <DetalleProducto dataEntrad={currentEntry} actualizaResultados={actualizarTabla}/> : 
+                    action === "registrar" ? <RegistroEntrada actualizaResultados={actualizarTabla}/> :
                         <rs.Col sm={3}>
                             <rs.Card className='card'>
                                 <rs.CardHeader className="h4 filters">
@@ -244,4 +245,4 @@ function Productos () {
     )
 }
 
-export default Productos;
+export default Entradas;
