@@ -11,7 +11,6 @@ function Clientes () {
     
     const [action, setAction] = useState(false);
     const [btnActionTxt, setBtnActionTxt] = useState("Agregar");
-    const [btnIcon, setBtnIcon] = useState(<FontAwesomeIcon icon={icon.faPlusCircle}/>);
     const [showLoader, setShowLoader] = useState(false);
     const [searchCust, setSearchCust] = useState("");
     const [clientes, setClientes] = useState([]);
@@ -20,13 +19,7 @@ function Clientes () {
 
     function showRegistroClientes(){
         if (btnActionTxt === "Agregar"){
-            setBtnIcon(<FontAwesomeIcon icon={icon.faFilter}/>)
-            setBtnActionTxt("Filtros")
             setAction("registrar")
-        }else{
-            setBtnIcon(<FontAwesomeIcon icon={icon.faPlusCircle}/>)
-            setBtnActionTxt("Agregar")
-            setAction("filtrar")
         }
     }
 
@@ -52,7 +45,6 @@ function Clientes () {
                     body.forEach( a => {
                         filas.push(
                             <tr key= {a.key}>
-                                <td>{body.indexOf(a)+1}</td>
                                 <td>{a.name} {a.lastname}</td>
                                 <td>{a.address} - {a.city} </td>
                                 <td>{a.phone.replace(/\s/g, '')}</td>
@@ -88,162 +80,122 @@ function Clientes () {
         setSearchCust(value)
     }
 
+    function selectAction(value){
+        setAction(value)
+    }
+
     return (
         <div>
-            <rs.Row>
-                <rs.Col sm={9}>
-                    <rs.Card className='card'>
-                        <rs.CardHeader className='header'>
-                            <rs.Row>
-                                <rs.Col sm={10}>
-                                    <h2>&nbsp;Administrar Clientes</h2>
-                                </rs.Col>
-                                <rs.Col sm={2}>
-                                        <rs.Button 
-                                            className='button'
-                                            value={btnActionTxt} 
-                                            onClick={showRegistroClientes}
-                                        >
-                                            {btnIcon} {btnActionTxt} 
-                                        </rs.Button>
-                                </rs.Col>
-                            </rs.Row>
-                        </rs.CardHeader>
-                        <rs.CardBody className='body'>
-                            {showLoader ? <Loader /> :
-                                <rs.Form>
-                                    <rs.FormGroup>
-                                        <rs.Table responsive className='styled-table'>
-                                            <thead>
-                                                <tr>
-                                                    <th style={{width: "0%"}}>
-                                                        #
-                                                    </th>
-                                                    <th style={{width: "30%"}}>
-                                                        Nombres
-                                                    </th>
-                                                    <th style={{width: "30%"}}>
-                                                        Direccion
-                                                    </th>
-                                                    <th style={{width: "0%"}}>
-                                                        Telefono
-                                                    </th>
-                                                    <th style={{width: "0%"}}>
-                                                        Email
-                                                    </th>
-                                                    <th style={{width: "0%"}}>
-                                                        DNI/RUC
-                                                    </th>
-                                                    <th style={{width: "20%"}}>
-                                                        Detalles
-                                                    </th>
-                                                    <th style={{width: "10%"}}>
-                                                        F. de creacion
-                                                    </th>
-                                                    <th style={{width: "10%"}}>
-                                                        F. de modificacion
-                                                    </th>
-                                                    <th>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {clientes}
-                                            </tbody>
-                                        </rs.Table>
-                                    </rs.FormGroup>
-                                </rs.Form>
-                            }
-                        </rs.CardBody>
-                    </rs.Card>
-                </rs.Col>
-                {action === "detalle" ? <DetalleCliente dataCliente={currentCustomer} actualizaResultados={actualizarTabla}/> :
-                    action === "registrar" ? <RegistroClientes actualizaResultados={actualizarTabla}/> :
-                        <rs.Col sm={3}>
-                            <rs.Card className='card'>
-                                <rs.CardHeader className="h4 filters">
-                                    <FontAwesomeIcon icon={icon.faFilter}/>
-                                    {' '}
-                                    Filtros
-                                </rs.CardHeader>
-                                <rs.CardBody>
-                                    <rs.Form>
-                                        <rs.FormGroup>
-                                            <rs.Col sm={12} className='search-input'>
-                                                <rs.InputGroup>
-                                                    <rs.Input
-                                                        id="searchCust"
-                                                        name="Search"
-                                                        placeholder="Buscar"
-                                                        type="search"
-                                                        onChange={(e) => getCustomerSearched(e.target.value)}
-                                                    />
-                                                    <rs.InputGroupText>
-                                                        <FontAwesomeIcon icon={icon.faSearch}/>
-                                                    </rs.InputGroupText>
-                                                </rs.InputGroup>
-                                            </rs.Col>
-                                        </rs.FormGroup>
-                                        <rs.FormGroup>
-                                            <rs.Label>
-                                                <FontAwesomeIcon icon={icon.faCalendar}/> Rango de Fechas
-                                            </rs.Label>
-                                            <rs.Col sm={6}>
-                                                <rs.Input
-                                                    name="rbtnDateType"
-                                                    type="radio"
-                                                />
-                                                {' '}
-                                                F. de Creacion
-                                            </rs.Col>
-                                            <rs.Col sm={6}>
-                                                <rs.Input
-                                                    name="rbtnDateType"
-                                                    type="radio"
-                                                />
-                                                {' '}
-                                                F. de Modificacion
-                                            </rs.Col>
-                                        </rs.FormGroup>
-                                        <rs.FormGroup>
-                                            <rs.Col sm={12}>
-                                                <rs.Label for="customerFromDate">
-                                                    Desde
-                                                </rs.Label>
-                                                <rs.Input
-                                                    id="customerFromDate"
-                                                    name="date"
-                                                    placeholder="date placeholder"
-                                                    type="date"
-                                                />
-                                            </rs.Col>
-                                            <br/>
-                                            <rs.Col sm={12}>
-                                                <rs.Label for="customerToDate">
-                                                    Hasta
-                                                </rs.Label>
-                                                <rs.Input
-                                                    id="customerToDate"
-                                                    name="date"
-                                                    placeholder="date placeholder"
-                                                    type="date"
-                                                />
-                                            </rs.Col>
-                                        </rs.FormGroup>
-                                        <hr/>
-                                        <rs.FormGroup className='actions'>
-                                            <div className='left'>
-                                                <rs.Button color="success">
-                                                    <FontAwesomeIcon icon={icon.faCheck}/>{' '}Aplicar
-                                                </rs.Button>
-                                            </div>
-                                        </rs.FormGroup>
-                                    </rs.Form>
-                                </rs.CardBody>
-                            </rs.Card>
-                        </rs.Col>
-                }
-            </rs.Row>
+            {action === "detalle" ? <DetalleCliente dataCliente={currentCustomer} actualizaResultados={actualizarTabla}/> :
+                    action === "registrar" ? <RegistroClientes actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
+                <rs.Card className='card'>
+                    <rs.CardHeader className='header'>
+                        <rs.Row>
+                            <rs.Col sm={10}>
+                                <h2>&nbsp;Lista Clientes</h2>
+                            </rs.Col>
+                            <rs.Col sm={2}>
+                                    <rs.Button 
+                                        className='button'
+                                        value={btnActionTxt} 
+                                        onClick={showRegistroClientes}
+                                    >
+                                       <FontAwesomeIcon icon={icon.faPlusCircle}/> Agregar
+                                    </rs.Button>
+                            </rs.Col>
+                        </rs.Row>
+                    </rs.CardHeader>
+                    <rs.CardBody className='body'>
+                        <rs.Row>
+                            <rs.Col sm={4}>
+                                <rs.FormGroup row>
+                                    <rs.Label for="productFromDate" sm={4}>
+                                        Fecha Inicio
+                                    </rs.Label>
+                                    <rs.Col sm={8}>
+                                        <rs.Input
+                                            id="productFromDate"
+                                            name="date"
+                                            placeholder="date placeholder"
+                                            type="date"
+                                        />
+                                    </rs.Col>
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={4}>
+                                <rs.FormGroup row>
+                                    <rs.Label for="productToDate" sm={4}>
+                                        Fecha Fin
+                                    </rs.Label>
+                                    <rs.Col sm={8}>
+                                        <rs.Input
+                                            id="productToDate"
+                                            name="date"
+                                            placeholder="date placeholder"
+                                            type="date"
+                                        />
+                                    </rs.Col>
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={4}>
+                                <rs.InputGroup>
+                                    <rs.Input
+                                        id="searchCust"
+                                        name="Search"
+                                        placeholder="Buscar"
+                                        type="search"
+                                    />
+                                    <rs.InputGroupText>
+                                        <FontAwesomeIcon icon={icon.faSearch}/>
+                                    </rs.InputGroupText>
+                                </rs.InputGroup>
+                            </rs.Col>
+                        </rs.Row>
+                        <hr/>
+                        {showLoader ? <Loader /> :
+                            <rs.Form>
+                                <rs.FormGroup>
+                                    <rs.Table responsive className='styled-table'>
+                                        <thead>
+                                            <tr>
+                                                <th style={{width: "30%"}}>
+                                                    Nombres
+                                                </th>
+                                                <th style={{width: "30%"}}>
+                                                    Direccion
+                                                </th>
+                                                <th style={{width: "0%"}}>
+                                                    Telefono
+                                                </th>
+                                                <th style={{width: "0%"}}>
+                                                    Email
+                                                </th>
+                                                <th style={{width: "0%"}}>
+                                                    DNI/RUC
+                                                </th>
+                                                <th style={{width: "20%"}}>
+                                                    Detalles
+                                                </th>
+                                                <th style={{width: "10%"}}>
+                                                    F. de creacion
+                                                </th>
+                                                <th style={{width: "10%"}}>
+                                                    F. de modificacion
+                                                </th>
+                                                <th>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {clientes}
+                                        </tbody>
+                                    </rs.Table>
+                                </rs.FormGroup>
+                            </rs.Form>
+                        }
+                    </rs.CardBody>
+                </rs.Card>
+            }
         </div>
     )
 }

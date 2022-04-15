@@ -130,7 +130,7 @@ function Entradas () {
                 <rs.CardHeader className='header' onClick={() => setToggeRegister(!toggleRegister)}>
                     <rs.Row>
                         <rs.Col sm={10}>
-                            <h2>&nbsp;Registro de Entradas</h2>
+                            <h4>&nbsp;Registro de Entradas</h4>
                         </rs.Col>
                     </rs.Row>
                 </rs.CardHeader>
@@ -317,51 +317,51 @@ function Entradas () {
                 <rs.Collapse isOpen={toggleList}>
                     <rs.CardBody className='body'>
                         <rs.Form>
-                                <rs.Row>
-                                    <rs.Col sm={4}>
-                                        <rs.FormGroup row>
-                                            <rs.Label for="productFromDate" sm={4}>
-                                                Fecha Inicio
-                                            </rs.Label>
-                                            <rs.Col sm={8}>
-                                                <rs.Input
-                                                    id="productFromDate"
-                                                    name="date"
-                                                    placeholder="date placeholder"
-                                                    type="date"
-                                                />
-                                            </rs.Col>
-                                        </rs.FormGroup>
-                                    </rs.Col>
-                                    <rs.Col sm={4}>
-                                        <rs.FormGroup row>
-                                            <rs.Label for="productToDate" sm={4}>
-                                                Fecha Fin
-                                            </rs.Label>
-                                            <rs.Col sm={8}>
-                                                <rs.Input
-                                                    id="productToDate"
-                                                    name="date"
-                                                    placeholder="date placeholder"
-                                                    type="date"
-                                                />
-                                            </rs.Col>
-                                        </rs.FormGroup>
-                                    </rs.Col>
-                                    <rs.Col sm={4}>
-                                        <rs.InputGroup>
+                            <rs.Row>
+                                <rs.Col sm={4}>
+                                    <rs.FormGroup row>
+                                        <rs.Label for="productFromDate" sm={4}>
+                                            Fecha Inicio
+                                        </rs.Label>
+                                        <rs.Col sm={8}>
                                             <rs.Input
-                                                id="searchCust"
-                                                name="Search"
-                                                placeholder="Buscar"
-                                                type="search"
+                                                id="productFromDate"
+                                                name="date"
+                                                placeholder="date placeholder"
+                                                type="date"
                                             />
-                                            <rs.InputGroupText>
-                                                <FontAwesomeIcon icon={icon.faSearch}/>
-                                            </rs.InputGroupText>
-                                        </rs.InputGroup>
-                                    </rs.Col>
-                                </rs.Row>
+                                        </rs.Col>
+                                    </rs.FormGroup>
+                                </rs.Col>
+                                <rs.Col sm={4}>
+                                    <rs.FormGroup row>
+                                        <rs.Label for="productToDate" sm={4}>
+                                            Fecha Fin
+                                        </rs.Label>
+                                        <rs.Col sm={8}>
+                                            <rs.Input
+                                                id="productToDate"
+                                                name="date"
+                                                placeholder="date placeholder"
+                                                type="date"
+                                            />
+                                        </rs.Col>
+                                    </rs.FormGroup>
+                                </rs.Col>
+                                <rs.Col sm={4}>
+                                    <rs.InputGroup>
+                                        <rs.Input
+                                            id="searchCust"
+                                            name="Search"
+                                            placeholder="Buscar"
+                                            type="search"
+                                        />
+                                        <rs.InputGroupText>
+                                            <FontAwesomeIcon icon={icon.faSearch}/>
+                                        </rs.InputGroupText>
+                                    </rs.InputGroup>
+                                </rs.Col>
+                            </rs.Row>
                         </rs.Form>
                         <hr/>
                         {showLoader ? <Loader /> :

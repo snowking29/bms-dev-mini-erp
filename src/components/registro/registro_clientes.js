@@ -16,11 +16,15 @@ function Registro_Clientes(props){
     const [email, setEmail] = useState("");
     const [identifyID, setIdentifyID] = useState("");
     const [phone, setPhone] = useState("");
-    const [creationTime, setCreationTime] = useState("");
+    const [msjAlert, setMsjAlert] = useState("");
+    const [mostrarAlert, setMostrarAlert] = useState(false);
+    const [color, setColor] = useState("secondary");
     const [showLoader, setShowLoader] = useState(false);
 
+    var date = new Date().toLocaleDateString()
+    const user = localStorage.getItem("name");
+    
     function saveCustomer() {
-        var date = new Date(creationTime)
 
         let dataCustomer = {
             "name": name,
@@ -39,45 +43,55 @@ function Registro_Clientes(props){
             .then((response => {
                 setShowLoader (false);
                 if (response) {
-                    if (response.status === 200) {
+                    if (response.data.meta.status.code === "00") {
+                        setColor("success");
                         props.actualizaResultados();
+                    }else{
+                        setColor("danger");
                     }
+                    setMsjAlert(response.data.meta.status.message_ilgn[0].value);
+                    setMostrarAlert(true);
                 }
             }))
     }
 
+    function ocultarAlerta(){
+        setMostrarAlert(false);
+    }
+
     return (
-        <rs.Col sm={3}>
+        <rs.Card className='card'>
+            <rs.CardHeader className='header'>
+                <rs.Row>
+                    <rs.Col sm={10}>
+                        <h2>&nbsp;Nuevo Cliente</h2>
+                    </rs.Col>
+                    <rs.Col sm={2}>
+                            <rs.Button 
+                                className='button' 
+                                onClick={(e) => props.selectAction("listar")}
+                            >
+                                <FontAwesomeIcon icon={icon.faList}/>{' '}Listar clientes
+                            </rs.Button>
+                    </rs.Col>
+                </rs.Row>
+            </rs.CardHeader>
+            <rs.CardBody>
             {showLoader ? <Loader /> : 
-                <rs.Card className='card'>
-                    <rs.CardHeader className="h4 register">
-                        <FontAwesomeIcon icon={icon.faUserCheck}/>
-                        {' '}
-                        Nuevo Cliente
-                    </rs.CardHeader>
-                    <rs.CardBody>
-                        <rs.Form>
-                            <rs.FormGroup>
+                <rs.Form>
+                    <rs.FormGroup>
+                        <rs.Row>
+                            <rs.Col sm={3}>
                                 <rs.Label>
-                                    <FontAwesomeIcon icon={icon.faFileText}/> Nombre
+                                    <FontAwesomeIcon icon={icon.faFileText}/> Nombres y Apellidos
                                 </rs.Label>
                                 <rs.Input
-                                    name="txtName"
+                                    name="txtFullName"
                                     type="text"
                                     onChange={(e) => setName(e.target.value)}
                                 />
-                            </rs.FormGroup>
-                            <rs.FormGroup>
-                                <rs.Label>
-                                    <FontAwesomeIcon icon={icon.faFileText}/> Apellidos
-                                </rs.Label>
-                                <rs.Input
-                                    name="txtLastname"
-                                    type="text"
-                                    onChange={(e) => setLastName(e.target.value)}
-                                />
-                            </rs.FormGroup>
-                            <rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
                                 <rs.Label>
                                     <FontAwesomeIcon icon={icon.faAddressCard}/> Direccion
                                 </rs.Label>
@@ -86,33 +100,43 @@ function Registro_Clientes(props){
                                     type="text"
                                     onChange={(e) => setAddress(e.target.value)}
                                 />
-                            </rs.FormGroup>
-                            
-                            <rs.FormGroup>
-                                <rs.Row>
-                                    <rs.Col sm={6}>
-                                        <rs.Label>
-                                            <FontAwesomeIcon icon={icon.faCity}/> Ciudad
-                                        </rs.Label>
-                                        <rs.Input
-                                            name="txtCity"
-                                            type="text"
-                                            onChange={(e) => setCity(e.target.value)}
-                                        />
-                                    </rs.Col>
-                                    <rs.Col sm={6}>
-                                        <rs.Label>
-                                            <FontAwesomeIcon icon={icon.faPhone}/> Telefono
-                                        </rs.Label>
-                                        <rs.Input
-                                            name="txtPhone"
-                                            type="number"
-                                            onChange={(e) => setPhone(e.target.value)}
-                                        />
-                                    </rs.Col>
-                                </rs.Row>
-                            </rs.FormGroup>
-                            <rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={2}>
+                                <rs.Label>
+                                    <FontAwesomeIcon icon={icon.faCity}/> Ciudad
+                                </rs.Label>
+                                <rs.Input
+                                    name="txtCity"
+                                    type="text"
+                                    onChange={(e) => setCity(e.target.value)}
+                                />
+                            </rs.Col>
+                            <rs.Col sm={2}>
+                                <rs.Label>
+                                    <FontAwesomeIcon icon={icon.faPhone}/> Telefono
+                                </rs.Label>
+                                <rs.Input
+                                    name="txtPhone"
+                                    type="number"
+                                    onChange={(e) => setPhone(e.target.value)}
+                                />
+                            </rs.Col>
+                            <rs.Col sm={2}>
+                                <rs.Label>
+                                    <FontAwesomeIcon icon={icon.faCalendar}/> Fecha de Registro
+                                </rs.Label>
+                                <rs.Input
+                                    name="txtCreationTime"
+                                    type="text"
+                                    value={date}
+                                    disabled
+                                />
+                            </rs.Col>
+                        </rs.Row>
+                    </rs.FormGroup>
+                    <rs.FormGroup>
+                        <rs.Row>
+                            <rs.Col sm={3}>
                                 <rs.Label>
                                     <FontAwesomeIcon icon={icon.faMailBulk}/> Email
                                 </rs.Label>
@@ -121,50 +145,61 @@ function Registro_Clientes(props){
                                     type="email"
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
-                            </rs.FormGroup>
-                            <rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
                                 <rs.Label>
-                                    <FontAwesomeIcon icon={icon.faIdCard}/> DNI / RUC
+                                    <FontAwesomeIcon icon={icon.faComment}/> Detalle
+                                </rs.Label>
+                                <rs.Input
+                                    name="txtDetail"
+                                    type="text"
+                                    onChange={(e) => setDetails(e.target.value)}
+                                />
+                            </rs.Col>
+                            <rs.Col sm={2}>
+                                <rs.Label>
+                                    <FontAwesomeIcon icon={icon.faIdCard}/> DNI - RUC
                                 </rs.Label>
                                 <rs.Input
                                     name="txtIdentifyID"
                                     type="number"
                                     onChange={(e) => setIdentifyID(e.target.value)}
                                 />
-                            </rs.FormGroup>
-                            <rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={2}>
                                 <rs.Label>
-                                    <FontAwesomeIcon icon={icon.faComment}/> Detalle
+                                    <FontAwesomeIcon icon={icon.faUser}/> Usuario
                                 </rs.Label>
                                 <rs.Input
-                                    name="txtDetail"
-                                    type="textarea"
-                                    onChange={(e) => setDetails(e.target.value)}
+                                    name="txtUser"
+                                    type="text"
+                                    value={user}
+                                    disabled
                                 />
-                            </rs.FormGroup>
-                            <rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={2}>
                                 <rs.Label>
-                                    <FontAwesomeIcon icon={icon.faCalendar}/> Fecha de creacion
+                                    
                                 </rs.Label>
-                                <rs.Input
-                                    name="txtFCreation"
-                                    type="datetime-local"
-                                    onChange={(e) => setCreationTime(e.target.value)}
-                                />
-                            </rs.FormGroup>
-                            <hr/>
-                            <rs.FormGroup className='actions'>
-                                <div className='left'>
-                                    <rs.Button color="success" onClick={saveCustomer}>
+                                <div className='actions'>
+
+                                    <rs.Button className='left'color="success" onClick={saveCustomer}>
                                         <FontAwesomeIcon icon={icon.faSave}/>{' '}Grabar
                                     </rs.Button>
+
+                                    <rs.Button className='right'color="warning" onClick={saveCustomer}>
+                                        <FontAwesomeIcon icon={icon.faEraser}/>{' '}Limpiar
+                                    </rs.Button>
                                 </div>
-                            </rs.FormGroup>
-                        </rs.Form>
-                    </rs.CardBody>
-                </rs.Card>
+                            </rs.Col>
+                        </rs.Row>
+                    </rs.FormGroup>
+                    
+                </rs.Form>
             }
-        </rs.Col>
+                <Alerta msj={msjAlert} alertVisible={mostrarAlert} color={color} ocultar={ocultarAlerta}/>
+            </rs.CardBody>
+        </rs.Card>
     )
 }
 
