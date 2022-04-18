@@ -10,7 +10,6 @@ import DetalleCliente from "../components/detalle/detalle_clientes";
 function Clientes () {
     
     const [action, setAction] = useState(false);
-    const [btnActionTxt, setBtnActionTxt] = useState("Agregar");
     const [showLoader, setShowLoader] = useState(false);
     const [searchCust, setSearchCust] = useState("");
     const [clientes, setClientes] = useState([]);
@@ -18,9 +17,7 @@ function Clientes () {
     const [currentCustomer , setCurrentCustomer] = useState(initialFormState)
 
     function showRegistroClientes(){
-        if (btnActionTxt === "Agregar"){
-            setAction("registrar")
-        }
+        setAction("registrar")
     }
 
     function actualizarTabla () {
@@ -45,11 +42,11 @@ function Clientes () {
                     body.forEach( a => {
                         filas.push(
                             <tr key= {a.key}>
-                                <td>{a.name} {a.lastname}</td>
+                                <td>{a.identifyID}</td>
+                                <td>{a.fullName}</td>
                                 <td>{a.address} - {a.city} </td>
                                 <td>{a.phone.replace(/\s/g, '')}</td>
                                 <td>{a.email}</td>
-                                <td>{a.identifyID}</td>
                                 <td>{a.details}</td>
                                 <td>{a.creationTime}</td>
                                 <td>{a.modifiedTime}</td>
@@ -86,21 +83,21 @@ function Clientes () {
 
     return (
         <div>
-            {action === "detalle" ? <DetalleCliente dataCliente={currentCustomer} actualizaResultados={actualizarTabla}/> :
-                    action === "registrar" ? <RegistroClientes actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
+            {action === "detalle" ? <DetalleCliente dataCliente={currentCustomer} actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
+            action === "registrar" ? <RegistroClientes actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
                 <rs.Card className='card'>
                     <rs.CardHeader className='header'>
                         <rs.Row>
                             <rs.Col sm={10}>
-                                <h2>&nbsp;Lista Clientes</h2>
+                                <h3><FontAwesomeIcon icon={icon.faListNumeric}/> Lista Clientes</h3>
                             </rs.Col>
                             <rs.Col sm={2}>
                                     <rs.Button 
                                         className='button'
-                                        value={btnActionTxt} 
+                                        value="Agregar" 
                                         onClick={showRegistroClientes}
                                     >
-                                       <FontAwesomeIcon icon={icon.faPlusCircle}/> Agregar
+                                       <FontAwesomeIcon icon={icon.faPlusCircle}/> Nuevo
                                     </rs.Button>
                             </rs.Col>
                         </rs.Row>
@@ -109,12 +106,12 @@ function Clientes () {
                         <rs.Row>
                             <rs.Col sm={4}>
                                 <rs.FormGroup row>
-                                    <rs.Label for="productFromDate" sm={4}>
+                                    <rs.Label for="customerFromDate" sm={4}>
                                         Fecha Inicio
                                     </rs.Label>
                                     <rs.Col sm={8}>
                                         <rs.Input
-                                            id="productFromDate"
+                                            id="customerFromDate"
                                             name="date"
                                             placeholder="date placeholder"
                                             type="date"
@@ -124,12 +121,12 @@ function Clientes () {
                             </rs.Col>
                             <rs.Col sm={4}>
                                 <rs.FormGroup row>
-                                    <rs.Label for="productToDate" sm={4}>
+                                    <rs.Label for="customerToDate" sm={4}>
                                         Fecha Fin
                                     </rs.Label>
                                     <rs.Col sm={8}>
                                         <rs.Input
-                                            id="productToDate"
+                                            id="customerToDate"
                                             name="date"
                                             placeholder="date placeholder"
                                             type="date"
@@ -140,7 +137,7 @@ function Clientes () {
                             <rs.Col sm={4}>
                                 <rs.InputGroup>
                                     <rs.Input
-                                        id="searchCust"
+                                        id="searchCustomer"
                                         name="Search"
                                         placeholder="Buscar"
                                         type="search"
@@ -158,10 +155,13 @@ function Clientes () {
                                     <rs.Table responsive className='styled-table'>
                                         <thead>
                                             <tr>
-                                                <th style={{width: "30%"}}>
+                                                <th style={{width: "5%"}}>
+                                                    Documento
+                                                </th>
+                                                <th style={{width: "25%"}}>
                                                     Nombres
                                                 </th>
-                                                <th style={{width: "30%"}}>
+                                                <th style={{width: "25%"}}>
                                                     Direccion
                                                 </th>
                                                 <th style={{width: "0%"}}>
@@ -170,17 +170,14 @@ function Clientes () {
                                                 <th style={{width: "0%"}}>
                                                     Email
                                                 </th>
-                                                <th style={{width: "0%"}}>
-                                                    DNI/RUC
-                                                </th>
-                                                <th style={{width: "20%"}}>
+                                                <th style={{width: "15%"}}>
                                                     Detalles
                                                 </th>
-                                                <th style={{width: "10%"}}>
-                                                    F. de creacion
+                                                <th style={{width: "15%"}}>
+                                                    F. Creacion
                                                 </th>
-                                                <th style={{width: "10%"}}>
-                                                    F. de modificacion
+                                                <th style={{width: "15%"}}>
+                                                    F. Modificacion
                                                 </th>
                                                 <th>
                                                 </th>

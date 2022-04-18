@@ -9,24 +9,14 @@ import DetalleProducto from "../components/detalle/detalle_productos";
 
 function Productos () {
 
-    const [action, setAction] = useState("filtros");
-    const [btnActionTxt, setBtnActionTxt] = useState("Agregar");
-    const [btnIcon, setBtnIcon] = useState(<FontAwesomeIcon icon={icon.faPlusCircle}/>);
+    const [action, setAction] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
     const [productos, setProductos] = useState([]);
     const initialFormState = {}
     const [currentProduct , setCurrentProduct] = useState(initialFormState)
 
     function showRegistroProductos(){
-        if (btnActionTxt === "Agregar"){
-            setBtnIcon(<FontAwesomeIcon icon={icon.faFilter}/>)
-            setBtnActionTxt("Filtros")
-            setAction("registrar")
-        }else{
-            setBtnIcon(<FontAwesomeIcon icon={icon.faPlusCircle}/>)
-            setBtnActionTxt("Agregar")
-            setAction("filtrar")
-        }
+        setAction("registrar")
     }
 
     useEffect(() => {
@@ -45,7 +35,6 @@ function Productos () {
                     body.forEach( a => {
                         filas.push(
                             <tr key= {a.code}>
-                                <td>{body.indexOf(a)+1}</td>
                                 <td>{a.code}</td>
                                 <td>{a.name}</td>
                                 <td>{a.description}</td>
@@ -53,6 +42,7 @@ function Productos () {
                                 <td>{a.priceCost}</td>
                                 <td>{a.priceSale}</td>
                                 <td>{a.category}</td>
+                                <td>{a.warehouse}</td>
                                 <td>{a.creationTime}</td>
                                 <td>{a.modifiedTime}</td>
                                 <td>
@@ -83,163 +73,129 @@ function Productos () {
         }
     }
 
+    function selectAction(value){
+        setAction(value)
+    }
+
     return (
         <div>
-            <rs.Row>
-                <rs.Col sm={9}>
-                    <rs.Card className='card'>
-                        <rs.CardHeader className='header'>
-                            <rs.Row>
-                                <rs.Col sm={10}>
-                                    <h2>&nbsp;Administrar Productos</h2>
-                                </rs.Col>
-                                <rs.Col sm={2}>
-                                        <rs.Button 
-                                            className='button'
-                                            value={btnActionTxt} 
-                                            onClick={showRegistroProductos}
-                                        >
-                                            {btnIcon} {btnActionTxt} 
-                                        </rs.Button>
-                                </rs.Col>
-                            </rs.Row>
-                        </rs.CardHeader>
-                        <rs.CardBody className='body'>
-                            {showLoader ? <Loader /> :
-                                <rs.Form>
-                                    <rs.FormGroup>
-                                        <rs.Table responsive className='styled-table'>
-                                            <thead>
-                                                <tr>
-                                                    <th style={{width: "0%"}}>
-                                                        #
-                                                    </th>
-                                                    <th style={{width: "5%"}}>
-                                                        Codigo
-                                                    </th>
-                                                    <th style={{width: "15%"}}>
-                                                        Nombre
-                                                    </th>
-                                                    <th style={{width: "15%"}}>
-                                                        Descripcion
-                                                    </th>
-                                                    <th style={{width: "0%"}}>
-                                                        Stock
-                                                    </th>
-                                                    <th style={{width: "10%"}}>
-                                                        P. de Costo
-                                                    </th>
-                                                    <th style={{width: "10%"}}>
-                                                        P. de Venta
-                                                    </th>
-                                                    <th style={{width: "15%"}}>
-                                                        Categoria
-                                                    </th>
-                                                    <th style={{width: "15%"}}>
-                                                        F. de Creacion
-                                                    </th>
-                                                    <th style={{width: "15%"}}>
-                                                        F. de Modificacion
-                                                    </th>
-                                                    <th>
+            {action === "detalle" ? <DetalleProducto dataProducto={currentProduct} actualizaResultados={actualizarTabla} selectAction={selectAction}/> : 
+            action === "registrar" ? <RegistroProducto actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
+                <rs.Card className='card'>
+                    <rs.CardHeader className='header'>
+                        <rs.Row>
+                            <rs.Col sm={10}>
+                                <h3><FontAwesomeIcon icon={icon.faListNumeric}/> Lista Productos</h3>
+                            </rs.Col>
+                            <rs.Col sm={2}>
+                                <rs.Button 
+                                    className='button'
+                                    value="Agregar" 
+                                    onClick={showRegistroProductos}
+                                >
+                                    <FontAwesomeIcon icon={icon.faPlusCircle}/> Nuevo
+                                </rs.Button>
+                            </rs.Col>
+                        </rs.Row>
+                    </rs.CardHeader>
+                    <rs.CardBody className='body'>
+                    <rs.Row>
+                            <rs.Col sm={4}>
+                                <rs.FormGroup row>
+                                    <rs.Label for="productFromDate" sm={4}>
+                                        Fecha Inicio
+                                    </rs.Label>
+                                    <rs.Col sm={8}>
+                                        <rs.Input
+                                            id="productFromDate"
+                                            name="date"
+                                            placeholder="date placeholder"
+                                            type="date"
+                                        />
+                                    </rs.Col>
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={4}>
+                                <rs.FormGroup row>
+                                    <rs.Label for="productToDate" sm={4}>
+                                        Fecha Fin
+                                    </rs.Label>
+                                    <rs.Col sm={8}>
+                                        <rs.Input
+                                            id="productToDate"
+                                            name="date"
+                                            placeholder="date placeholder"
+                                            type="date"
+                                        />
+                                    </rs.Col>
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={4}>
+                                <rs.InputGroup>
+                                    <rs.Input
+                                        id="searchProduct"
+                                        name="Search"
+                                        placeholder="Buscar"
+                                        type="search"
+                                    />
+                                    <rs.InputGroupText>
+                                        <FontAwesomeIcon icon={icon.faSearch}/>
+                                    </rs.InputGroupText>
+                                </rs.InputGroup>
+                            </rs.Col>
+                        </rs.Row>
+                        <hr/>
+                        {showLoader ? <Loader /> :
+                            <rs.Form>
+                                <rs.FormGroup>
+                                    <rs.Table responsive className='styled-table'>
+                                        <thead>
+                                            <tr>
+                                                <th style={{width: "5%"}}>
+                                                    Codigo
+                                                </th>
+                                                <th style={{width: "15%"}}>
+                                                    Nombre
+                                                </th>
+                                                <th style={{width: "20%"}}>
+                                                    Descripcion
+                                                </th>
+                                                <th style={{width: "0%"}}>
+                                                    Stock
+                                                </th>
+                                                <th style={{width: "10%"}}>
+                                                    Precio Costo
+                                                </th>
+                                                <th style={{width: "10%"}}>
+                                                    Precio Venta
+                                                </th>
+                                                <th style={{width: "10%"}}>
+                                                    Categoria
+                                                </th>
+                                                <th style={{width: "5%"}}>
+                                                    Almacén
+                                                </th>
+                                                <th style={{width: "10%"}}>
+                                                    F. Creación
+                                                </th>
+                                                <th style={{width: "10%"}}>
+                                                    F. Modificación
+                                                </th>
+                                                <th>
 
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {productos}
-                                            </tbody>
-                                        </rs.Table>
-                                    </rs.FormGroup>
-                                </rs.Form>
-                            }
-                        </rs.CardBody>
-                    </rs.Card>
-                </rs.Col>
-                {action === "detalle" ? <DetalleProducto dataProducto={currentProduct} actualizaResultados={actualizarTabla}/> : 
-                    action === "registrar" ? <RegistroProducto actualizaResultados={actualizarTabla}/> :
-                        <rs.Col sm={3}>
-                            <rs.Card className='card'>
-                                <rs.CardHeader className="h4 filters">
-                                    <FontAwesomeIcon icon={icon.faFilter}/>
-                                    {' '}
-                                    Filtros
-                                </rs.CardHeader>
-                                <rs.CardBody>
-                                    <rs.Form>
-                                        <rs.FormGroup>
-                                            <rs.Col sm={12} className='search-input'>
-                                                <rs.InputGroup>
-                                                    <rs.Input
-                                                        id="searchCat"
-                                                        name="Search"
-                                                        placeholder="Buscar"
-                                                        type="search"
-                                                    />
-                                                    <rs.Button color="primary" value='Buscar'><FontAwesomeIcon icon={icon.faSearch}/></rs.Button>
-                                                </rs.InputGroup>
-                                            </rs.Col>
-                                        </rs.FormGroup>
-                                        <rs.FormGroup>
-                                            <rs.Label>
-                                                <FontAwesomeIcon icon={icon.faCalendar}/> Rango de Fechas
-                                            </rs.Label>
-                                            <rs.Col sm={6}>
-                                                <rs.Input
-                                                    name="rbtnDateType"
-                                                    type="radio"
-                                                />
-                                                {' '}
-                                                F. Creacion
-                                            </rs.Col>
-                                            <rs.Col sm={6}>
-                                                <rs.Input
-                                                    name="rbtnDateType"
-                                                    type="radio"
-                                                />
-                                                {' '}
-                                                F. Modificacion
-                                            </rs.Col>
-                                        </rs.FormGroup>
-                                        <rs.FormGroup>
-                                            <rs.Col sm={12}>
-                                                <rs.Label for="productFromDate">
-                                                    Desde
-                                                </rs.Label>
-                                                <rs.Input
-                                                    id="productFromDate"
-                                                    name="date"
-                                                    placeholder="date placeholder"
-                                                    type="date"
-                                                />
-                                            </rs.Col>
-                                            <br/>
-                                            <rs.Col sm={12}>
-                                                <rs.Label for="productToDate">
-                                                    Hasta
-                                                </rs.Label>
-                                                <rs.Input
-                                                    id="productToDate"
-                                                    name="date"
-                                                    placeholder="date placeholder"
-                                                    type="date"
-                                                />
-                                            </rs.Col>
-                                        </rs.FormGroup>
-                                        <hr/>
-                                        <rs.FormGroup className='actions'>
-                                            <div className='left'>
-                                                <rs.Button color="success">
-                                                    <FontAwesomeIcon icon={icon.faCheck}/>{' '}Aplicar
-                                                </rs.Button>
-                                            </div>
-                                        </rs.FormGroup>
-                                    </rs.Form>
-                                </rs.CardBody>
-                            </rs.Card>
-                        </rs.Col>
-                }
-            </rs.Row>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {productos}
+                                        </tbody>
+                                    </rs.Table>
+                                </rs.FormGroup>
+                            </rs.Form>
+                        }
+                    </rs.CardBody>
+                </rs.Card>
+            }
         </div>
     )
 }
