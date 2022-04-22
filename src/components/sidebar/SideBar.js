@@ -4,7 +4,6 @@ import {SideBarData, SideBarDataAdmin} from './SideBarData';
 import * as rs from "reactstrap";
 import classNames from "classnames";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import * as icon from '@fortawesome/free-solid-svg-icons';
 
 const user = localStorage.getItem("name");
 
@@ -19,12 +18,11 @@ const SideBar = ({isOpen, toggle}) => (
     <hr/>
     <div className="side-menu">
       <rs.Nav vertical className="nav-li list-unstyled pb-3">
-        
         <h6>General</h6>
           {SideBarData.map((item,index) => {
               return (
                 <rs.NavItem key={item.title}>
-                  <rs.NavLink className='li-a li-a-links_name' tag={Link} to={item.path}>
+                  <rs.NavLink className='li-a li-a-links_name' tag={Link} to={item.path} disabled={item.disabled}>
                     <FontAwesomeIcon icon={item.icon} className="mr-2 li-icon"/>
                     {' '}
                     {item.title}

@@ -10,15 +10,11 @@ import Alerta from "../utils/alerta";
 import Loader from "../utils/loader";
 import { properties } from '../properties/bms-dev';
 
-function Registro_Entrada(props){
-
+function Detalle_Entrada(props){
     const [dataProducts, setDataProducts] = useState([]);
     const [products, setProducts] = useState([]);
-    const [dataProviders, setDataProviders] = useState([]);
-    const [providers, setProviders] = useState([]);
 
     const [codeEntry, setCodeEntry] = useState("");
-    const [providerID, setProviderID] = useState("");
     const [provider, setProvider] = useState("");
 
     const [codeProduct, setCodeProduct] = useState("");
@@ -44,17 +40,7 @@ function Registro_Entrada(props){
     const [modalFooter, setModalFooter] = useState("");
     const [modalConfirmation, setModalConfirmation] = useState(false);
     
-    var date = new Date().toLocaleDateString('es-PE')
     const user = localStorage.getItem("name");
-
-    function deleteEntryFromTable(key){
-        setEntriesTable(entriesTable.filter(item => item.key !== key));
-        entriesData.filter(item=> item.code !== key);
-    }
-
-    function checkDuplicity(){
-        if (entriesTable.some(e => e[0].key === codeProduct))return true;
-    }
 
     function saveProductData (e) {
         if (e.target.value !== "-"){
@@ -74,30 +60,52 @@ function Registro_Entrada(props){
         }
     }
 
-    function saveProviderData (e) {
-        if (e.target.value !== "-"){
-            dataProviders.forEach(c=>{
-                if (c.identifyID === e.target.value){
-                    setProviderID(c.identifyID)
-                    setProvider(c.fullName)
+    useEffect(() => {
+        product_services.getProducts().then((response) => {
+            if (response){
+                if (response.status === 200){
+                    var filas = [];
+                    response.data.data.forEach( c => {
+                        filas.push(
+                            <option key={c.code} value={c.code}>{c.code}</option>
+                        )
+                    })
+                    setDataProducts(response.data.data);
+                    setProducts(filas);
                 }
-            })
-        } else {
-            setProviderID("")
-            setProvider("")
-        }
+            }
+        })
+    }, [])
+
+    useEffect(()=> {
+        var filas = [];
+        props.dataEntrada.entries.forEach( a => {
+            filas.push(
+                <tr key= {a.code}>
+                    <td><FontAwesomeIcon title="Eliminar" type="button" className= 'select-button'icon={icon.faTrash} onClick={() => deleteEntryFromTable(a.code)}/></td>
+                    <td>{a.code}</td>
+                    <td>{a.name}</td>
+                    <td>{a.priceCost}</td>
+                    <td>{a.quantity}</td>
+                    <td>{a.subTotal}</td>
+                </tr>
+            )
+            setEntriesTable(filas);
+        })
+    },[])
+
+
+    function deleteEntryFromTable(key){
+        setEntriesTable(entriesTable.filter(item => item.key !== key));
+        entriesData.filter(item=> item.code !== key);
     }
-    
+
+    function checkDuplicity(){
+        if (entriesTable.some(e => e.key === codeProduct))return true;
+    }
+
     const validate = () => {
         var error = "validado"
-        if (!codeEntry) {
-            error = properties['error.form.entry.code'];
-            return error;
-        }
-        if (!providerID) {
-            error = properties['error.form.entry.provider.id'];
-            return error;
-        }
         if (!codeProduct) {
             error = properties['error.form.entry.product.code'];
             return error;
@@ -154,7 +162,7 @@ function Registro_Entrada(props){
             "code": codeProduct,
             "name": nameProduct,
             "category":categoryProduct,
-            "warehouse":warehouse,
+            "almacen":warehouse,
             "priceCost": priceCost,
             "priceSale": priceSale,
             "quantity": quantity,
@@ -188,7 +196,7 @@ function Registro_Entrada(props){
         if (entriesTable.length === 0 ){
             ocultarModal();
             setColor("danger");
-            setMsjAlert("La tabla de entradas estÃ¡ vacÃ­a.");
+            setMsjAlert("La tabla de entradas está vacía.");
             setMostrarAlert(true);
             return;
         }
@@ -201,78 +209,8 @@ function Registro_Entrada(props){
     }
 
     useEffect(() => {
-        provider_services.getProviders().then((response) => {
-            if (response){
-                if (response.status === 200){
-                    var filas = [];
-                    response.data.data.forEach( c => {
-                        filas.push(
-                            <option key={c.indetifiyID} value={c.identifyID}>{c.identifyID}</option>
-                        )
-                    })
-                    setDataProviders(response.data.data);
-                    setProviders(filas);
-                }
-            }
-        })
-    }, [])
-
-    useEffect(() => {
-        product_services.getProducts().then((response) => {
-            if (response){
-                if (response.status === 200){
-                    var filas = [];
-                    response.data.data.forEach( c => {
-                        filas.push(
-                            <option key={c.code} value={c.code}>{c.code}</option>
-                        )
-                    })
-                    setDataProducts(response.data.data);
-                    setProducts(filas);
-                }
-            }
-        })
-    }, [])
-
-    useEffect(() => {
         if (modalConfirmation === true && action === "guardar") {
 
-            var subTotals = []
-            entriesData.forEach(c=>{ subTotals.push(c.subTotal)})
-            var total = subTotals.reduce((prevValue, curValue) => { return prevValue+curValue});
-
-            let dataEntry = {
-                "code": codeEntry,
-                "user": user,
-                "total": total,
-                "provider": provider,
-                "entries": entriesData,
-                "creationTime": date
-            }
-            
-            setShowLoader(true);
-            entry_Services.postEntries(dataEntry)
-                .then((response => {
-                    setShowLoader (false);
-                    if (response) {
-                        if (response.data.meta.status.code === "00") {
-                            setColor("success");
-                            props.actualizaResultados();
-                            setEntriesTable([]);
-                            setProvider("");
-                            setProviderID("");
-                            setCodeEntry("");
-                            clearCurrentEntry();
-                        }else{
-                            setColor("danger");
-                        }
-                        ocultarModal();
-                        setMsjAlert(response.data.meta.status.message_ilgn[0].value);
-                        setMostrarAlert(true);
-                    }
-                }))
-                setModalConfirmation("")
-                setAction("")
         }
     },[modalConfirmation, action])
 
@@ -281,7 +219,7 @@ function Registro_Entrada(props){
             <rs.CardHeader className="header">
                 <rs.Row>
                     <rs.Col sm={10}>
-                        <h3>&nbsp;Nueva Entrada</h3>
+                        <h3>&nbsp;Detalle Entrada</h3>
                     </rs.Col>
                     <rs.Col sm={2}>
                             <rs.Button 
@@ -305,7 +243,8 @@ function Registro_Entrada(props){
                                     <rs.Input
                                         name="txtName"
                                         type="text"
-                                        onChange={(e) => setCodeEntry(e.target.value)}
+                                        value={props.dataEntrada.code}
+                                        disabled
                                     />
                                 </rs.FormGroup>
                             </rs.Col>
@@ -317,7 +256,7 @@ function Registro_Entrada(props){
                                     <rs.Input
                                         name="txtCreationTime"
                                         type="text"
-                                        value={date}
+                                        value={props.dataEntrada.creationTime}
                                         disabled
                                     />
                                 </rs.FormGroup>
@@ -338,30 +277,13 @@ function Registro_Entrada(props){
                             <rs.Col sm={4}>
                                 <rs.FormGroup>
                                     <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faTruckMoving}/> Doc. Proveedor
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="selectProvider"
-                                        id="selectProvider"
-                                        type="select"
-                                        value={providerID}
-                                        onChange={(e) => saveProviderData(e)}
-                                    >
-                                        <option key = "-" value = "-">[Seleccione]</option>
-                                        {providers}
-                                    </rs.Input>
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={4}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faAlignJustify}/> Nombre Proveedor
+                                        <FontAwesomeIcon icon={icon.faAlignJustify}/> Proveedor
                                     </rs.Label>
                                     <rs.Input
                                         name="txtProvider"
                                         id="txtProvider"
                                         type="text"
-                                        value={provider}
+                                        value={props.dataEntrada.provider}
                                         disabled
                                     />
                                 </rs.FormGroup>
@@ -397,7 +319,7 @@ function Registro_Entrada(props){
                                     />
                                 </rs.FormGroup>
                             </rs.Col>
-                            <rs.Col sm={3}>
+                            <rs.Col sm={4}>
                                 <rs.FormGroup>
                                     <rs.Label>
                                         <FontAwesomeIcon icon={icon.faMoneyBill}/> Precio Compra
@@ -411,7 +333,7 @@ function Registro_Entrada(props){
                                     />
                                 </rs.FormGroup>
                             </rs.Col>
-                            <rs.Col sm={3}>
+                            <rs.Col sm={4}>
                                 <rs.FormGroup>
                                     <rs.Label>
                                         <FontAwesomeIcon icon={icon.faMoneyBill}/> Precio Venta
@@ -425,7 +347,7 @@ function Registro_Entrada(props){
                                     />
                                 </rs.FormGroup>
                             </rs.Col>
-                            <rs.Col sm={2}>
+                            <rs.Col sm={4}>
                                 <rs.FormGroup>
                                     <rs.Label>
                                         <FontAwesomeIcon icon={icon.faSortNumericAsc}/> Cantidad
@@ -456,7 +378,7 @@ function Registro_Entrada(props){
                                             Codigo
                                         </th>
                                         <th style={{width: "30%"}}>
-                                            Descripcion
+                                            Nombre
                                         </th>
                                         <th style={{width: "20%"}}>
                                             Precio de Compra
@@ -477,7 +399,7 @@ function Registro_Entrada(props){
                         <hr/>
                         <rs.FormGroup className='actions'>
                             <rs.Button className='right' color='success'onClick={() =>
-                                buildingModal("ConfirmaciÃ³n",`Â¿EstÃ¡ seguro de guardar la nueva entrada?`,
+                                buildingModal("Confirmación",`¿Está seguro de guardar la nueva entrada?`,
                                     <>
                                         <rs.Button color="primary"
                                             onClick={()=> setModalConfirmation(true)}
@@ -504,4 +426,4 @@ function Registro_Entrada(props){
     )
 }
 
-export default Registro_Entrada;
+export default Detalle_Entrada;

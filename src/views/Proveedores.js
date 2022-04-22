@@ -183,6 +183,11 @@ function Proveedores () {
                                             {proveedores}
                                         </tbody>
                                     </rs.Table>
+                                    {proveedores.length === 0 ?
+                                        <h5 className="noData">
+                                            No data.
+                                        </h5>
+                                    :<hr/>}
                                 </rs.FormGroup>
                             </rs.Form>
                         }

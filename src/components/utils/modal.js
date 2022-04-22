@@ -6,7 +6,7 @@ class CustomModal extends Component {
     cerrarModal = () => {
         this.props.ocultar();
     }
-
+    
     render() {
         return (
             <div>

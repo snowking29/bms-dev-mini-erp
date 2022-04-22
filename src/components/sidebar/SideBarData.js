@@ -2,45 +2,53 @@ import * as icon from '@fortawesome/free-solid-svg-icons';
 
 export const SideBarData = [
   {
-    title: 'Principal',
-    path: '/principal',
-    icon: icon.faHome
+    title: 'Dashboard',
+    path: '/dashboard',
+    icon: icon.faDashboard,
+    disabled: "true"
   },
   {
     title: 'Salidas',
     path: '/salidas',
-    icon: icon.faTruckRampBox
+    icon: icon.faTruckRampBox,
+    disabled: "true"
   },
   {
     title: 'Entradas',
     path: '/entradas',
-    icon: icon.faBoxOpen
+    icon: icon.faBoxOpen,
+    disabled: ""
   },
   {
     title: 'Clientes',
     path: '/clientes',
-    icon: icon.faUsers
+    icon: icon.faUsers,
+    disabled: ""
   },
   {
     title: 'Proveedores',
     path: '/proveedores',
-    icon: icon.faTruckMoving
+    icon: icon.faTruckMoving,
+    disabled: ""
   },
   {
     title: 'Productos',
     path: '/productos',
-    icon: icon.faBoxesPacking
+    icon: icon.faBoxesPacking,
+    disabled: ""
   },
   {
     title: 'Categorias',
     path: '/categorias',
-    icon: icon.faTags
+    icon: icon.faTags,
+    disabled: ""
   },
   
   {
     title: 'Inventario',
     path: '/inventario',
-    icon: icon.faBoxes
+    icon: icon.faBoxes,
+    disabled: "true"
   }
 ];
 

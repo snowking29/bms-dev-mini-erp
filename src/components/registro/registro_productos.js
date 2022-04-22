@@ -7,6 +7,7 @@ import * as category_service from '../../api/services/category-services';
 import CustomModal from "../utils/modal";
 import Alerta from "../utils/alerta";
 import Loader from "../utils/loader";
+import { properties } from '../properties/bms-dev';
 
 function Registro_Producto(props){
 
@@ -31,41 +32,6 @@ function Registro_Producto(props){
     
     var date = new Date().toLocaleDateString('es-PE')
 
-    function saveProduct() {
-
-        let dataProduct = {
-            "code": code,
-            "name": name,
-            "category": category,
-            "description": description,
-            "stock": 0,
-            "priceCost": 0,
-            "priceSale": 0,
-            "warehouse": warehouse,
-            "creationTime": date,
-            "modifiedTime": "-"
-        }
-        setShowLoader(true);
-        product_service.postProducts(dataProduct)
-            .then((response => {
-                setShowLoader (false);
-                if (response) {
-                    if (response.data.meta.status.code === "00") {
-                        setColor("success");
-                        let dataCategory = {
-                            "products":[response.data.key]
-                        }
-                        category_service.putCategories(keyCategory,dataCategory)
-                        props.actualizaResultados();
-                    }else{
-                        setColor("danger");
-                    }
-                    setMsjAlert(response.data.meta.status.message_ilgn[0].value);
-                    setMostrarAlert(true);
-                }
-            }))
-    }
-
     function ocultarAlerta(){
         setMostrarAlert(false);
     }
@@ -82,7 +48,7 @@ function Registro_Producto(props){
     useEffect(() => {
         category_service.getCategories().then((response) => {
             if (response){
-                if (response.status == 200){
+                if (response.status === 200){
                     var filas = [];
                     response.data.data.forEach( c => {
                         filas.push(
@@ -99,8 +65,35 @@ function Registro_Producto(props){
         setMostrarModal(false);
     }
 
-    function buildingModal(title,body,footer,action){
-        setAction(action)
+    const validate = () => {
+        var error = "validado"
+        if (!code) {
+            error = properties['error.form.product.id']
+            return error;
+        }
+        if (!name) {
+            error = properties['error.form.product.name'];
+            return error;
+        }
+        if (!category) {
+            error = properties['error.form.product.category'];
+            return error;
+        }
+        return error;
+    };
+
+
+    function buildingModal(title,body,footer,event){
+        let result = validate();
+
+        if (result !== "validado") {
+            setColor("danger");
+            setMsjAlert(result);
+            setMostrarAlert(true);
+            return;
+        }
+        
+        setAction(event)
         setModalTitle(title)
         setModalBody(body)
         setMostrarModal(true)
@@ -109,9 +102,42 @@ function Registro_Producto(props){
     
     useEffect(() => {
         if (modalConfirmation === true && action === "guardar") {
-            saveProduct()
+            let dataProduct = {
+                "code": code,
+                "name": name,
+                "category": category,
+                "description": description,
+                "stock": 0,
+                "priceCost": 0,
+                "priceSale": 0,
+                "warehouse": warehouse,
+                "creationTime": date,
+                "modifiedTime": "-"
+            }
+            setShowLoader(true);
+            product_service.postProducts(dataProduct)
+                .then((response => {
+                    setShowLoader (false);
+                    if (response) {
+                        if (response.data.meta.status.code === "00") {
+                            setColor("success");
+                            let dataCategory = {
+                                "products":[response.data.key]
+                            }
+                            category_service.putCategories(keyCategory,dataCategory)
+                            props.actualizaResultados();
+                        }else{
+                            setColor("danger");
+                        }
+                        ocultarModal();
+                        setMsjAlert(response.data.meta.status.message_ilgn[0].value);
+                        setMostrarAlert(true);
+                    }
+                }))
+            setModalConfirmation("")
+            setAction("")
         }
-    },[modalConfirmation])
+    },[modalConfirmation, action])
 
     return (
         <rs.Card className='card'>
@@ -218,7 +244,7 @@ function Registro_Producto(props){
                             </rs.Col>
                             <rs.FormGroup className='actions'>
                                 <rs.Button className='right' color='success'onClick={() =>
-                                    buildingModal("Confirmación",`¿Desea grabar el nuevo item?`,
+                                    buildingModal("Confirmación",`¿¿Está seguro de guardar el nuevo producto?`,
                                         <>
                                             <rs.Button color="primary"
                                                 onClick={()=> setModalConfirmation(true)}
@@ -233,7 +259,7 @@ function Registro_Producto(props){
                                         </>,
                                         "guardar"
                                     )}>
-                                    <FontAwesomeIcon icon={icon.faSave}/>{' '}Grabar
+                                    <FontAwesomeIcon icon={icon.faSave}/>{' '}Guardar
                                 </rs.Button>
                             </rs.FormGroup>
                         </rs.Row>

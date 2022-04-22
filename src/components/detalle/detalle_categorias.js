@@ -28,37 +28,6 @@ function Detalle_Categoria(props){
     var date = new Date().toLocaleDateString('es-PE')
     var key = props.dataCategoria.key;
 
-    function saveCategory() {
-
-        var temporaryDataCategory = {
-            "code": code,
-            "name": name,
-            "description": description,          
-            "modifiedTime": date
-        }
-
-        var dataCategory = removeEmptyData(temporaryDataCategory)
-
-        setShowLoader(true);
-        category_services.putCategories(key, dataCategory)
-            .then(
-                (response => {
-                    setShowLoader (false);
-                    if (response) {
-                        if (response.data.meta.status.code === "00") {
-                            clearFields();
-                            setColor("success");
-                            props.actualizaResultados();
-                        }else{
-                            setColor("danger");
-                        }
-                        setMsjAlert(response.data.meta.status.message_ilgn[0].value);
-                        setMostrarAlert(true);
-                    }
-                })
-            )
-    }
-
     function clearFields(){
         setCode("")
         setName("")
@@ -69,28 +38,12 @@ function Detalle_Categoria(props){
         setMostrarAlert(false);
     }
 
-    function deleteCategory (){
-        setShowLoader(true);
-        category_services.deleteCategories(key).then((response) => {
-            if (response) {
-                setShowLoader (false);
-                if ( response.data.meta.status.code === "00" ) {
-                    props.actualizaResultados();
-                    props.selectAction("listar")
-                }else{
-                    setColor("danger");
-                    setMsjAlert(response.data.meta.status.message_ilgn[0].value);
-                }
-            }
-        })
-    }
-
     function ocultarModal(){
         setMostrarModal(false);
     }
 
-    function buildingModal(title,body,footer,action){
-        setAction(action)
+    function buildingModal(title,body,footer,event){
+        setAction(event)
         setModalTitle(title)
         setModalBody(body)
         setMostrarModal(true)
@@ -98,12 +51,60 @@ function Detalle_Categoria(props){
     }
     
     useEffect(() => {
+
         if (modalConfirmation === true && action === "guardar") {
-            saveCategory()
+
+            var temporaryDataCategory = {
+                "code": code,
+                "name": name,
+                "description": description,          
+                "modifiedTime": date
+            }
+    
+            var dataCategory = removeEmptyData(temporaryDataCategory)
+    
+            setShowLoader(true);
+            category_services.putCategories(key, dataCategory)
+                .then(
+                    (response => {
+                        setShowLoader (false);
+                        if (response) {
+                            if (response.data.meta.status.code === "00") {
+                                clearFields();
+                                setColor("success");
+                                props.actualizaResultados();
+                            }else{
+                                setColor("danger");
+                            }
+                            ocultarModal();
+                            setMsjAlert(response.data.meta.status.message_ilgn[0].value);
+                            setMostrarAlert(true);
+                        }
+                    })
+                )
+            setModalConfirmation("")
+            setAction("")
         } else if (modalConfirmation === true && action === "eliminar") {
-            deleteCategory()
+
+            setShowLoader(true);
+            category_services.deleteCategories(key).then((response) => {
+                if (response) {
+                    setShowLoader (false);
+                    if ( response.data.meta.status.code === "00" ) {
+                        ocultarModal();
+                        props.actualizaResultados();
+                        props.selectAction("listar")
+                    }else{
+                        ocultarModal();
+                        setColor("danger");
+                        setMsjAlert(response.data.meta.status.message_ilgn[0].value);
+                    }
+                }
+            })
+            setModalConfirmation("")
+            setAction("")
         }
-    },[modalConfirmation])
+    },[modalConfirmation, action])
 
     return (
         <rs.Card className='card'>

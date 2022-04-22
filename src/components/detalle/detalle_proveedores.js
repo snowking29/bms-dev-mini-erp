@@ -31,41 +31,6 @@ function Detalle_Proveedor(props){
     var key = props.dataProveedor.key;
     var date = new Date().toLocaleDateString('es-PE')
 
-    function saveProvider() {
-        
-        var temporaryDataProvider = {
-            
-            "name": name,
-            "address": address,
-            "city": city,
-            "details": details,
-            "email": email,
-            "phone": phone,            
-            "modifiedTime": date
-        }
-
-        var dataProvider = removeEmptyData(temporaryDataProvider)
-
-        setShowLoader(true);
-        provider_services.putProviders(key, dataProvider)
-            .then(
-                (response => {
-                    setShowLoader (false);
-                    if (response) {
-                        if (response.data.meta.status.code === "00") {
-                            clearFields();
-                            setColor("success");
-                            props.actualizaResultados();
-                        }else{
-                            setColor("danger");
-                        }
-                        setMsjAlert(response.data.meta.status.message_ilgn[0].value);
-                        setMostrarAlert(true);
-                    }
-                })
-            )
-    }
-
     function clearFields(){
         setName("")
         setAddress("")
@@ -83,8 +48,8 @@ function Detalle_Proveedor(props){
         setMostrarModal(false);
     }
 
-    function buildingModal(title,body,footer,action){
-        setAction(action)
+    function buildingModal(title,body,footer,event){
+        setAction(event)
         setModalTitle(title)
         setModalBody(body)
         setMostrarModal(true)
@@ -93,27 +58,57 @@ function Detalle_Proveedor(props){
 
     useEffect(() => {
         if (modalConfirmation === true && action === "guardar") {
-            saveProvider()
-        } else if (modalConfirmation === true && action === "eliminar") {
-            deleteProvider()
-        }
-    },[modalConfirmation])
-
-    function deleteProvider (){
-        setShowLoader(true);
-        provider_services.deleteProvider(key).then((response) => {
-            if (response) {
-                setShowLoader (false);
-                if ( response.data.meta.status.code === "00" ) {
-                    props.actualizaResultados();
-                    props.selectAction("listar")
-                }else{
-                    setColor("danger");
-                    setMsjAlert(response.data.meta.status.message_ilgn[0].value);
-                }
+            var temporaryDataProvider = {
+            
+                "name": name,
+                "address": address,
+                "city": city,
+                "details": details,
+                "email": email,
+                "phone": phone,            
+                "modifiedTime": date
             }
-        })
-    }
+    
+            var dataProvider = removeEmptyData(temporaryDataProvider)
+    
+            setShowLoader(true);
+            provider_services.putProviders(key, dataProvider)
+                .then(
+                    (response => {
+                        setShowLoader (false);
+                        if (response) {
+                            if (response.data.meta.status.code === "00") {
+                                clearFields();
+                                setColor("success");
+                                props.actualizaResultados();
+                            }else{
+                                setColor("danger");
+                            }
+                            setMsjAlert(response.data.meta.status.message_ilgn[0].value);
+                            setMostrarAlert(true);
+                        }
+                    })
+                )
+            setModalConfirmation("")
+            setAction("")
+        } else if (modalConfirmation === true && action === "eliminar") {
+            setShowLoader(true);
+            provider_services.deleteProvider(key).then((response) => {
+                if (response) {
+                    setShowLoader (false);
+                    if ( response.data.meta.status.code === "00" ) {
+                        props.actualizaResultados();
+                        props.selectAction("listar")
+                    }else{
+                        setColor("danger");
+                        setMsjAlert(response.data.meta.status.message_ilgn[0].value);
+                    }
+                }
+            })
+            setModalConfirmation("")
+            setAction("")
+        }
+    },[modalConfirmation, action])
 
     return (
         <rs.Card className='card'>

@@ -144,7 +144,6 @@ function Productos () {
                                 </rs.InputGroup>
                             </rs.Col>
                         </rs.Row>
-                        <hr/>
                         {showLoader ? <Loader /> :
                             <rs.Form>
                                 <rs.FormGroup>
@@ -154,20 +153,20 @@ function Productos () {
                                                 <th style={{width: "5%"}}>
                                                     Codigo
                                                 </th>
-                                                <th style={{width: "15%"}}>
+                                                <th style={{width: "20%"}}>
                                                     Nombre
                                                 </th>
                                                 <th style={{width: "20%"}}>
                                                     Descripcion
                                                 </th>
-                                                <th style={{width: "0%"}}>
+                                                <th style={{width: "5%"}}>
                                                     Stock
                                                 </th>
-                                                <th style={{width: "10%"}}>
-                                                    Precio Costo
+                                                <th style={{width: "5%"}}>
+                                                    P. Costo
                                                 </th>
-                                                <th style={{width: "10%"}}>
-                                                    Precio Venta
+                                                <th style={{width: "5%"}}>
+                                                    P. Venta
                                                 </th>
                                                 <th style={{width: "10%"}}>
                                                     Categoria
@@ -175,10 +174,10 @@ function Productos () {
                                                 <th style={{width: "5%"}}>
                                                     Almacén
                                                 </th>
-                                                <th style={{width: "10%"}}>
+                                                <th style={{width: "15%"}}>
                                                     F. Creación
                                                 </th>
-                                                <th style={{width: "10%"}}>
+                                                <th style={{width: "15%"}}>
                                                     F. Modificación
                                                 </th>
                                                 <th>
@@ -190,6 +189,11 @@ function Productos () {
                                             {productos}
                                         </tbody>
                                     </rs.Table>
+                                    {productos.length === 0 ?
+                                        <h5 className="noData">
+                                            No data.
+                                        </h5>
+                                    :<hr/>}
                                 </rs.FormGroup>
                             </rs.Form>
                         }

@@ -155,7 +155,6 @@ li a.dropdown-toggle::after {
 
 .sidebar .li-a-links_name{
   color: #fff;
-  font-size: 15px;
   font-weight: 400;
   white-space: nowrap;
   opacity: 1;
@@ -275,7 +274,15 @@ li a.dropdown-toggle::after {
 .actions .right{
   float:right;
 }
+
+.noData{
+  align-items: center;
+  padding: 5px;
+}
 @media only screen and (max-width: 760px),(min-device-width: 768px) and (max-device-width: 1024px) {
+  .content.is-open{
+    position: fixed;  
+  }
 
   .sidebar.is-open {
     min-width: 100%;
@@ -291,11 +298,11 @@ li a.dropdown-toggle::after {
   li a.dropdown-toggle::after {
     display: inline-block;
     position: relative;
-    left: 68%;
+    left: 70%;
   }
 
   .sidebar .li-a-links_name{
-    font-size: 20px;
+    font-size: 25px;
   }
   
   .content.is-open {

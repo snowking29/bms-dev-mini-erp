@@ -6,6 +6,7 @@ import * as customer_services from '../../api/services/customer-services';
 import CustomModal from "../utils/modal";
 import Alerta from "../utils/alerta";
 import Loader from "../utils/loader";
+import { properties } from '../properties/bms-dev';
 
 function Registro_Clientes(props){
 
@@ -30,36 +31,6 @@ function Registro_Clientes(props){
 
     var date = new Date().toLocaleDateString('es-PE')
     
-    function saveCustomer() {
-
-        let dataCustomer = {
-            "fullName": fullName,
-            "address": address,
-            "city": city,
-            "phone": phone,
-            "email": email,
-            "identifyID": identifyID,
-            "details": details,
-            "creationTime": date,
-            "modifiedTime": ""
-        }
-        setShowLoader(true);
-        customer_services.postCustomer(dataCustomer)
-            .then((response => {
-                setShowLoader (false);
-                if (response) {
-                    if (response.data.meta.status.code === "00") {
-                        setColor("success");
-                        props.actualizaResultados();
-                    }else{
-                        setColor("danger");
-                    }
-                    setMsjAlert(response.data.meta.status.message_ilgn[0].value);
-                    setMostrarAlert(true);
-                }
-            }))
-    }
-
     function ocultarAlerta(){
         setMostrarAlert(false);
     }
@@ -68,26 +39,81 @@ function Registro_Clientes(props){
         setMostrarModal(false);
     }
 
-    function buildingModal(title,body,footer,action){
-        setAction(action)
+    function buildingModal(title,body,footer,event){
+        let result = validate();
+
+        if (result !== "validado") {
+            setColor("danger");
+            setMsjAlert(result);
+            setMostrarAlert(true);
+            return;
+        }
+
+        setAction(event)
         setModalTitle(title)
         setModalBody(body)
         setMostrarModal(true)
         setModalFooter(footer)
     }
+
+    const validate = () => {
+        var error = "validado"
+        if (!identifyID) {
+            error = properties['error.form.customer.identifyID'];
+            return error;
+        }
+        if (!fullName) {
+            error = properties['error.form.customer.fullName'];
+            return error;
+        }
+        if (!phone) {
+            error = properties['error.form.customer.phone'];
+            return error;
+        }
+        return error;
+    };
     
     useEffect(() => {
         if (modalConfirmation === true && action === "guardar") {
-            saveCustomer()
+            
+            let dataCustomer = {
+                "fullName": fullName,
+                "address": address,
+                "city": city,
+                "phone": phone,
+                "email": email,
+                "identifyID": identifyID,
+                "details": details,
+                "creationTime": date,
+                "modifiedTime": ""
+            }
+            setShowLoader(true);
+            customer_services.postCustomer(dataCustomer)
+                .then((response => {
+                    setShowLoader (false);
+                    if (response) {
+                        if (response.data.meta.status.code === "00") {
+                            setColor("success");
+                            props.actualizaResultados();
+                        }else{
+                            setColor("danger");
+                        }
+                        ocultarModal();
+                        setMsjAlert(response.data.meta.status.message_ilgn[0].value);
+                        setMostrarAlert(true);
+                    }
+            }))
+            setModalConfirmation("")
+            setAction("")
         }
-    },[modalConfirmation])
+    },[modalConfirmation, action])
 
     return (
         <rs.Card className='card'>
             <rs.CardHeader className='header'>
                 <rs.Row>
                     <rs.Col sm={10}>
-                        <h3><FontAwesomeIcon icon={icon.faUserPlus}/>Nuevo Cliente</h3>
+                        <h3><FontAwesomeIcon icon={icon.faUserPlus}/> Nuevo Cliente</h3>
                     </rs.Col>
                     <rs.Col sm={2}>
                             <rs.Button 
@@ -142,6 +168,18 @@ function Registro_Clientes(props){
                             <rs.Col sm={3}>
                                 <rs.FormGroup>
                                     <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faMailBulk}/> Email
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtEmail"
+                                        type="email"
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
                                         <FontAwesomeIcon icon={icon.faCity}/> Ciudad
                                     </rs.Label>
                                     <rs.Input
@@ -160,18 +198,6 @@ function Registro_Clientes(props){
                                         name="txtAddress"
                                         type="text"
                                         onChange={(e) => setAddress(e.target.value)}
-                                    />
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={3}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faMailBulk}/> Email
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtEmail"
-                                        type="email"
-                                        onChange={(e) => setEmail(e.target.value)}
                                     />
                                 </rs.FormGroup>
                             </rs.Col>
@@ -202,7 +228,7 @@ function Registro_Clientes(props){
                             </rs.Col>
                             <rs.FormGroup className='actions'>
                                 <rs.Button className='right' color='success'onClick={() =>
-                                    buildingModal("Confirmación",`¿Desea grabar el nuevo item?`,
+                                    buildingModal("Confirmación",`¿Está seguro de guardar el nuevo cliente?`,
                                         <>
                                             <rs.Button color="primary"
                                                 onClick={()=> setModalConfirmation(true)}
@@ -217,8 +243,11 @@ function Registro_Clientes(props){
                                         </>,
                                         "guardar"
                                     )}>
-                                    <FontAwesomeIcon icon={icon.faSave}/>{' '}Grabar
+                                    <FontAwesomeIcon icon={icon.faSave}/>{' '}Guardar
                                 </rs.Button>
+                            </rs.FormGroup>
+                            <rs.FormGroup>
+                                
                             </rs.FormGroup>
                         </rs.Row>
                     </rs.Form>

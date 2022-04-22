@@ -32,44 +32,6 @@ function Detalle_Producto(props){
     var key = props.dataProducto.key;
     var date = new Date().toLocaleDateString('es-PE')
 
-    function saveProduct() {
-        
-        var temporaryDataProduct = {
-            "code": code,
-            "name": name,
-            "description": description,
-            "category": category,
-            "modifiedTime": date
-        }
-        
-        var dataProduct = removeEmptyData(temporaryDataProduct)
-
-        setShowLoader(true);
-        product_service.putProducts(dataProduct)
-            .then((response => {
-                setShowLoader (false);
-                if (response) {
-                    if (response.data.meta.status.code === "00") {
-
-                        if (category !== "") {
-                            let dataCategory = {
-                                "products":key
-                            }
-                            category_service.putCategories(keyCategory,dataCategory)
-                        }
-                        setColor("success");
-                        clearFields();
-                        props.actualizaResultados();
-                        props.selectAction("listar")
-                    }else{
-                        setColor("danger");
-                    }
-                    setMsjAlert(response.data.meta.status.message_ilgn[0].value);
-                    setMostrarAlert(true);
-                }
-            }))
-    }
-
     function clearFields(){
         setCode("")
         setName("")
@@ -79,22 +41,6 @@ function Detalle_Producto(props){
 
     function ocultarAlerta(){
         setMostrarAlert(false);
-    }
-
-    function deleteProduct (){
-        setShowLoader(true);
-        product_service.deleteProduct(key).then((response) => {
-            if (response) {
-                setShowLoader (false);
-                if ( response.data.meta.status.code === "00" ) {
-                    props.actualizaResultados();
-                    props.selectAction("listar")
-                }else{
-                    setColor("danger");
-                    setMsjAlert(response.data.meta.status.message_ilgn[0].value);
-                }
-            }
-        })
     }
 
     function saveCategoryData (e) {
@@ -126,8 +72,8 @@ function Detalle_Producto(props){
         setMostrarModal(false);
     }
 
-    function buildingModal(title,body,footer,action){
-        setAction(action)
+    function buildingModal(title,body,footer,event){
+        setAction(event)
         setModalTitle(title)
         setModalBody(body)
         setMostrarModal(true)
@@ -136,11 +82,65 @@ function Detalle_Producto(props){
     
     useEffect(() => {
         if (modalConfirmation === true && action === "guardar") {
-            saveProduct()
+
+            var temporaryDataProduct = {
+                "code": code,
+                "name": name,
+                "description": description,
+                "category": category,
+                "modifiedTime": date
+            }
+            
+            var dataProduct = removeEmptyData(temporaryDataProduct)
+    
+            setShowLoader(true);
+            product_service.putProducts(key, dataProduct)
+                .then((response => {
+                    setShowLoader (false);
+                    if (response) {
+                        if (response.data.meta.status.code === "00") {
+    
+                            if (category !== "") {
+                                let dataCategory = {
+                                    "products":key
+                                }
+                                category_service.putCategories(keyCategory,dataCategory)
+                            }
+                            setColor("success");
+                            clearFields();
+                            props.actualizaResultados();
+                            props.selectAction("listar")
+                        }else{
+                            setColor("danger");
+                        }
+                        ocultarModal();
+                        setMsjAlert(response.data.meta.status.message_ilgn[0].value);
+                        setMostrarAlert(true);
+                    }
+                }))
+            setModalConfirmation("")
+            setAction("")
+
         } else if (modalConfirmation === true && action === "eliminar") {
-            deleteProduct()
+            setShowLoader(true);
+            product_service.deleteProduct(key).then((response) => {
+                if (response) {
+                    setShowLoader (false);
+                    if ( response.data.meta.status.code === "00" ) {
+                        ocultarModal();
+                        props.actualizaResultados();
+                        props.selectAction("listar")
+                    }else{
+                        ocultarModal();
+                        setColor("danger");
+                        setMsjAlert(response.data.meta.status.message_ilgn[0].value);
+                    }
+                }
+            })
+            setModalConfirmation("")
+            setAction("")
         }
-    },[modalConfirmation])
+    },[modalConfirmation, action])
     
     return (
         <rs.Card className='card'>

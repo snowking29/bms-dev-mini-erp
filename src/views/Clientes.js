@@ -148,7 +148,6 @@ function Clientes () {
                                 </rs.InputGroup>
                             </rs.Col>
                         </rs.Row>
-                        <hr/>
                         {showLoader ? <Loader /> :
                             <rs.Form>
                                 <rs.FormGroup>
@@ -187,6 +186,11 @@ function Clientes () {
                                             {clientes}
                                         </tbody>
                                     </rs.Table>
+                                    {clientes.length === 0 ?
+                                        <h5 className="noData">
+                                            No data.
+                                        </h5>
+                                    : <hr/>}
                                 </rs.FormGroup>
                             </rs.Form>
                         }

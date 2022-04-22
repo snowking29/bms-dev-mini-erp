@@ -4,7 +4,7 @@ import {Routes, Route} from 'react-router-dom';
 import PrivateRoute from '../utils/PrivateRoute';
 import { Container } from "reactstrap";
 import Login from '../../views/Login';
-import Home from '../../views/Home';
+import Dashboard from '../../views/Dashboard';
 import Productos from '../../views/Productos';
 import Categorias from '../../views/Categorias';
 import Clientes from '../../views/Clientes';
@@ -20,8 +20,8 @@ const Content = ({ sidebarIsOpen, toggleSidebar }) => (
         <TopBar toggleSidebar={toggleSidebar} />
         <Routes>
             <Route path ="/login" element={<Login />} exact/>
-            <Route element={<PrivateRoute component={Home} />}>
-                <Route path="/principal" element={<Home />}/>
+            <Route element={<PrivateRoute component={Dashboard} />}>
+                <Route path="/dashboard" element={<Dashboard />}/>
             </Route>
             <Route element={<PrivateRoute component={Productos} exact/>}>
                 <Route path="/productos" element={<Productos />}/>

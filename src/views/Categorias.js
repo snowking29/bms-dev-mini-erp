@@ -96,6 +96,51 @@ function Categorias () {
                         </rs.Row>
                     </rs.CardHeader>
                     <rs.CardBody className='body'>
+                    <rs.Row>
+                            <rs.Col sm={4}>
+                                <rs.FormGroup row>
+                                    <rs.Label for="categoryFromDate" sm={4}>
+                                        Fecha Inicio
+                                    </rs.Label>
+                                    <rs.Col sm={8}>
+                                        <rs.Input
+                                            id="categoryFromDate"
+                                            name="date"
+                                            placeholder="date placeholder"
+                                            type="date"
+                                        />
+                                    </rs.Col>
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={4}>
+                                <rs.FormGroup row>
+                                    <rs.Label for="categoryToDate" sm={4}>
+                                        Fecha Fin
+                                    </rs.Label>
+                                    <rs.Col sm={8}>
+                                        <rs.Input
+                                            id="categoryToDate"
+                                            name="date"
+                                            placeholder="date placeholder"
+                                            type="date"
+                                        />
+                                    </rs.Col>
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={4}>
+                                <rs.InputGroup>
+                                    <rs.Input
+                                        id="searchCategory"
+                                        name="Search"
+                                        placeholder="Buscar"
+                                        type="search"
+                                    />
+                                    <rs.InputGroupText>
+                                        <FontAwesomeIcon icon={icon.faSearch}/>
+                                    </rs.InputGroupText>
+                                </rs.InputGroup>
+                            </rs.Col>
+                        </rs.Row>
                         {showLoader ? <Loader /> :
                             <rs.Form>
                                 <rs.FormGroup>
@@ -130,6 +175,11 @@ function Categorias () {
                                                 {categorias}
                                             </tbody>
                                         </rs.Table>
+                                        {categorias.length === 0 ?
+                                            <h5 className="noData">
+                                                No data.
+                                            </h5>
+                                        : <hr/>}
                                     </rs.FormGroup>
                                 </rs.FormGroup>
                             </rs.Form>

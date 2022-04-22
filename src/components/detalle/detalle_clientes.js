@@ -32,42 +32,6 @@ function Detalle_Cliente(props){
     var key = props.dataCliente.key;
     var date = new Date().toLocaleDateString('es-PE')
 
-    function saveCustomer() {
-        
-        var temporaryDataCustomer = {
-            "identifyID": identifyID,
-            "fullName": fullName,
-            "address": address,
-            "city": city,
-            "details": details,
-            "email": email,
-            "phone": phone,            
-            "modifiedTime": date
-        }
-
-        var dataCustomer = removeEmptyData(temporaryDataCustomer)
-
-        setShowLoader(true);
-        customer_services.putCustomers(key, dataCustomer)
-            .then(
-                (response => {
-                    setShowLoader (false);
-                    if (response) {
-                        if (response.data.meta.status.code === "00") {
-                            setColor("success");
-                            clearFields();
-                            props.actualizaResultados();
-                            props.selectAction("listar")
-                        }else{
-                            setColor("danger");
-                        }
-                        setMsjAlert(response.data.meta.status.message_ilgn[0].value);
-                        setMostrarAlert(true);
-                    }
-                })
-            )
-    }
-
     function clearFields(){
         setFullName("")
         setAddress("")
@@ -81,28 +45,12 @@ function Detalle_Cliente(props){
         setMostrarAlert(false);
     }
 
-    function deleteCustomer (){
-        setShowLoader(true);
-        customer_services.deleteCustomer(key).then((response) => {
-            if (response) {
-                setShowLoader (false);
-                if ( response.data.meta.status.code === "00" ) {
-                    props.actualizaResultados();
-                    props.selectAction("listar")
-                }else{
-                    setColor("danger");
-                    setMsjAlert(response.data.meta.status.message_ilgn[0].value);
-                }
-            }
-        })
-    }
-
     function ocultarModal(){
         setMostrarModal(false);
     }
 
-    function buildingModal(title,body,footer,action){
-        setAction(action)
+    function buildingModal(title,body,footer,event){
+        setAction(event)
         setModalTitle(title)
         setModalBody(body)
         setMostrarModal(true)
@@ -111,11 +59,62 @@ function Detalle_Cliente(props){
     
     useEffect(() => {
         if (modalConfirmation === true && action === "guardar") {
-            saveCustomer()
+
+            var temporaryDataCustomer = {
+                "identifyID": identifyID,
+                "fullName": fullName,
+                "address": address,
+                "city": city,
+                "details": details,
+                "email": email,
+                "phone": phone,            
+                "modifiedTime": date
+            }
+    
+            var dataCustomer = removeEmptyData(temporaryDataCustomer)
+    
+            setShowLoader(true);
+            customer_services.putCustomers(key, dataCustomer)
+                .then(
+                    (response => {
+                        setShowLoader (false);
+                        if (response) {
+                            if (response.data.meta.status.code === "00") {
+                                setColor("success");
+                                clearFields();
+                                props.actualizaResultados();
+                                props.selectAction("listar")
+                            }else{
+                                setColor("danger");
+                            }
+                            ocultarModal();
+                            setMsjAlert(response.data.meta.status.message_ilgn[0].value);
+                            setMostrarAlert(true);
+                        }
+                    })
+                )
+            setModalConfirmation("")
+            setAction("")
         } else if (modalConfirmation === true && action === "eliminar") {
-            deleteCustomer()
+            setShowLoader(true);
+            customer_services.deleteCustomer(key).then((response) => {
+                if (response) {
+                    setShowLoader (false);
+                    if ( response.data.meta.status.code === "00" ) {
+                        ocultarModal();
+                        props.actualizaResultados();
+                        props.selectAction("listar")
+                    }else{
+                        ocultarModal();
+                        setColor("danger");
+                        setMsjAlert(response.data.meta.status.message_ilgn[0].value);
+                    }
+                }
+            })
+            setModalConfirmation("")
+            setAction("")
         }
-    },[modalConfirmation])
+    },[modalConfirmation, action])
 
     return (
         <rs.Card className='card'>
@@ -166,30 +165,6 @@ function Detalle_Cliente(props){
                             <rs.Col sm={3}>
                                 <rs.FormGroup>
                                     <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faAddressCard}/> Direccion
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtAddress"
-                                        type="text"
-                                        onChange={(e) => setAddress(e.target.value)}
-                                    />
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={3}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faCity}/> Ciudad
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtCity"
-                                        type="text"
-                                        onChange={(e) => setCity(e.target.value)}
-                                    />
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={3}>
-                                <rs.FormGroup>
-                                    <rs.Label>
                                         <FontAwesomeIcon icon={icon.faPhone}/> Telefono
                                     </rs.Label>
                                     <rs.Input
@@ -208,6 +183,30 @@ function Detalle_Cliente(props){
                                         name="txtEmail"
                                         type="email"
                                         onChange={(e) => setEmail(e.target.value)}
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faCity}/> Ciudad
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtCity"
+                                        type="text"
+                                        onChange={(e) => setCity(e.target.value)}
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faAddressCard}/> Direccion
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtAddress"
+                                        type="text"
+                                        onChange={(e) => setAddress(e.target.value)}
                                     />
                                 </rs.FormGroup>
                             </rs.Col>

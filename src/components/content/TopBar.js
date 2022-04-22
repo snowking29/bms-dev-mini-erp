@@ -27,9 +27,9 @@ const Topbar = ({ toggleSidebar }) => {
                 {SideBarData.map((item,index) => {
                     if (item.path === pathname){
                         return (
-                            <rs.NavItem>
+                            <rs.NavItem key={item.title}>
                                 <rs.NavLink tag={Link} to={item.path}>
-                                    Administrar {item.title}
+                                    {item.title}
                                 </rs.NavLink>
                             </rs.NavItem>
                         )

@@ -6,6 +6,7 @@ import * as category_service from '../../api/services/category-services';
 import CustomModal from "../utils/modal";
 import Alerta from "../utils/alerta";
 import Loader from "../utils/loader";
+import { properties } from '../properties/bms-dev';
 
 function Registro_Categoria(props){
 
@@ -25,34 +26,6 @@ function Registro_Categoria(props){
     const [modalConfirmation, setModalConfirmation] = useState(false);
 
     var date = new Date().toLocaleDateString('es-PE')
-    
-    function saveCategory() {
-        
-        let dataCategory = {
-            "code": code,
-            "name": name,
-            "description": description,
-            "products":[],
-            "creationTime": date,
-            "modifiedTime": ""
-        }
-        setShowLoader(true);
-        category_service.postCategories(dataCategory)
-            .then((response => {
-                setShowLoader (false);
-                if (response) {
-                    if (response.data.meta.status.code === "00") {
-                        setColor("success");
-                        props.actualizaResultados();
-                    }else{
-                        setColor("danger");
-                    }
-                    setMsjAlert(response.data.meta.status.message_ilgn[0].value);
-                    setMostrarAlert(true);
-                }
-            }))
-
-    }
 
     function ocultarAlerta(){
         setMostrarAlert(false);
@@ -62,19 +35,58 @@ function Registro_Categoria(props){
         setMostrarModal(false);
     }
 
-    function buildingModal(title,body,footer,action){
-        setAction(action)
+    function buildingModal(title,body,footer,event){
+        setAction(event)
         setModalTitle(title)
         setModalBody(body)
         setMostrarModal(true)
         setModalFooter(footer)
     }
+
+    const validate = () => {
+        var error = "validado"
+        if (!code) {
+            error = properties['error.form.provider.id'];
+            return error;
+        }
+        if (!name) {
+            error = properties['error.form.provider.fullName'];
+            return error;
+        }
+        return error;
+    };
     
     useEffect(() => {
         if (modalConfirmation === true && action === "guardar") {
-            saveCategory()
+            
+            let dataCategory = {
+                "code": code,
+                "name": name,
+                "description": description,
+                "products":[],
+                "creationTime": date,
+                "modifiedTime": ""
+            }
+            setShowLoader(true);
+            category_service.postCategories(dataCategory)
+                .then((response => {
+                    setShowLoader (false);
+                    if (response) {
+                        if (response.data.meta.status.code === "00") {
+                            setColor("success");
+                            props.actualizaResultados();
+                        }else{
+                            setColor("danger");
+                        }
+                        ocultarModal();
+                        setMsjAlert(response.data.meta.status.message_ilgn[0].value);
+                        setMostrarAlert(true);
+                    }
+                }))
+            setModalConfirmation("")
+            setAction("")
         }
-    },[modalConfirmation])
+    },[modalConfirmation, action])
 
     return (
         <rs.Card className='card'>
@@ -152,7 +164,7 @@ function Registro_Categoria(props){
                             </rs.Col>
                             <rs.FormGroup className='actions'>
                                 <rs.Button className='right' color='success'onClick={() =>
-                                    buildingModal("Confirmación",`¿Desea grabar el nuevo item?`,
+                                    buildingModal("Confirmación",`¿Está seguro de guardar la nueva categoría?`,
                                         <>
                                             <rs.Button color="primary"
                                                 onClick={()=> setModalConfirmation(true)}
@@ -167,7 +179,7 @@ function Registro_Categoria(props){
                                         </>,
                                         "guardar"
                                     )}>
-                                    <FontAwesomeIcon icon={icon.faSave}/>{' '}Grabar
+                                    <FontAwesomeIcon icon={icon.faSave}/>{' '}Guardar
                                 </rs.Button>
                             </rs.FormGroup>
                         </rs.Row>

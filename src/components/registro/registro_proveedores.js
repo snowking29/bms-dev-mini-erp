@@ -6,6 +6,7 @@ import * as provider_services from '../../api/services/provider-services';
 import CustomModal from "../utils/modal";
 import Alerta from "../utils/alerta";
 import Loader from "../utils/loader";
+import { properties } from '../properties/bms-dev';
 
 function Registro_Proveedor(props){
 
@@ -30,36 +31,6 @@ function Registro_Proveedor(props){
 
     var date = new Date().toLocaleDateString('es-PE')
 
-    function saveProvider() {
-
-        let dataProvider = {
-            "fullName": fullName,
-            "address": address,
-            "city": city,
-            "phone": phone,
-            "email": email,
-            "identifyID": identifyID,
-            "details": details,
-            "creationTime": date,
-            "modifiedTime": ""
-        }
-        setShowLoader(true);
-        provider_services.postProviders(dataProvider)
-            .then((response => {
-                setShowLoader (false);
-                if (response) {
-                    if (response.data.meta.status.code === "00") {
-                        setColor("success");
-                        props.actualizaResultados();
-                    }else{
-                        setColor("danger");
-                    }
-                    setMsjAlert(response.data.meta.status.message_ilgn[0].value);
-                    setMostrarAlert(true);
-                }
-            }))
-    }
-
     function ocultarAlerta(){
         setMostrarAlert(false);
     }
@@ -68,19 +39,74 @@ function Registro_Proveedor(props){
         setMostrarModal(false);
     }
 
-    function buildingModal(title,body,footer,action){
-        setAction(action)
+    function buildingModal(title,body,footer,event){
+        let result = validate();
+
+        if (result !== "validado") {
+            setColor("danger");
+            setMsjAlert(result);
+            setMostrarAlert(true);
+            return;
+        }
+
+        setAction(event)
         setModalTitle(title)
         setModalBody(body)
         setMostrarModal(true)
         setModalFooter(footer)
     }
+
+    const validate = () => {
+        var error = "validado"
+        if (!identifyID) {
+            error = properties['error.form.provider.id'];
+            return error;
+        }
+        if (!fullName) {
+            error = properties['error.form.provider.fullName'];
+            return error;
+        }
+        if (!phone) {
+            error = properties['error.form.provider.phone'];
+            return error;
+        }
+        return error;
+    };
     
     useEffect(() => {
         if (modalConfirmation === true && action === "guardar") {
-            saveProvider()
+            
+            let dataProvider = {
+                "fullName": fullName,
+                "address": address,
+                "city": city,
+                "phone": phone,
+                "email": email,
+                "identifyID": identifyID,
+                "details": details,
+                "creationTime": date,
+                "modifiedTime": ""
+            }
+            setShowLoader(true);
+            provider_services.postProviders(dataProvider)
+                .then((response => {
+                    setShowLoader (false);
+                    if (response) {
+                        if (response.data.meta.status.code === "00") {
+                            setColor("success");
+                            props.actualizaResultados();
+                        }else{
+                            setColor("danger");
+                        }
+                        ocultarModal();
+                        setMsjAlert(response.data.meta.status.message_ilgn[0].value);
+                        setMostrarAlert(true);
+                    }
+                }))
+            setModalConfirmation("")
+            setAction("")
         }
-    },[modalConfirmation])
+    },[modalConfirmation, action])
 
     return (
         <rs.Card className='card'>
@@ -106,24 +132,24 @@ function Registro_Proveedor(props){
                             <rs.Col sm={3}>
                                 <rs.FormGroup>
                                     <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faFileText}/> Nombres
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtFullame"
-                                        type="text"
-                                        onChange={(e) => setFullName(e.target.value)}
-                                    />
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={3}>
-                                <rs.FormGroup>
-                                    <rs.Label>
                                         <FontAwesomeIcon icon={icon.faIdCard}/> Nro. Documento
                                     </rs.Label>
                                     <rs.Input
                                         name="txtIdentifyID"
                                         type="number"
                                         onChange={(e) => setIdentifyID(e.target.value)}
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faFileText}/> Nombres
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtFullame"
+                                        type="text"
+                                        onChange={(e) => setFullName(e.target.value)}
                                     />
                                 </rs.FormGroup>
                             </rs.Col>
@@ -202,7 +228,7 @@ function Registro_Proveedor(props){
                             </rs.Col>
                             <rs.FormGroup className='actions'>
                                 <rs.Button className='right' color='success'onClick={() =>
-                                    buildingModal("Confirmación",`¿Desea grabar el nuevo item?`,
+                                    buildingModal("Confirmación",`¿Está seguro de guardar el nuevo proveedor?`,
                                         <>
                                             <rs.Button color="primary"
                                                 onClick={()=> setModalConfirmation(true)}
@@ -217,7 +243,7 @@ function Registro_Proveedor(props){
                                         </>,
                                         "guardar"
                                     )}>
-                                    <FontAwesomeIcon icon={icon.faSave}/>{' '}Grabar
+                                    <FontAwesomeIcon icon={icon.faSave}/>{' '}Guardar
                                 </rs.Button>
                             </rs.FormGroup>
                         </rs.Row>

@@ -5,8 +5,7 @@ import * as icon from '@fortawesome/free-solid-svg-icons';
 import RegistroEntrada from "../components/registro/registro_entradas";
 import * as entry_services from '../api/services/entry-services';
 import Loader from "../components/utils/loader";
-import DetalleProducto from "../components/detalle/detalle_productos";
-import * as provider_services from '../api/services/provider-services';
+import DetalleEntrada from "../components/detalle/detalle_entradas";
 
 function Entradas () {
 
@@ -15,12 +14,9 @@ function Entradas () {
     const [entradas, setEntradas] = useState([]);
     const initialFormState = {}
     const [currentEntry , setCurrentEntry] = useState(initialFormState)
-    const [btnActionTxt, setBtnActionTxt] = useState("Agregar");
 
     function showRegistroEntradas(){
-        if (btnActionTxt === "Agregar"){
-            setAction("registrar")
-        }
+        setAction("registrar")
     }
 
     useEffect(() => {
@@ -28,7 +24,7 @@ function Entradas () {
     },[])
 
     function getEntryTable () {
-        /*setShowLoader(true);
+        setShowLoader(true);
         entry_services.getEntries().then( (response) => {
             setShowLoader(false);
             if (response.status === 200){
@@ -37,32 +33,43 @@ function Entradas () {
 
                 if (Array.isArray(body)) {
                     body.forEach( a => {
-                        filas.push(
-                            <tr key= {a.key}>
-                                <td>{a.creationTime}</td>
-                                <td>{a.code}</td>
-                                <td>{a.user}</td>
-                                <td>{a.total}</td>
-                                <td>
-                                    <FontAwesomeIcon icon={icon.faCheckSquare}
-                                        type="button" 
-                                        className= 'select-button'
-                                        title="Seleccionar"
-                                        onClick = { () => {
-                                            setAction("detalle")
-                                            setCurrentEntry(a)
-                                        }}
-                                    />
-                                </td>
-                            </tr>
-                        )
+                        a.entries.forEach( e => {
+                            filas.push(
+                                <tr key= {a.code - e.code}>
+                                    <td>{a.creationTime}</td>
+                                    <td>{a.code}</td>
+                                    <td>{a.user}</td>
+                                    <td>{a.total}</td>
+                                    <td>{a.provider}</td>
+                                    <td>{e.code}</td>
+                                    <td>{e.description}</td>
+                                    <td>{e.category}</td>
+                                    <td>{e.warehouse}</td>
+                                    <td>{e.priceCost}</td>
+                                    <td>{e.priceSale}</td>
+                                    <td>{e.quantity}</td>
+                                    <td>{e.subTotal}</td>
+                                    <td>
+                                        <FontAwesomeIcon icon={icon.faCheckSquare}
+                                            type="button" 
+                                            className= 'select-button'
+                                            title="Seleccionar"
+                                            onClick = { () => {
+                                                setAction("detalle")
+                                                setCurrentEntry(a)
+                                            }}
+                                        />
+                                    </td>
+                                </tr>
+                            )
+                        })
                     })
                 }
                 setEntradas(filas);
             } else if(response.status === 401) {
                 console.log("NOT AUTHORIZED, AUTH AGAIN OR REDIRECT TO LOGIN")
             }
-        })*/
+        })
     }
 
     function actualizarTabla () {
@@ -77,7 +84,7 @@ function Entradas () {
 
     return (
         <div>
-            {action === "detalle" ? <DetalleProducto dataProducto={currentEntry} actualizaResultados={actualizarTabla}/> :
+            {action === "detalle" ? <DetalleEntrada dataEntrada={currentEntry} actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
             action === "registrar" ? <RegistroEntrada actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
                 <rs.Card className='card'>
                     <rs.CardHeader className='header'>
@@ -144,7 +151,6 @@ function Entradas () {
                                 </rs.Col>
                             </rs.Row>
                         </rs.Form>
-                        <hr/>
                         {showLoader ? <Loader /> :
                             <rs.Form>
                                 <rs.FormGroup>
@@ -152,7 +158,7 @@ function Entradas () {
                                         <thead>
                                             <tr>
                                                 <th style={{width: "10%"}}>
-                                                    Fecha de Creacion
+                                                    Fecha Registro
                                                 </th>
                                                 <th style={{width: "10%"}}>
                                                     Nro de Documento
@@ -175,6 +181,9 @@ function Entradas () {
                                                 <th style={{width: "10%"}}>
                                                     Categoria Producto
                                                 </th>
+                                                <th style={{width: "10%"}}>
+                                                    Almacen
+                                                </th>
                                                 <th style={{width: "5%"}}>
                                                     Precio Compra
                                                 </th>
@@ -187,12 +196,20 @@ function Entradas () {
                                                 <th style={{width: "5%"}}>
                                                     Sub Total
                                                 </th>
+                                                <th>
+
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {entradas}
                                         </tbody>
                                     </rs.Table>
+                                    {entradas.length === 0 ?
+                                        <h5 className="noData">
+                                            No data.
+                                        </h5>
+                                    : <hr/>}
                                 </rs.FormGroup>
                             </rs.Form>
                         }
