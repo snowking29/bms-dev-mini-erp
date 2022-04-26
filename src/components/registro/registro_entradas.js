@@ -21,6 +21,8 @@ function Registro_Entrada(props){
     const [providerID, setProviderID] = useState("");
     const [provider, setProvider] = useState("");
 
+    const [keyProduct, setKeyProduct] = useState("");
+    const [currentStock, setCurrentStock] = useState(0);
     const [codeProduct, setCodeProduct] = useState("");
     const [nameProduct, setNameProduct] = useState("");
     const [categoryProduct, setCategoryProduct] = useState("");
@@ -60,17 +62,19 @@ function Registro_Entrada(props){
         if (e.target.value !== "-"){
             dataProducts.forEach(c=>{
                 if (c.code === e.target.value){
-                    setCodeProduct(c.code)
-                    setCategoryProduct(c.category)
-                    setWarehouse(c.warehouse)
-                    setNameProduct(c.name)
+                    setKeyProduct(c.key);
+                    setCurrentStock(c.stock);
+                    setCodeProduct(c.code);
+                    setCategoryProduct(c.category);
+                    setWarehouse(c.warehouse);
+                    setNameProduct(c.name);
                 }
             })
         } else {
-            setCodeProduct("")
-            setCategoryProduct("")
-            setWarehouse("")
-            setNameProduct("")
+            setCodeProduct("");
+            setCategoryProduct("");
+            setWarehouse("");
+            setNameProduct("");
         }
     }
 
@@ -78,13 +82,13 @@ function Registro_Entrada(props){
         if (e.target.value !== "-"){
             dataProviders.forEach(c=>{
                 if (c.identifyID === e.target.value){
-                    setProviderID(c.identifyID)
-                    setProvider(c.fullName)
+                    setProviderID(c.identifyID);
+                    setProvider(c.fullName);
                 }
             })
         } else {
-            setProviderID("")
-            setProvider("")
+            setProviderID("");
+            setProvider("");
         }
     }
     
@@ -149,15 +153,19 @@ function Registro_Entrada(props){
                 <td>{subTotal}</td>
             </tr>
         )
+        
+        var totalStock = parseInt(quantity) + currentStock;
 
         var currentEntry = {
+            "key": keyProduct,
             "code": codeProduct,
             "name": nameProduct,
             "category":categoryProduct,
             "warehouse":warehouse,
-            "priceCost": priceCost,
-            "priceSale": priceSale,
-            "quantity": quantity,
+            "priceCost": parseFloat(priceCost),
+            "priceSale": parseFloat(priceSale),
+            "quantity": parseInt(quantity),
+            "stock": parseInt(totalStock),
             "subTotal": subTotal
         }
 
@@ -240,7 +248,7 @@ function Registro_Entrada(props){
             var subTotals = []
             entriesData.forEach(c=>{ subTotals.push(c.subTotal)})
             var total = subTotals.reduce((prevValue, curValue) => { return prevValue+curValue});
-
+            
             let dataEntry = {
                 "code": codeEntry,
                 "user": user,
@@ -256,6 +264,16 @@ function Registro_Entrada(props){
                     setShowLoader (false);
                     if (response) {
                         if (response.data.meta.status.code === "00") {
+                            
+                            entriesData.forEach( e=> {
+                                let data = {
+                                    "priceCost":e.priceCost,
+                                    "priceSale": e.priceSale,
+                                    "stock": e.stock
+                                }
+                                product_services.putProducts(e.key,data)
+                            })
+
                             setColor("success");
                             props.actualizaResultados();
                             setEntriesTable([]);

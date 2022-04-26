@@ -22,6 +22,25 @@
   text-align: center;
 }
 
+.dashboard{
+  align-items: center;
+  background: #fff;
+  color: #036bfc;
+  border-radius: 10px;
+  font-family: sans-serif;
+  width: 100%;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard .text{
+  color: #252525;
+}
+
+.dashboard .icon{
+  font-size: 35px;
+}
+
+
 .card .button{
   background: #fff;
   color: #11101D;
