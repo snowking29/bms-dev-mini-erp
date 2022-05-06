@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import AuthService from "../api/services/auth-services";
 import { Button, Form, Input, Label, FormGroup, FormFeedback } from 'reactstrap'
 import "../css/Login.css";
+import UserPool from "../components/utils/UserPool";
+import { CognitoUser, AuthenticationDetails } from "amazon-cognito-identity-js";
 
 const Login = () => {
 
@@ -13,7 +15,26 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
+
+    const user = new CognitoUser({
+      Username: email,
+      Pool: UserPool,
+    })
+
+    const authDetails = new AuthenticationDetails({
+      Username: email,
+      Password: password,
+    })
+
+    user.authenticateUser(authDetails, {
+      onSuccess: (data) => {
+        console.log("onSuccess: ",data);
+      },
+      onFailure: (err) => {
+        console.log("onFailure: ", err);
+      }
+    })
+    /*try {
       await AuthService.login(email, password).then(
         () => {
           navigate("/dashboard");
@@ -25,7 +46,7 @@ const Login = () => {
       );
     } catch (err) {
       console.log(err);
-    }
+    }*/
   };
 
   return (

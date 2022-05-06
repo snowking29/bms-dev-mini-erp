@@ -50,8 +50,9 @@ function Registro_Entrada(props){
     const user = localStorage.getItem("name");
 
     function deleteEntryFromTable(key){
-        setEntriesTable(entriesTable.filter(item => item.key !== key));
-        entriesData.filter(item=> item.code !== key);
+        console.log(key)
+        setEntriesTable(entriesTable.filter((item) => item[0].key !== key));
+        setEntriesData(entriesData.filter((item) => item.key !== key));
     }
 
     function checkDuplicity(){
@@ -71,6 +72,8 @@ function Registro_Entrada(props){
                 }
             })
         } else {
+            setKeyProduct("");
+            setCurrentStock("");
             setCodeProduct("");
             setCategoryProduct("");
             setWarehouse("");
@@ -144,8 +147,8 @@ function Registro_Entrada(props){
         }
 
         filas.push(
-            <tr key={codeProduct}>
-                <td><FontAwesomeIcon title="Eliminar" type="button" className= 'select-button'icon={icon.faTrash} onClick={() => deleteEntryFromTable(codeProduct)}/></td>
+            <tr key={keyProduct}>
+                <td><FontAwesomeIcon title="Eliminar" type="button" className= 'select-button'icon={icon.faTrash} onClick={() => deleteEntryFromTable(keyProduct)}/></td>
                 <td>{codeProduct}</td>
                 <td>{nameProduct}</td>
                 <td>{priceCost}</td>
