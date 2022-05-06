@@ -11,11 +11,13 @@
   background: #fff;
   font-size: 1em;
   font-family: sans-serif;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.20);
 }
 
 .card .header{
   background: #345468;
   color: #f3f3f3;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.20);
 }
 
 .card .body{
@@ -116,33 +118,16 @@ body {
 }
 
 .sidebar-header {
-  background: #11101D;
   padding: 0px 20px;
   align-items: center;
 }
 
 .sidebar-header h3 {
-  color: #fff;
-  padding: 1em;
+  padding: 0.5em;
 }
 
 .sidebar ul p {
-  color: #fff;
   padding: 10px;
-}
-
-.menu-open {
-  background: #6d7fcc;
-}
-
-.nav-item:hover {
-  color: #7386d5;
-  background: #fff;
-}
-
-.items-menu {
-  color: #fff;
-  background: #6d7fcc;
 }
 
 li a.dropdown-toggle::after {
@@ -164,17 +149,10 @@ li a.dropdown-toggle::after {
   align-items: center;
   text-decoration: none;
   transition: all 0.4s ease;
-  background: #11101D;
-}
-
-.sidebar .li-icon{
-  padding: 3%;
-  font-size: 15px;
 }
 
 .sidebar .li-a-links_name{
   color: #fff;
-  font-weight: 400;
   white-space: nowrap;
   opacity: 1;
   pointer-events: none;
@@ -201,7 +179,7 @@ li a.dropdown-toggle::after {
   position: relative;
   float: right;
   margin: 0.5em;
-  font-size: 2rem;
+  font-size: 1.5rem;
   cursor: pointer;
   display: none;
 }

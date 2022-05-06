@@ -28,8 +28,6 @@ function Detalle_Producto(props){
     const [modalBody, setModalBody] = useState("");
     const [modalFooter, setModalFooter] = useState("");
     const [modalConfirmation, setModalConfirmation] = useState(false);
-
-    var key = props.dataProducto.key;
     var date = new Date().toLocaleDateString('es-PE')
 
     function clearFields(){
@@ -94,7 +92,7 @@ function Detalle_Producto(props){
             var dataProduct = removeEmptyData(temporaryDataProduct)
     
             setShowLoader(true);
-            product_service.putProducts(key, dataProduct)
+            product_service.putProducts(props.dataProducto.key, dataProduct)
                 .then((response => {
                     setShowLoader (false);
                     if (response) {
@@ -102,7 +100,7 @@ function Detalle_Producto(props){
     
                             if (category !== "") {
                                 let dataCategory = {
-                                    "products":key
+                                    "products":props.dataProducto.key
                                 }
                                 category_service.putCategories(keyCategory,dataCategory)
                             }
@@ -123,7 +121,7 @@ function Detalle_Producto(props){
 
         } else if (modalConfirmation === true && action === "eliminar") {
             setShowLoader(true);
-            product_service.deleteProduct(key).then((response) => {
+            product_service.deleteProduct(props.dataProducto.key).then((response) => {
                 if (response) {
                     setShowLoader (false);
                     if ( response.data.meta.status.code === "00" ) {

@@ -26,7 +26,6 @@ function Detalle_Categoria(props){
     const [modalConfirmation, setModalConfirmation] = useState(false);
 
     var date = new Date().toLocaleDateString('es-PE')
-    var key = props.dataCategoria.key;
 
     function clearFields(){
         setCode("")
@@ -64,7 +63,7 @@ function Detalle_Categoria(props){
             var dataCategory = removeEmptyData(temporaryDataCategory)
     
             setShowLoader(true);
-            category_services.putCategories(key, dataCategory)
+            category_services.putCategories(props.dataCategoria.key, dataCategory)
                 .then(
                     (response => {
                         setShowLoader (false);
@@ -87,7 +86,7 @@ function Detalle_Categoria(props){
         } else if (modalConfirmation === true && action === "eliminar") {
 
             setShowLoader(true);
-            category_services.deleteCategories(key).then((response) => {
+            category_services.deleteCategories(props.dataCategoria.key).then((response) => {
                 if (response) {
                     setShowLoader (false);
                     if ( response.data.meta.status.code === "00" ) {

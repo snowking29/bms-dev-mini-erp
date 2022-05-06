@@ -28,7 +28,6 @@ function Detalle_Proveedor(props){
     const [modalFooter, setModalFooter] = useState("");
     const [modalConfirmation, setModalConfirmation] = useState(false);
 
-    var key = props.dataProveedor.key;
     var date = new Date().toLocaleDateString('es-PE')
 
     function clearFields(){
@@ -72,7 +71,7 @@ function Detalle_Proveedor(props){
             var dataProvider = removeEmptyData(temporaryDataProvider)
     
             setShowLoader(true);
-            provider_services.putProviders(key, dataProvider)
+            provider_services.putProviders(props.dataProveedor.key, dataProvider)
                 .then(
                     (response => {
                         setShowLoader (false);
@@ -93,7 +92,7 @@ function Detalle_Proveedor(props){
             setAction("")
         } else if (modalConfirmation === true && action === "eliminar") {
             setShowLoader(true);
-            provider_services.deleteProvider(key).then((response) => {
+            provider_services.deleteProvider(props.dataProveedor.key).then((response) => {
                 if (response) {
                     setShowLoader (false);
                     if ( response.data.meta.status.code === "00" ) {

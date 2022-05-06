@@ -9,14 +9,18 @@ import CustomModal from "../utils/modal";
 import Alerta from "../utils/alerta";
 import Loader from "../utils/loader";
 import { properties } from '../properties/bms-dev';
+import {removeEmptyData} from "../utils/RemoveEmptyData";
 
 function Detalle_Entrada(props){
+
     const [dataProducts, setDataProducts] = useState([]);
     const [products, setProducts] = useState([]);
 
     const [codeEntry, setCodeEntry] = useState("");
     const [provider, setProvider] = useState("");
 
+    const [keyProduct, setKeyProduct] = useState("");
+    const [currentStock, setCurrentStock] = useState(0);
     const [codeProduct, setCodeProduct] = useState("");
     const [nameProduct, setNameProduct] = useState("");
     const [categoryProduct, setCategoryProduct] = useState("");
@@ -41,11 +45,14 @@ function Detalle_Entrada(props){
     const [modalConfirmation, setModalConfirmation] = useState(false);
     
     const user = localStorage.getItem("name");
+    var date = new Date().toLocaleDateString('es-PE')
 
     function saveProductData (e) {
         if (e.target.value !== "-"){
             dataProducts.forEach(c=>{
                 if (c.code === e.target.value){
+                    setKeyProduct(c.key);
+                    setCurrentStock(c.stock);
                     setCodeProduct(c.code)
                     setCategoryProduct(c.category)
                     setWarehouse(c.warehouse)
@@ -53,6 +60,8 @@ function Detalle_Entrada(props){
                 }
             })
         } else {
+            setKeyProduct("");
+            setCurrentStock("");
             setCodeProduct("")
             setCategoryProduct("")
             setWarehouse("")
@@ -90,6 +99,7 @@ function Detalle_Entrada(props){
                     <td>{a.subTotal}</td>
                 </tr>
             )
+
             setEntriesTable(filas);
         })
     },[])
@@ -157,28 +167,31 @@ function Detalle_Entrada(props){
                 <td>{subTotal}</td>
             </tr>
         )
-
-        var currentEntry = {
+        setEntriesTable((prevArr) => ([...prevArr, filas]));
+        
+        var newEntry = {
+            "key": keyProduct,
             "code": codeProduct,
             "name": nameProduct,
             "category":categoryProduct,
-            "almacen":warehouse,
-            "priceCost": priceCost,
-            "priceSale": priceSale,
-            "quantity": quantity,
-            "subTotal": subTotal
+            "warehouse":warehouse,
+            "priceCost": parseFloat(priceCost),
+            "priceSale": parseFloat(priceSale),
+            "quantity": parseInt(quantity),
+            "subTotal": parseFloat(subTotal)
         }
 
-        setEntriesData((prevArr) => ([...prevArr, currentEntry]))
-        setEntriesTable((prevArr) => ([...prevArr, filas]));
+        setEntriesData((prevArr) => ([...prevArr, newEntry]))
 
         clearCurrentEntry();
-        
     }
 
     function clearCurrentEntry(){
+        setKeyProduct("");
         setCodeProduct("");
         setNameProduct("");
+        setCategoryProduct("");
+        setWarehouse("");
         setPriceCost(0);
         setPriceSale(0);
         setQuantity(0);
@@ -196,7 +209,7 @@ function Detalle_Entrada(props){
         if (entriesTable.length === 0 ){
             ocultarModal();
             setColor("danger");
-            setMsjAlert("La tabla de entradas está vacía.");
+            setMsjAlert("La tabla de entradas estï¿½ vacï¿½a.");
             setMostrarAlert(true);
             return;
         }
@@ -210,7 +223,52 @@ function Detalle_Entrada(props){
 
     useEffect(() => {
         if (modalConfirmation === true && action === "guardar") {
+            console.log(entriesTable)
+            var subTotals = []
+            entriesData.forEach(c=>{ 
+                subTotals.push(c.subTotal)
+            })
+            var total = subTotals.reduce((prevValue, curValue) => { return prevValue+curValue});
 
+            var temporaryDataEntry = {
+                "code": codeEntry,
+                "user": user,
+                "total": total,
+                "provider": provider,
+                "entries": entriesData,
+                "modifiedTime": date
+            }
+
+            var dataEntry = removeEmptyData(temporaryDataEntry)
+
+            setShowLoader(true);
+            entry_Services.putEntries(props.dataEntrada.key,dataEntry, "false")
+                .then((response => {
+                setShowLoader (false);
+                if (response) {
+                    if (response.data.meta.status.code === "00") {
+                        entriesData.forEach( e=> {
+                            let data = {
+                                "priceCost":e.priceCost,
+                                "priceSale": e.priceSale,
+                                "stock": e.stock
+                            }
+                            product_services.putProducts(e.key,data)
+                        })
+                        setColor("success");
+                            props.actualizaResultados();
+                            setEntriesTable([]);
+                            setProvider("");
+                            setCodeEntry("");
+                            clearCurrentEntry();
+                    }else{
+                        setColor("danger");
+                    }
+                    ocultarModal();
+                    setMsjAlert(response.data.meta.status.message_ilgn[0].value);
+                    setMostrarAlert(true);
+                }
+            }))
         }
     },[modalConfirmation, action])
 
@@ -399,7 +457,7 @@ function Detalle_Entrada(props){
                         <hr/>
                         <rs.FormGroup className='actions'>
                             <rs.Button className='right' color='success'onClick={() =>
-                                buildingModal("Confirmación",`¿Está seguro de guardar la nueva entrada?`,
+                                buildingModal("ConfirmaciÃ³n",`Â¿EstÃ¡ seguro de guardar la nueva entrada?`,
                                     <>
                                         <rs.Button color="primary"
                                             onClick={()=> setModalConfirmation(true)}

@@ -29,7 +29,6 @@ function Detalle_Cliente(props){
     const [modalFooter, setModalFooter] = useState("");
     const [modalConfirmation, setModalConfirmation] = useState(false);
     
-    var key = props.dataCliente.key;
     var date = new Date().toLocaleDateString('es-PE')
 
     function clearFields(){
@@ -74,7 +73,7 @@ function Detalle_Cliente(props){
             var dataCustomer = removeEmptyData(temporaryDataCustomer)
     
             setShowLoader(true);
-            customer_services.putCustomers(key, dataCustomer)
+            customer_services.putCustomers(props.dataCliente.key, dataCustomer)
                 .then(
                     (response => {
                         setShowLoader (false);
@@ -97,7 +96,7 @@ function Detalle_Cliente(props){
             setAction("")
         } else if (modalConfirmation === true && action === "eliminar") {
             setShowLoader(true);
-            customer_services.deleteCustomer(key).then((response) => {
+            customer_services.deleteCustomer(props.dataCliente.key).then((response) => {
                 if (response) {
                     setShowLoader (false);
                     if ( response.data.meta.status.code === "00" ) {

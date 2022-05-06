@@ -53,13 +53,14 @@ export const postEntries = ( dataEntry ) => {
     )
 }
 
-export const putEntries = ( key, dataEntry ) => {
+export const putEntries = ( key, dataEntry, upsert ) => {
     let config = {
         method : "put",
         url : global.config.API_AWS_URL + RESOURCE_URL,
         headers: headers,
         params: {
-            "key": key
+            "key": key,
+            "upsert": upsert
         },
         data : dataEntry,
         validateStatus: function (status) {

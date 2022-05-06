@@ -35,14 +35,14 @@ function Entradas () {
                     body.forEach( a => {
                         a.entries.forEach( e => {
                             filas.push(
-                                <tr key= {a.code - e.code}>
+                                <tr key= {a.code.concat(e.code)}>
                                     <td>{a.creationTime}</td>
                                     <td>{a.code}</td>
                                     <td>{a.user}</td>
                                     <td>{a.total}</td>
                                     <td>{a.provider}</td>
                                     <td>{e.code}</td>
-                                    <td>{e.description}</td>
+                                    <td>{e.name}</td>
                                     <td>{e.category}</td>
                                     <td>{e.warehouse}</td>
                                     <td>{e.priceCost}</td>
@@ -176,7 +176,7 @@ function Entradas () {
                                                     Codigo Producto
                                                 </th>
                                                 <th style={{width: "15%"}}>
-                                                    Descripcion Producto
+                                                    Nombre Producto
                                                 </th>
                                                 <th style={{width: "10%"}}>
                                                     Categoria Producto

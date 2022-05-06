@@ -23,8 +23,8 @@ const SideBar = ({isOpen, toggle}) => (
               return (
                 <rs.NavItem key={item.title}>
                   <rs.NavLink className='li-a li-a-links_name' tag={Link} to={item.path} disabled={item.disabled}>
-                    <FontAwesomeIcon icon={item.icon} className="mr-2 li-icon"/>
-                    {' '}
+                    <FontAwesomeIcon icon={item.icon} className="mr-2"/>
+                    &nbsp;
                     {item.title}
                   </rs.NavLink>
                 </rs.NavItem>
@@ -37,8 +37,8 @@ const SideBar = ({isOpen, toggle}) => (
               return (
                 <rs.NavItem key={item.title}>
                   <rs.NavLink className='li-a li-a-links_name' tag={Link} to={item.path}>
-                    <FontAwesomeIcon icon={item.icon} className="mr-2 li-icon"/>
-                    {' '}
+                    <FontAwesomeIcon icon={item.icon} className="mr-2"/>
+                    &nbsp;
                     {item.title}
                   </rs.NavLink>
                 </rs.NavItem>
