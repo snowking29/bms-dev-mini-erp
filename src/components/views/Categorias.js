@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import * as rs from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
-import RegistroCategoria from "../components/registro/registro_categorias";
-import * as category_services from '../api/services/category-services';
-import Loader from "../components/utils/loader";
-import DetalleCategoria from "../components/detalle/detalle_categorias";
+import RegistroCategoria from "../registro/registro_categorias";
+import * as category_services from '../../api/services/category-services';
+import Loader from "../utils/loader";
+import DetalleCategoria from "../detalle/detalle_categorias";
 
 function Categorias () {
 

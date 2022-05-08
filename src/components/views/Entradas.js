@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import * as rs from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
-import RegistroEntrada from "../components/registro/registro_entradas";
-import * as entry_services from '../api/services/entry-services';
-import Loader from "../components/utils/loader";
-import DetalleEntrada from "../components/detalle/detalle_entradas";
+import RegistroEntrada from "../registro/registro_entradas";
+import * as entry_services from '../../api/services/entry-services';
+import Loader from "../utils/loader";
+import DetalleEntrada from "../detalle/detalle_entradas";
 
 function Entradas () {
 

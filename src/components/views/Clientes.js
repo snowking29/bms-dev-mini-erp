@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import * as rs from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
-import RegistroClientes from "../components/registro/registro_clientes";
-import * as customer_services from '../api/services/customer-services';
-import Loader from "../components/utils/loader";
-import DetalleCliente from "../components/detalle/detalle_clientes";
+import RegistroClientes from "../registro/registro_clientes";
+import * as customer_services from '../../api/services/customer-services';
+import Loader from "../utils/loader";
+import DetalleCliente from "../detalle/detalle_clientes";
 
 function Clientes () {
     

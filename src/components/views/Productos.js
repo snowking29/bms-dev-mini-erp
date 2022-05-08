@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import * as rs from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
-import RegistroProducto from "../components/registro/registro_productos";
-import * as product_services from '../api/services/product-services';
-import Loader from "../components/utils/loader";
-import DetalleProducto from "../components/detalle/detalle_productos";
+import RegistroProducto from "../registro/registro_productos";
+import * as product_services from '../../api/services/product-services';
+import Loader from "../utils/loader";
+import DetalleProducto from "../detalle/detalle_productos";
 
 function Productos () {
 

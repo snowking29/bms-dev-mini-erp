@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import * as rs from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
-import RegistroProveedores from "../components/registro/registro_proveedores";
-import * as provider_services from '../api/services/provider-services';
-import Loader from "../components/utils/loader";
-import DetalleProveedor from "../components/detalle/detalle_proveedores";
+import RegistroProveedores from "../registro/registro_proveedores";
+import * as provider_services from '../../api/services/provider-services';
+import Loader from "../utils/loader";
+import DetalleProveedor from "../detalle/detalle_proveedores";
 
 function Proveedores () {
     

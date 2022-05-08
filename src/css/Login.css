@@ -1,19 +1,54 @@
-.Login {
-  border: 2px solid #d3d3d3;
-  border-radius: .5em;
-  margin-bottom: 1em;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 100px;
-  padding: 1em;
+body{
+  background: #00d2ff;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #3a7bd5, #00d2ff);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #3a7bd5, #00d2ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.login {
+  max-width: 500px;
+  min-width: 300px;
+  max-height: 700px;
+  width: 30%;
+  height: 60%;
+  margin: 100px auto;
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.20);
+}
+
+.login .title {
+  text-align: center;
+  font-family: 'open sans', sans-serif;
+  padding: 25px 45px;
+  font-size: 2rem;
+  display: block;
+  margin-top: 5%;
+}
+
+.login .form {
+  margin: 5px;
   text-align: left;
-  width: 600px;
 }
 
-.form {
-  padding: 1em;
+.login .form Label {
+  font-weight: bold;
 }
 
-label {
-  font-weight: 600;
+.login .btn-grad {background-image: linear-gradient(to right, #314755 0%, #26a0da  51%, #314755  100%)}
+.login .btn-grad {
+  margin: 10px;
+  padding: 10px 45px;
+  text-align: center;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+}
+
+ .login .btn-grad:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
 }
