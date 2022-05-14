@@ -132,7 +132,7 @@ function Registro_Proveedor(props){
                             <rs.Col sm={3}>
                                 <rs.FormGroup>
                                     <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faIdCard}/> Nro. Documento
+                                        <FontAwesomeIcon icon={icon.faIdCard}/> Numero Documento
                                     </rs.Label>
                                     <rs.Input
                                         name="txtIdentifyID"

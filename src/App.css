@@ -5,7 +5,7 @@
 }
 
 
-@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+@import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700");
 
 .card {
   background: #fff;
@@ -15,7 +15,7 @@
 }
 
 .card .header{
-  background: #345468;
+  background: #152340;
   color: #f3f3f3;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.20);
 }
@@ -24,7 +24,7 @@
   text-align: center;
 }
 
-.dashboard{
+.dashboard {
   align-items: center;
   background: #fff;
   color: #036bfc;
@@ -94,114 +94,6 @@
   margin-right: 0px;
 }
 
-body {
-  font-family: "Poppins", sans-serif;
-}
-
-/* ---------------------------------------------------
-    SIDEBAR STYLE
------------------------------------------------------ */
-.sidebar {
-  min-width: 250px;
-  max-width: 250px;
-  position: fixed;
-  height: 100%;
-  background: #11101D;
-  color: #fff;
-  margin-left: -250px;
-  transition: all 0.5s;
-  padding: 10px 20px;
-}
-
-.sidebar.is-open {
-  margin-left: 0;
-  transition: 0.5s;
-}
-
-.sidebar-header {
-  padding: 0px 20px;
-  align-items: center;
-}
-
-.sidebar-header h3 {
-  padding: 0.5em;
-}
-
-.sidebar ul p {
-  padding: 10px;
-}
-
-li a.dropdown-toggle::after {
-  display: inline-flex;
-  position: relative;
-  left: 60%;
-  top: 10%;
-}
-
-.sidebar .nav-li{
-  position: relative;
-  list-style: none;
-}
-
-.sidebar .li-a{
-  display: flex;
-  height: 100%;
-  width: 100%;
-  align-items: center;
-  text-decoration: none;
-  transition: all 0.4s ease;
-}
-
-.sidebar .li-a-links_name{
-  color: #fff;
-  white-space: nowrap;
-  opacity: 1;
-  pointer-events: none;
-  transition: 0.4s;
-}
-
-.sidebar .li-a-links_name:hover,
-.sidebar .li-a:hover{
-  transition: all 0.5s ease;
-  color: #11101D;
-}
-
-
-.sidebar .li-a-links_name{
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.sidebar .li-a:hover{
-  background: #FFF;
-}
-
-.sidebar-header > span {
-  position: relative;
-  float: right;
-  margin: 0.5em;
-  font-size: 1.5rem;
-  cursor: pointer;
-  display: none;
-}
-
-.side-menu {
-  height: calc(100vh - 130px);
-  overflow-y: scroll;
-}
-
-.side-menu::-webkit-scrollbar {
-  width: 10px;
-}
-
-.side-menu::-webkit-scrollbar-thumb {
-  background: #11101D;
-  border-radius: 3px;
-}
-
-.side-menu::-webkit-scrollbar-thumb:hover {
-  background: #fff;
-}
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
@@ -210,6 +102,7 @@ li a.dropdown-toggle::after {
   margin-left: 250px;
   transition: 0.5s;
   height: 100vh;
+  overflow-x: scroll;
 }
 
 .content {
@@ -218,6 +111,7 @@ li a.dropdown-toggle::after {
   height: 100vh;
   transition: 0.5s;
   width: 100%;
+  
 }
 
 /* ---------------------------------------------------
@@ -239,7 +133,7 @@ li a.dropdown-toggle::after {
 }
 
 .styled-table th {
-  background: #333; 
+  background: #254d72; 
   color: white; 
   font-weight: bold; 
 }
@@ -277,35 +171,13 @@ li a.dropdown-toggle::after {
   align-items: center;
   padding: 5px;
 }
+
 @media only screen and (max-width: 760px),(min-device-width: 768px) and (max-device-width: 1024px) {
-  .content.is-open{
-    position: fixed;  
-  }
 
-  .sidebar.is-open {
-    min-width: 100%;
-    max-width: 100%;
-    margin-left: 0;
-    transition: all 0.5s, height 0s;
-  }
-
-  .sidebar.is-open > .sidebar-header span {
-    display: unset;
-  }
-
-  li a.dropdown-toggle::after {
-    display: inline-block;
-    position: relative;
-    left: 70%;
-  }
-
-  .sidebar .li-a-links_name{
-    font-size: 15px;
-  }
-  
   .content.is-open {
     overflow: hidden;
     margin-left: 100%;
+    position: fixed;
   }
 
 

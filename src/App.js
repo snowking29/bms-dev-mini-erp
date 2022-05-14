@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from './components/views/Dashboard';
 import Login from './components/views/Login';
 import Productos from './components/views/Productos';
@@ -9,15 +9,13 @@ import Clientes from './components/views/Clientes';
 import Proveedores from './components/views/Proveedores';
 import Entradas from './components/views/Entradas';
 import PrivateRoute from './components/utils/PrivateRoute';
-import { Account } from './components/utils/Account';
-import Status from './components/utils/Status';
-import NewPasswordChallenge from './components/views/NewPasswordChallenge';
+import Perfil from './components/views/Perfil';
+
 import './App.css';
 
 const App =() => {
-  return (
-    <Account>
-        <Status/>
+    
+    return (
         <Router>
             <Routes>
                 <Route path ="/login" element={<Login />} exact/>
@@ -39,11 +37,12 @@ const App =() => {
                 <Route element={<PrivateRoute component={Entradas} exact/>}>
                     <Route path="/entradas" element={<Entradas />}/>
                 </Route>
-                <Route path="/newPassword" element={<NewPasswordChallenge />} exact/>
+                <Route element={<PrivateRoute component={Perfil} exact/>}>
+                    <Route path="/perfil" element={<Perfil />}/>
+                </Route>
             </Routes>
         </Router>
-    </Account>
-  );  
+    );  
 }
 
 export default App;

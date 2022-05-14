@@ -321,7 +321,7 @@ function Registro_Entrada(props){
                             <rs.Col sm={4}>
                                 <rs.FormGroup>
                                     <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faFileText}/> Nro de Documento
+                                        <FontAwesomeIcon icon={icon.faFileText}/> Numero de Documento
                                     </rs.Label>
                                     <rs.Input
                                         name="txtName"

@@ -9,21 +9,27 @@ const login = (email, password) => {
       password,
     }})
     .then((response) => {
-      if (response.data.token) {
-        localStorage.setItem("user", JSON.stringify(response.data));
-        localStorage.setItem("name", response.data.name)
+      if (response.data.success === "true") {
+        if (response.data.data.token) {
+          localStorage.setItem("SESSION_ID", JSON.stringify(response.data.data.token));
+          localStorage.setItem("SESSION_USER", JSON.stringify({
+            "name":response.data.data.name,
+            "email":response.data.data.email,
+            "role":response.data.data.role
+          }));
+        }
       }
-
       return response.data;
-    });
+    })
 };
 
 const logout = () => {
-  localStorage.removeItem("user");
+  localStorage.removeItem("SESSION_ID");
+  localStorage.removeItem("SESSION_USER");
 };
 
 const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem("user"));
+  return JSON.parse(localStorage.getItem("SESSION_USER"))
 };
 
 const authService = {

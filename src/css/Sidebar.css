@@ -1,0 +1,166 @@
+.sidebar {
+  min-width: 250px;
+  max-width: 250px;
+  position: fixed;
+  height: 100%;
+  background: #152340 ;
+  color: #fff;
+  margin-left: -250px;
+  transition: all 0.5s;
+  padding: 10px 20px;
+}
+
+.sidebar.is-open {
+  margin-left: 0;
+  transition: 0.5s;
+}
+
+.sidebar-header {
+  padding: 5px;
+  text-align: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.sidebar-user-info {
+  overflow: hidden;
+  padding: 15px;
+}
+
+.sidebar-user-info span {
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sidebar-user-info .user-name {
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.sidebar-user-info .user-role {
+  font-size: 12px;
+}
+
+.sidebar-user-info .user-logout {
+  position: relative;
+  cursor: pointer;
+  font-size: 15px;
+  padding: 10px 5px;
+}
+
+.sidebar-user-pic {
+  cursor: pointer;
+  width: 70px;
+  padding: 2px;
+  overflow: hidden;
+}
+
+
+.sidebar-user-pic img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+.sidebar-header h3 {
+  padding: 0.5em;
+}
+
+.sidebar ul p {
+  padding: 10px;
+}
+
+li a.dropdown-toggle::after {
+  display: inline-flex;
+  position: relative;
+  left: 60%;
+  top: 10%;
+}
+
+.sidebar .nav-li{
+  position: relative;
+  list-style: none;
+}
+
+.sidebar .li-a{
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  text-decoration: none;
+  transition: all 0.4s ease;
+}
+
+.sidebar .li-a-links_name{
+  color: #fff;
+  white-space: nowrap;
+  opacity: 1;
+  pointer-events: none;
+  transition: 0.4s;
+}
+
+.sidebar .li-a-links_name:hover,
+.sidebar .li-a:hover{
+  transition: all 0.5s ease;
+  color: #11101D;
+}
+
+
+.sidebar .li-a-links_name{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sidebar .li-a:hover{
+  background: #FFF;
+}
+
+.sidebar-header > span {
+  position: relative;
+  float: right;
+  margin: 0.5em;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: none;
+}
+
+.side-menu {
+  height: calc(100vh - 130px);
+}
+
+.side-menu::-webkit-scrollbar {
+  width: 10px;
+}
+
+.side-menu::-webkit-scrollbar-thumb {
+  background: #11101D;
+  border-radius: 3px;
+}
+
+.side-menu::-webkit-scrollbar-thumb:hover {
+  background: #fff;
+}
+
+.sidebar .logOut {
+    text-align: center;
+}
+
+@media only screen and (max-width: 760px),(min-device-width: 768px) and (max-device-width: 1024px) {
+
+  .sidebar-user-info .user-role {
+    font-size: 12px;
+  }
+
+  .sidebar.is-open {
+    min-width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    transition: all 0.5s, height 0s;
+    overflow-y: scroll;
+  }
+
+  .sidebar.is-open > .sidebar-header span {
+    display: unset;
+  }
+}

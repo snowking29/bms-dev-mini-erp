@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import AuthService from "../../api/services/auth-services";
 import SideBar from '../sidebar/SideBar';
 import classNames from "classnames";
-import TopBar from '../content/TopBar';
+import TopBar from '../topbar/TopBar';
 
 function PrivateRoute ({component : Component}){
     const [sidebarIsOpen, setSidebarOpen] = useState(true);

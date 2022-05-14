@@ -20,6 +20,12 @@ export const SideBarData = [
     disabled: false
   },
   {
+    title: 'Control de Caja',
+    path: '/caja',
+    icon: icon.faCalculator,
+    disabled: true
+  },
+  {
     title: 'Clientes',
     path: '/clientes',
     icon: icon.faUsers,
@@ -49,18 +55,11 @@ export const SideBarData = [
     path: '/inventario',
     icon: icon.faBoxes,
     disabled: true
-  }
-];
-
-export const SideBarDataAdmin = [
-  {
-    title: 'Perfil',
-    path: '/perfil',
-    icon: icon.faIdCard
   },
   {
-    title: 'Usuarios',
-    path: '/usuarios',
-    icon: icon.faUser
+    title: 'Empleados',
+    path: '/empleados',
+    icon: icon.faUserGroup,
+    disabled: true
   }
-]
+];
