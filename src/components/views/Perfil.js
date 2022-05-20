@@ -6,11 +6,14 @@ import AuthService from "../../api/services/auth-services";
 import "../../css/Perfil.css";
 
 function Perfil () {
-    const [user, setUser] = useState("");
-    const [email, setEmail] = useState("");
-    const [role, setRole] = useState("");
-    const defaultUser = require('../../assets/user.png');
+    const [user, setUser] = useState(null);
+    const [email, setEmail] = useState(null);
+    const [role, setRole] = useState(null);
+    const [imgPreview, setImgPreview] = useState(null);
+    const [error, setError] = useState(false);
 
+    const defaultUser = require('../../assets/user.png');
+    
     useEffect(() => {
         const currentUser = AuthService.getCurrentUser();
         if (currentUser) {
@@ -19,6 +22,22 @@ function Perfil () {
             setRole(currentUser.role)
         }
     },[])
+
+    const handleImageChange = (e) => {
+        setError(false);
+        const selected = e.target.files[0];
+        const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
+
+        if (selected && ALLOWED_TYPES.includes(selected.type)) {
+            let reader = new FileReader();
+            reader.onloadend = () => {
+                setImgPreview(reader.result);
+            }
+            reader.readAsDataURL(selected);
+        } else {
+            setError(true);
+        }
+    }
 
     return (
         <div>
@@ -102,9 +121,47 @@ function Perfil () {
                                                     />
                                                 </rs.FormGroup>
                                             </rs.Col>
+                                            <rs.Col md={12}>
+                                                <rs.FormGroup>
+                                                    <rs.Button color="success" >Actualizar</rs.Button>
+                                                </rs.FormGroup>
+                                            </rs.Col>
                                         </rs.Row>
                                     </rs.Col>
+                                    <rs.Col sm={6}>
+                                        <rs.FormGroup>
+                                            <rs.Label><FontAwesomeIcon icon={icon.faImage}/> Foto de Perfil</rs.Label>
+                                            <div className='box-container'>
+                                                <div className="imgPreview" 
+                                                    style={{background: imgPreview 
+                                                        ? `url("${imgPreview}") no-repeat center/cover` 
+                                                        : "#131313"
+                                                    }}
+                                                >
+                                                    {!imgPreview && (
+                                                        <>
+                                                            <rs.Label htmlFor="fileUpload" className="customFileUpload">
+                                                                Elegir Archivo
+                                                            </rs.Label>
+                                                            <rs.Input
+                                                                id="fileUpload"
+                                                                className="imgInput"
+                                                                type="file"
+                                                                onChange={handleImageChange}
+                                                            />
+                                                            <span>(.jpg .jpeg .png)</span>
+                                                        </>
+                                                    )}
+                                                </div>
+                                                {imgPreview && (
+                                                    <rs.Button className="removeBtn" onClick={() => setImgPreview(null)}>Remover imagen</rs.Button>
+                                                )}
+                                                {error && <p className="errorMsg">Archivo no soportado.</p>}
+                                            </div>
+                                        </rs.FormGroup>
+                                    </rs.Col>
                                 </rs.Row>
+                                <hr/>
                             </rs.Form>
                         </rs.CardBody>
                     </rs.Card>
@@ -117,10 +174,5 @@ function Perfil () {
 export default Perfil;
 
 /*
-<rs.Col sm={6}>
-    <img className='uploadImage'src={defaultUser}/>
-    <rs.Input
-        type="file"
-    />
-</rs.Col>
+
 */

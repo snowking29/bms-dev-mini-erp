@@ -7,7 +7,7 @@ import * as category_services from '../../api/services/category-services';
 import Loader from "../utils/loader";
 import DetalleCategoria from "../detalle/detalle_categorias";
 
-function Categorias () {
+function Categorias (props) {
 
     const [action, setAction] = useState(false);
     const [showLoader, setShowLoader] = useState(false);

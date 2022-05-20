@@ -3,7 +3,7 @@ import * as rs from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
 
-function Dashboard(){
+function Dashboard(props){
 
     return (
         <div>

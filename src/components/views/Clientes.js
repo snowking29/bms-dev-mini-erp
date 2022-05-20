@@ -7,7 +7,7 @@ import * as customer_services from '../../api/services/customer-services';
 import Loader from "../utils/loader";
 import DetalleCliente from "../detalle/detalle_clientes";
 
-function Clientes () {
+function Clientes (props) {
     
     const [action, setAction] = useState(false);
     const [showLoader, setShowLoader] = useState(false);

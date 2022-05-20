@@ -7,7 +7,7 @@ import * as entry_services from '../../api/services/entry-services';
 import Loader from "../utils/loader";
 import DetalleEntrada from "../detalle/detalle_entradas";
 
-function Entradas () {
+function Entradas (props) {
 
     const [action, setAction] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
@@ -84,8 +84,8 @@ function Entradas () {
 
     return (
         <div>
-            {action === "detalle" ? <DetalleEntrada dataEntrada={currentEntry} actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
-            action === "registrar" ? <RegistroEntrada actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
+            {action === "detalle" ? <DetalleEntrada currentUser={props.currentUser} dataEntrada={currentEntry} actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
+            action === "registrar" ? <RegistroEntrada currentUser={props.currentUser} actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
                 <rs.Card className='card'>
                     <rs.CardHeader className='header'>
                         <rs.Row>

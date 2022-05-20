@@ -47,7 +47,7 @@ function Registro_Entrada(props){
     const [modalConfirmation, setModalConfirmation] = useState(false);
     
     var date = new Date().toLocaleDateString('es-PE')
-    const user = localStorage.getItem("name");
+    const user = props.currentUser.name;
 
     function deleteEntryFromTable(key){
         console.log(key)

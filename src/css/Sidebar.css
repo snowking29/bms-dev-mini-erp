@@ -106,7 +106,6 @@ li a.dropdown-toggle::after {
   color: #11101D;
 }
 
-
 .sidebar .li-a-links_name{
   opacity: 1;
   pointer-events: auto;
@@ -164,3 +163,4 @@ li a.dropdown-toggle::after {
     display: unset;
   }
 }
+

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route,  } from "react-router-dom";
 import Dashboard from './components/views/Dashboard';
 import Login from './components/views/Login';
 import Productos from './components/views/Productos';
@@ -10,11 +10,10 @@ import Proveedores from './components/views/Proveedores';
 import Entradas from './components/views/Entradas';
 import PrivateRoute from './components/utils/PrivateRoute';
 import Perfil from './components/views/Perfil';
-
 import './App.css';
 
 const App =() => {
-    
+
     return (
         <Router>
             <Routes>
@@ -35,7 +34,7 @@ const App =() => {
                     <Route path="/proveedores" element={<Proveedores />}/>
                 </Route>
                 <Route element={<PrivateRoute component={Entradas} exact/>}>
-                    <Route path="/entradas" element={<Entradas />}/>
+                    <Route path="/entradas" element={<Entradas  />}/>
                 </Route>
                 <Route element={<PrivateRoute component={Perfil} exact/>}>
                     <Route path="/perfil" element={<Perfil />}/>

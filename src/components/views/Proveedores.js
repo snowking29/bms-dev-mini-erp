@@ -7,7 +7,7 @@ import * as provider_services from '../../api/services/provider-services';
 import Loader from "../utils/loader";
 import DetalleProveedor from "../detalle/detalle_proveedores";
 
-function Proveedores () {
+function Proveedores (props) {
     
     const [action, setAction] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
@@ -144,7 +144,6 @@ function Proveedores () {
                                 </rs.Col>
                             </rs.Row>
                         </rs.Form>
-                        <hr/>
                         {showLoader ? <Loader /> :
                             <rs.Form>
                                 <rs.FormGroup>

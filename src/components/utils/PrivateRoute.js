@@ -13,10 +13,10 @@ function PrivateRoute ({component : Component}){
             <SideBar toggle={toggleSidebar} isOpen={sidebarIsOpen}/>
             <div className={classNames("content", { "is-open": sidebarIsOpen })}>
                 <TopBar toggleSidebar={toggleSidebar} />
-                <Component />
+                <Component currentUser={AuthService.getCurrentUser()} />
             </div>
         </div>
     </> : <Navigate to="/login" />
-};
+}
 
 export default PrivateRoute;

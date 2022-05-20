@@ -44,7 +44,7 @@ function Detalle_Entrada(props){
     const [modalFooter, setModalFooter] = useState("");
     const [modalConfirmation, setModalConfirmation] = useState(false);
     
-    const user = localStorage.getItem("name");
+    const user = props.currentUser.name;
     var date = new Date().toLocaleDateString('es-PE')
 
     function saveProductData (e) {

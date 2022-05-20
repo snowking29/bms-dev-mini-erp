@@ -7,7 +7,7 @@ import * as product_services from '../../api/services/product-services';
 import Loader from "../utils/loader";
 import DetalleProducto from "../detalle/detalle_productos";
 
-function Productos () {
+function Productos (props) {
 
     const [action, setAction] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
