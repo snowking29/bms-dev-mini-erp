@@ -138,7 +138,8 @@ function Detalle_Proveedor(props){
                                     <rs.Input
                                         name="txtIdentifyID"
                                         type="number"
-                                        placeholder={props.dataProveedor.identifyID}
+                                        defaultValue={props.dataProveedor.identifyID}
+                                        disabled
                                     />
                                 </rs.FormGroup>
                             </rs.Col>
@@ -150,6 +151,7 @@ function Detalle_Proveedor(props){
                                     <rs.Input
                                         name="txtName"
                                         type="text"
+                                        defaultValue={props.dataProveedor.fullName}
                                         onChange={(e) => setName(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -162,6 +164,7 @@ function Detalle_Proveedor(props){
                                     <rs.Input
                                         name="txtAddress"
                                         type="text"
+                                        defaultValue={props.dataProveedor.address}
                                         onChange={(e) => setAddress(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -174,6 +177,7 @@ function Detalle_Proveedor(props){
                                     <rs.Input
                                         name="txtCity"
                                         type="text"
+                                        defaultValue={props.dataProveedor.city}
                                         onChange={(e) => setCity(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -186,6 +190,7 @@ function Detalle_Proveedor(props){
                                     <rs.Input
                                         name="txtPhone"
                                         type="number"
+                                        defaultValue={props.dataProveedor.phone}
                                         onChange={(e) => setPhone(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -198,6 +203,7 @@ function Detalle_Proveedor(props){
                                     <rs.Input
                                         name="txtEmail"
                                         type="email"
+                                        defaultValue={props.dataProveedor.email}
                                         onChange={(e) => setEmail(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -209,7 +215,8 @@ function Detalle_Proveedor(props){
                                     </rs.Label>
                                     <rs.Input
                                         name="txtDetail"
-                                        type="text"
+                                        type="textarea"
+                                        defaultValue={props.dataProveedor.details}
                                         onChange={(e) => setDetails(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -217,12 +224,38 @@ function Detalle_Proveedor(props){
                             <rs.Col sm={3}>
                                 <rs.FormGroup>
                                     <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faCalendar}/> Fecha Edición
+                                        <FontAwesomeIcon icon={icon.faUser}/> Registrado por:
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtUser"
+                                        type="text"
+                                        defaultValue={props.dataProveedor.user}
+                                        disabled
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faCalendar}/> Fecha de Creación
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtCreationTime"
+                                        type="text"
+                                        defaultValue={props.dataProveedor.creationTime}
+                                        disabled
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faCalendar}/> Fecha de Modificación
                                     </rs.Label>
                                     <rs.Input
                                         name="txtModifiedTime"
                                         type="text"
-                                        value={date}
+                                        defaultValue={props.dataProveedor.modifiedTime ? props.dataProveedor.modifiedTime : date}
                                         disabled
                                     />
                                 </rs.FormGroup>

@@ -1,0 +1,20 @@
+.pos-list {
+    text-align: center;
+}
+
+.pos-list-header{
+    /*background: #1a1a1a;
+    color: #fff;
+    */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.20);
+}
+
+.pos-list-header span{
+    font-size: 20px;
+}
+
+.pos-list-header h4{
+    font-weight: bold;
+    font-size: 26px;
+}
+

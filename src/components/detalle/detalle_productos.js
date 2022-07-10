@@ -170,7 +170,8 @@ function Detalle_Producto(props){
                                         name="txtCode"
                                         id="txtCode"
                                         type="text"
-                                        placeholder={props.dataProducto.code}
+                                        defaultValue={props.dataProducto.code}
+                                        disabled
                                         onChange={(e) => setCode(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -184,6 +185,7 @@ function Detalle_Producto(props){
                                         name="txtName"
                                         id="txtName"
                                         type="text"
+                                        defaultValue={props.dataProducto.name}
                                         onChange={(e) => setName(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -196,7 +198,8 @@ function Detalle_Producto(props){
                                     <rs.Input
                                         name="txtDescription"
                                         id="txtDescription"
-                                        type="text"
+                                        type="textarea"
+                                        defaultValue={props.dataProducto.description}
                                         onChange={(e) => setDescription(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -204,7 +207,7 @@ function Detalle_Producto(props){
                             <rs.Col sm={3}>
                                 <rs.FormGroup>
                                     <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faBoxes}/> Categoria
+                                        <FontAwesomeIcon icon={icon.faBoxes}/> Categoría
                                     </rs.Label>
                                     <rs.Input
                                         name="selectCategory"
@@ -212,7 +215,7 @@ function Detalle_Producto(props){
                                         type="select"
                                         onChange={(e) => saveCategoryData(e)}
                                     >
-                                        <option key = "-" value = "-">[Seleccione]</option>
+                                        {props.dataProducto.category}
                                         {categories}
                                     </rs.Input>
                                 </rs.FormGroup>
@@ -220,12 +223,107 @@ function Detalle_Producto(props){
                             <rs.Col sm={3}>
                                 <rs.FormGroup>
                                     <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faCalendar}/> Fecha Edición
+                                        <FontAwesomeIcon icon={icon.faComment}/> Descripcion
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtDescription"
+                                        id="txtDescription"
+                                        type="textarea"
+                                        defaultValue={props.dataProducto.description}
+                                        onChange={(e) => setDescription(e.target.value)}
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faWarehouse}/> Almacén
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtWarehouse"
+                                        id="txtWarehouse"
+                                        type="text"
+                                        defaultValue={props.dataProducto.warehouse}
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faDollarSign}/> Precio de Compra
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtPriceSale"
+                                        id="txtPriceSale"
+                                        type="text"
+                                        defaultValue={props.dataProducto.priceSale}
+                                        disabled
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faMoneyBillTransfer}/> Precio de Venta
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtPriceCost"
+                                        id="txtPriceCost"
+                                        type="text"
+                                        defaultValue={props.dataProducto.priceCost}
+                                        disabled
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faSortNumericAsc}/> Stock
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtStock"
+                                        id="txtStock"
+                                        type="text"
+                                        defaultValue={props.dataProducto.stock}
+                                        disabled
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faUser}/> Registrado por:
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtUser"
+                                        type="text"
+                                        defaultValue={props.dataProducto.user}
+                                        disabled
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faCalendar}/> Fecha de Creación
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtCreationTime"
+                                        type="text"
+                                        defaultValue={props.dataProducto.creationTime}
+                                        disabled
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faCalendar}/> Fecha de Modificación
                                     </rs.Label>
                                     <rs.Input
                                         name="txtModifiedTime"
                                         type="text"
-                                        value={date}
+                                        defaultValue={props.dataProducto.modifiedTime ? props.dataProducto.modifiedTime : date}
                                         disabled
                                     />
                                 </rs.FormGroup>

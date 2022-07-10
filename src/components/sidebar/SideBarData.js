@@ -11,7 +11,7 @@ export const SideBarData = [
     title: 'Salidas',
     path: '/salidas',
     icon: icon.faTruckRampBox,
-    disabled: true
+    disabled: false
   },
   {
     title: 'Entradas',

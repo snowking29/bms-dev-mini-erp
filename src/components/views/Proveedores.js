@@ -36,12 +36,8 @@ function Proveedores (props) {
                             <tr key= {a.key}>
                                 <td>{a.identifyID}</td>
                                 <td>{a.fullName}</td>
-                                <td>{a.phone.replace(/\s/g, '')}</td>
-                                <td>{a.address} {a.city} </td>
                                 <td>{a.email}</td>
-                                <td>{a.details}</td>
-                                <td>{a.creationTime}</td>
-                                <td>{a.modifiedTime}</td>
+                                <td>{a.phone.replace(/\s/g, '')}</td>
                                 <td>
                                     <FontAwesomeIcon icon={icon.faCheckSquare}
                                         className= 'select-button'
@@ -150,31 +146,20 @@ function Proveedores (props) {
                                     <rs.Table responsive className='styled-table'>
                                         <thead>
                                             <tr>
-                                                <th style={{width: "5%"}}>
-                                                    Documento
-                                                </th>
-                                                <th style={{width: "10%"}}>
-                                                    Nombres
-                                                </th>
-                                                <th style={{width: "10%"}}>
-                                                    Telefono
-                                                </th>
-                                                <th style={{width: "15%"}}>
-                                                    Direccion
-                                                </th>
-                                                <th style={{width: "10%"}}>
-                                                    Email
-                                                </th>
-                                                <th style={{width: "25%"}}>
-                                                    Detalles
-                                                </th>
-                                                <th style={{width: "10%"}}>
-                                                    F. Creacion
-                                                </th>
-                                                <th style={{width: "10%"}}>
-                                                    F. Modificacion
+                                                <th>
+                                                    Nro de Documento
                                                 </th>
                                                 <th>
+                                                    Nombres
+                                                </th>
+                                                <th>
+                                                    Email
+                                                </th>
+                                                <th>
+                                                    Telefono
+                                                </th>
+                                                <th>
+                                                    Acción
                                                 </th>
                                             </tr>
                                         </thead>

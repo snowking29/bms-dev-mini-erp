@@ -135,6 +135,7 @@ function Detalle_Categoria(props){
                                         name="txtCode"
                                         id="txtCode"
                                         type="text"
+                                        defaultValue={props.dataCategoria.code}
                                         onChange={(e) => setCode(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -148,6 +149,7 @@ function Detalle_Categoria(props){
                                         name="txtName"
                                         id="txtName"
                                         type="text"
+                                        defaultValue={props.dataCategoria.name}
                                         onChange={(e) => setName(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -160,7 +162,8 @@ function Detalle_Categoria(props){
                                     <rs.Input
                                         name="txtDescription"
                                         id="txtDescription"
-                                        type="text"
+                                        type="textarea"
+                                        defaultValue={props.dataCategoria.description}
                                         onChange={(e) => setDescription(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -168,13 +171,40 @@ function Detalle_Categoria(props){
                             <rs.Col sm={3}>
                                 <rs.FormGroup>
                                     <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faCalendar}/> Fecha Edición
+                                        <FontAwesomeIcon icon={icon.faUser}/> Registrado por:
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtUser"
+                                        type="text"
+                                        defaultValue={props.dataCategoria.user}
+                                        disabled
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faCalendar}/> Fecha de Creación
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtCreationTime"
+                                        id="txtCreationTime"
+                                        type="text"
+                                        value={date}
+                                        disabled
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faCalendar}/> Fecha de Modificación
                                     </rs.Label>
                                     <rs.Input
                                         name="txtModifiedTime"
                                         id="txtModifiedTime"
                                         type="text"
-                                        value={date}
+                                        defaultValue={props.dataCategoria.modifiedTime ? props.dataCategoria.modifiedTime : date}
                                         disabled
                                     />
                                 </rs.FormGroup>

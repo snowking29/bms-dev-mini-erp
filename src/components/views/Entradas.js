@@ -157,43 +157,43 @@ function Entradas (props) {
                                     <rs.Table responsive className='styled-table'>
                                         <thead>
                                             <tr>
-                                                <th style={{width: "10%"}}>
+                                                <th>
                                                     Fecha Registro
                                                 </th>
-                                                <th style={{width: "10%"}}>
+                                                <th>
                                                     Nro de Documento
                                                 </th>
-                                                <th style={{width: "10%"}}>
+                                                <th>
                                                     Usuario Registro
                                                 </th>
-                                                <th style={{width: "5%"}}>
+                                                <th>
                                                     Total
                                                 </th>
-                                                <th style={{width: "10%"}}>
+                                                <th>
                                                     Proveedor
                                                 </th>
-                                                <th style={{width: "10%"}}>
+                                                <th>
                                                     Codigo Producto
                                                 </th>
-                                                <th style={{width: "15%"}}>
+                                                <th>
                                                     Nombre Producto
                                                 </th>
-                                                <th style={{width: "10%"}}>
+                                                <th>
                                                     Categoria Producto
                                                 </th>
-                                                <th style={{width: "10%"}}>
+                                                <th>
                                                     Almacen
                                                 </th>
-                                                <th style={{width: "5%"}}>
+                                                <th>
                                                     Precio Compra
                                                 </th>
-                                                <th style={{width: "5%"}}>
+                                                <th>
                                                     Precio Venta
                                                 </th>
-                                                <th style={{width: "5%"}}>
+                                                <th>
                                                     Cantidad
                                                 </th>
-                                                <th style={{width: "5%"}}>
+                                                <th>
                                                     Sub Total
                                                 </th>
                                                 <th>

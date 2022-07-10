@@ -144,7 +144,8 @@ function Detalle_Cliente(props){
                                     <rs.Input
                                         name="txtIdentifyID"
                                         type="number"
-                                        placeholder={props.dataCliente.identifyID}
+                                        value={props.dataCliente.identifyID}
+                                        disabled
                                         onChange={(e) => setIdentifyID(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -157,6 +158,7 @@ function Detalle_Cliente(props){
                                     <rs.Input
                                         name="txtFullName"
                                         type="text"
+                                        defaultValue={props.dataCliente.fullName}
                                         onChange={(e) => setFullName(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -169,6 +171,7 @@ function Detalle_Cliente(props){
                                     <rs.Input
                                         name="txtPhone"
                                         type="number"
+                                        defaultValue={props.dataCliente.phone}
                                         onChange={(e) => setPhone(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -181,6 +184,7 @@ function Detalle_Cliente(props){
                                     <rs.Input
                                         name="txtEmail"
                                         type="email"
+                                        defaultValue={props.dataCliente.email}
                                         onChange={(e) => setEmail(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -193,6 +197,7 @@ function Detalle_Cliente(props){
                                     <rs.Input
                                         name="txtCity"
                                         type="text"
+                                        defaultValue={props.dataCliente.city}
                                         onChange={(e) => setCity(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -205,6 +210,7 @@ function Detalle_Cliente(props){
                                     <rs.Input
                                         name="txtAddress"
                                         type="text"
+                                        defaultValue={props.dataCliente.address}
                                         onChange={(e) => setAddress(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -212,11 +218,12 @@ function Detalle_Cliente(props){
                             <rs.Col sm={3}>
                                 <rs.FormGroup>
                                     <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faComment}/> Detalle
+                                        <FontAwesomeIcon icon={icon.faInfoCircle}/> Detalle
                                     </rs.Label>
                                     <rs.Input
                                         name="txtDetail"
-                                        type="text"
+                                        type="textarea"
+                                        defaultValue={props.dataCliente.details}
                                         onChange={(e) => setDetails(e.target.value)}
                                     />
                                 </rs.FormGroup>
@@ -224,12 +231,38 @@ function Detalle_Cliente(props){
                             <rs.Col sm={3}>
                                 <rs.FormGroup>
                                     <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faCalendar}/> Fecha Edición
+                                        <FontAwesomeIcon icon={icon.faUser}/> Registrado por:
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtUser"
+                                        type="text"
+                                        defaultValue={props.dataCliente.user}
+                                        disabled
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faCalendar}/> Fecha de Creación
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtCreationTime"
+                                        type="text"
+                                        defaultValue={props.dataCliente.creationTime}
+                                        disabled
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faCalendar}/> Fecha de Modificación
                                     </rs.Label>
                                     <rs.Input
                                         name="txtModifiedTime"
                                         type="text"
-                                        value={date}
+                                        defaultValue={props.dataCliente.modifiedTime ? props.dataCliente.modifiedTime : date}
                                         disabled
                                     />
                                 </rs.FormGroup>

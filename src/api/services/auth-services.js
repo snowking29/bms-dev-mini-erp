@@ -1,14 +1,24 @@
 import axios from "axios";
 
-const RESOURCE_URL = "/auth";
-
+const headers = {
+  "Access-Control-Allow-Origin": "*",
+}
 const login = (email, password) => {
-  return axios
-    .post(global.config.API_URL + RESOURCE_URL + "/login",null, { params : {
+  let config = {
+    method : "post",
+    url : global.config.API_URL,
+    headers: headers,
+    params : {
       email,
       password,
-    }})
-    .then((response) => {
+    },
+    validateStatus: function (status) {
+        return status >= 200 && status < 400
+    }
+  }
+  console.log(config);
+  return axios(config).then((response) => {
+      console.log(response)
       if (response.data.success === "true") {
         if (response.data.data.token) {
           localStorage.setItem("SESSION_ID", JSON.stringify(response.data.data.token));

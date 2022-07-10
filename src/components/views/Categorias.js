@@ -43,10 +43,7 @@ function Categorias (props) {
                             <tr key= {a.key}>
                                 <td>{a.code}</td>
                                 <td>{a.name}</td>
-                                <td>{a.description}</td>
                                 <td>{a.products.length}</td>
-                                <td>{a.creationTime}</td>
-                                <td>{a.modifiedTime}</td>
                                 <td>
                                     <FontAwesomeIcon icon={icon.faCheckSquare}
                                         className= 'select-button'
@@ -148,26 +145,17 @@ function Categorias (props) {
                                         <rs.Table responsive className='styled-table'>
                                             <thead>
                                                 <tr>
-                                                    <th style={{width: "0%"}}>
+                                                    <th>
                                                         Codigo
                                                     </th>
-                                                    <th style={{width: "20%"}}>
+                                                    <th>
                                                         Nombre
                                                     </th>
-                                                    <th style={{width: "20%"}}>
-                                                        Descripcion
-                                                    </th>
-                                                    <th style={{width: "20%"}}>
+                                                    <th>
                                                         Cant. productos
                                                     </th>
-                                                    <th style={{width: "20%"}}>
-                                                        F. de Creacion
-                                                    </th>
-                                                    <th style={{width: "20%"}}>
-                                                        F. de Modificacion
-                                                    </th>
                                                     <th>
-                                                        
+                                                        Acción
                                                     </th>
                                                 </tr>
                                             </thead>

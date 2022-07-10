@@ -10,6 +10,7 @@ import Proveedores from './components/views/Proveedores';
 import Entradas from './components/views/Entradas';
 import PrivateRoute from './components/utils/PrivateRoute';
 import Perfil from './components/views/Perfil';
+import PuntoDeVentas from './components/views/PuntoDeVentas';
 import './App.css';
 
 const App =() => {
@@ -38,6 +39,9 @@ const App =() => {
                 </Route>
                 <Route element={<PrivateRoute component={Perfil} exact/>}>
                     <Route path="/perfil" element={<Perfil />}/>
+                </Route>
+                <Route element={<PrivateRoute component={PuntoDeVentas} exact/>}>
+                    <Route path="/salidas" element={<PuntoDeVentas />}/>
                 </Route>
             </Routes>
         </Router>

@@ -37,14 +37,8 @@ function Productos (props) {
                             <tr key= {a.code}>
                                 <td>{a.code}</td>
                                 <td>{a.name}</td>
-                                <td>{a.description}</td>
-                                <td>{a.stock}</td>
-                                <td>{a.priceCost}</td>
-                                <td>{a.priceSale}</td>
                                 <td>{a.category}</td>
                                 <td>{a.warehouse}</td>
-                                <td>{a.creationTime}</td>
-                                <td>{a.modifiedTime}</td>
                                 <td>
                                     <FontAwesomeIcon icon={icon.faCheckSquare}
                                         type="button" 
@@ -150,35 +144,17 @@ function Productos (props) {
                                     <rs.Table responsive className='styled-table'>
                                         <thead>
                                             <tr>
-                                                <th style={{width: "5%"}}>
+                                                <th>
                                                     Codigo
                                                 </th>
-                                                <th style={{width: "20%"}}>
+                                                <th>
                                                     Nombre
                                                 </th>
-                                                <th style={{width: "20%"}}>
-                                                    Descripcion
-                                                </th>
-                                                <th style={{width: "5%"}}>
-                                                    Stock
-                                                </th>
-                                                <th style={{width: "5%"}}>
-                                                    P. Costo
-                                                </th>
-                                                <th style={{width: "5%"}}>
-                                                    P. Venta
-                                                </th>
-                                                <th style={{width: "10%"}}>
+                                                <th>
                                                     Categoria
                                                 </th>
-                                                <th style={{width: "5%"}}>
+                                                <th>
                                                     Almacén
-                                                </th>
-                                                <th style={{width: "15%"}}>
-                                                    F. Creación
-                                                </th>
-                                                <th style={{width: "15%"}}>
-                                                    F. Modificación
                                                 </th>
                                                 <th>
 
