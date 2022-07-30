@@ -14,6 +14,7 @@ function Entradas (props) {
     const [entradas, setEntradas] = useState([]);
     const initialFormState = {}
     const [currentEntry , setCurrentEntry] = useState(initialFormState)
+    const [search, setSearch] = useState("");
 
     function showRegistroEntradas(){
         setAction("registrar")
@@ -21,7 +22,7 @@ function Entradas (props) {
 
     useEffect(() => {
         getEntryTable();
-    },[])
+    },[search])
 
     function getEntryTable () {
         setShowLoader(true);
@@ -32,34 +33,31 @@ function Entradas (props) {
                 let body = response.data.data
 
                 if (Array.isArray(body)) {
-                    body.forEach( a => {
+                    body.filter(val=>{
+                        if(search === ''){
+                            return val;
+                        } else if (val.code.toLowerCase().includes(search.toLocaleLowerCase())
+                            || val.user.toLowerCase().includes(search.toLocaleLowerCase())
+                            || val.creationTime.toLowerCase().includes(search.toLocaleLowerCase())){
+                            return val
+                        }
+                    }).forEach( a => {
                         a.entries.forEach( e => {
                             filas.push(
                                 <tr key= {a.code.concat(e.code)}>
                                     <td>{a.creationTime}</td>
                                     <td>{a.code}</td>
                                     <td>{a.user}</td>
-                                    <td>{a.total}</td>
+                                    <td>S/.{a.total}</td>
                                     <td>{a.provider}</td>
                                     <td>{e.code}</td>
                                     <td>{e.name}</td>
                                     <td>{e.category}</td>
                                     <td>{e.warehouse}</td>
-                                    <td>{e.priceCost}</td>
-                                    <td>{e.priceSale}</td>
+                                    <td>S/.{e.priceCost}</td>
+                                    <td>S/.{e.priceSale}</td>
                                     <td>{e.quantity}</td>
-                                    <td>{e.subTotal}</td>
-                                    <td>
-                                        <FontAwesomeIcon icon={icon.faCheckSquare}
-                                            type="button" 
-                                            className= 'select-button'
-                                            title="Seleccionar"
-                                            onClick = { () => {
-                                                setAction("detalle")
-                                                setCurrentEntry(a)
-                                            }}
-                                        />
-                                    </td>
+                                    <td>S/.{e.subTotal}</td>
                                 </tr>
                             )
                         })
@@ -81,6 +79,20 @@ function Entradas (props) {
     function selectAction(value){
         setAction(value)
     }
+
+    /*
+    <td>
+                                        <FontAwesomeIcon icon={icon.faCheckSquare}
+                                            type="button" 
+                                            className= 'select-button'
+                                            title="Seleccionar"
+                                            onClick = { () => {
+                                                setAction("detalle")
+                                                setCurrentEntry(a)
+                                            }}
+                                        />
+                                    </td>
+    */
 
     return (
         <div>
@@ -104,113 +116,77 @@ function Entradas (props) {
                         </rs.Row>
                     </rs.CardHeader>
                     <rs.CardBody className='body'>
-                        <rs.Form>
-                            <rs.Row>
-                                <rs.Col sm={4}>
-                                    <rs.FormGroup row>
-                                        <rs.Label for="entryFromDate" sm={4}>
-                                            Fecha Inicio
-                                        </rs.Label>
-                                        <rs.Col sm={8}>
-                                            <rs.Input
-                                                id="entryFromDate"
-                                                name="date"
-                                                placeholder="date placeholder"
-                                                type="date"
-                                            />
-                                        </rs.Col>
-                                    </rs.FormGroup>
-                                </rs.Col>
-                                <rs.Col sm={4}>
-                                    <rs.FormGroup row>
-                                        <rs.Label for="entryToDate" sm={4}>
-                                            Fecha Fin
-                                        </rs.Label>
-                                        <rs.Col sm={8}>
-                                            <rs.Input
-                                                id="entryToDate"
-                                                name="date"
-                                                placeholder="date placeholder"
-                                                type="date"
-                                            />
-                                        </rs.Col>
-                                    </rs.FormGroup>
-                                </rs.Col>
-                                <rs.Col sm={4}>
-                                    <rs.InputGroup>
-                                        <rs.Input
-                                            id="searchEntry"
-                                            name="Search"
-                                            placeholder="Buscar"
-                                            type="search"
-                                        />
-                                        <rs.InputGroupText>
-                                            <FontAwesomeIcon icon={icon.faSearch}/>
-                                        </rs.InputGroupText>
-                                    </rs.InputGroup>
-                                </rs.Col>
-                            </rs.Row>
-                        </rs.Form>
+                        <rs.InputGroup>
+                            <rs.Input
+                                id="searchEntry"
+                                name="Search"
+                                placeholder="Buscar registro, documento, usuario..."
+                                type="search"
+                                style={{ textAlign: 'center'}}
+                                onChange={(e)=>{
+                                    setSearch(e.target.value)
+                                }}
+                            />
+                            <rs.InputGroupText>
+                                <FontAwesomeIcon icon={icon.faSearch}/>
+                            </rs.InputGroupText>
+                        </rs.InputGroup>
+                        <br/>
                         {showLoader ? <Loader /> :
                             <rs.Form>
-                                <rs.FormGroup>
-                                    <rs.Table responsive className='styled-table'>
-                                        <thead>
-                                            <tr>
-                                                <th>
-                                                    Fecha Registro
-                                                </th>
-                                                <th>
-                                                    Nro de Documento
-                                                </th>
-                                                <th>
-                                                    Usuario Registro
-                                                </th>
-                                                <th>
-                                                    Total
-                                                </th>
-                                                <th>
-                                                    Proveedor
-                                                </th>
-                                                <th>
-                                                    Codigo Producto
-                                                </th>
-                                                <th>
-                                                    Nombre Producto
-                                                </th>
-                                                <th>
-                                                    Categoria Producto
-                                                </th>
-                                                <th>
-                                                    Almacen
-                                                </th>
-                                                <th>
-                                                    Precio Compra
-                                                </th>
-                                                <th>
-                                                    Precio Venta
-                                                </th>
-                                                <th>
-                                                    Cantidad
-                                                </th>
-                                                <th>
-                                                    Sub Total
-                                                </th>
-                                                <th>
-
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {entradas}
-                                        </tbody>
-                                    </rs.Table>
-                                    {entradas.length === 0 ?
-                                        <h5 className="noData">
-                                            No data.
-                                        </h5>
-                                    : <hr/>}
-                                </rs.FormGroup>
+                                <rs.Table className='fl-table' responsive>
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                REGISTRO
+                                            </th>
+                                            <th>
+                                                DOCUMENTO
+                                            </th>
+                                            <th>
+                                                USUARIO
+                                            </th>
+                                            <th>
+                                                IMPORTE
+                                            </th>
+                                            <th>
+                                                PROVEEDOR
+                                            </th>
+                                            <th>
+                                                ITEM
+                                            </th>
+                                            <th>
+                                                NOMBRE
+                                            </th>
+                                            <th>
+                                                CATEGORIA
+                                            </th>
+                                            <th>
+                                                ALAMACEN
+                                            </th>
+                                            <th>
+                                                COMPRA
+                                            </th>
+                                            <th>
+                                                VENTA
+                                            </th>
+                                            <th>
+                                                CANT
+                                            </th>
+                                            <th>
+                                                SUB. TOTAL
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {entradas}
+                                    </tbody>
+                                </rs.Table>
+                                {entradas.length === 0 ?
+                                    <h5 className="noData">
+                                        No data.
+                                    </h5>
+                                : <span/>}
                             </rs.Form>
                         }
                     </rs.CardBody>

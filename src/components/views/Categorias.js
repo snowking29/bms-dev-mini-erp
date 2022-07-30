@@ -14,6 +14,7 @@ function Categorias (props) {
     const [categorias, setCategorias] = useState([]);
     const initialFormState = {}
     const [currentCategory , setCurrentCategory] = useState(initialFormState)
+    const [search, setSearch] = useState("");
 
     function showRegistroCategorias(){
         setAction("registrar")
@@ -27,7 +28,7 @@ function Categorias (props) {
 
     useEffect(() => {
         getCategoryTable();
-    },[])
+    },[search])
 
     function getCategoryTable () {
         setShowLoader(true);
@@ -38,14 +39,21 @@ function Categorias (props) {
                 let body = response.data.data
 
                 if (Array.isArray(body)) {
-                    body.forEach( a => {
+                    body.filter(val => {
+                        if(search === ''){
+                            return val;
+                        } else if (val.code.toLowerCase().includes(search.toLocaleLowerCase())
+                            || val.name.toLowerCase().includes(search.toLocaleLowerCase())){
+                            return val
+                        }
+                    }).forEach( a => {
                         filas.push(
                             <tr key= {a.key}>
                                 <td>{a.code}</td>
                                 <td>{a.name}</td>
                                 <td>{a.products.length}</td>
                                 <td>
-                                    <FontAwesomeIcon icon={icon.faCheckSquare}
+                                    <FontAwesomeIcon icon={icon.faEdit}
                                         className= 'select-button'
                                         type="button" 
                                         title="Seleccionar"
@@ -93,83 +101,50 @@ function Categorias (props) {
                         </rs.Row>
                     </rs.CardHeader>
                     <rs.CardBody className='body'>
-                    <rs.Row>
-                            <rs.Col sm={4}>
-                                <rs.FormGroup row>
-                                    <rs.Label for="categoryFromDate" sm={4}>
-                                        Fecha Inicio
-                                    </rs.Label>
-                                    <rs.Col sm={8}>
-                                        <rs.Input
-                                            id="categoryFromDate"
-                                            name="date"
-                                            placeholder="date placeholder"
-                                            type="date"
-                                        />
-                                    </rs.Col>
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={4}>
-                                <rs.FormGroup row>
-                                    <rs.Label for="categoryToDate" sm={4}>
-                                        Fecha Fin
-                                    </rs.Label>
-                                    <rs.Col sm={8}>
-                                        <rs.Input
-                                            id="categoryToDate"
-                                            name="date"
-                                            placeholder="date placeholder"
-                                            type="date"
-                                        />
-                                    </rs.Col>
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={4}>
-                                <rs.InputGroup>
-                                    <rs.Input
-                                        id="searchCategory"
-                                        name="Search"
-                                        placeholder="Buscar"
-                                        type="search"
-                                    />
-                                    <rs.InputGroupText>
-                                        <FontAwesomeIcon icon={icon.faSearch}/>
-                                    </rs.InputGroupText>
-                                </rs.InputGroup>
-                            </rs.Col>
-                        </rs.Row>
+                        <rs.InputGroup>
+                            <rs.Input
+                                id="searchCategory"
+                                name="Search"
+                                placeholder="Buscar por codigo o nombre ..."
+                                type="search"
+                                style={{ textAlign: 'center'}}
+                                onChange={(e)=>{
+                                    setSearch(e.target.value)
+                                }}
+                            />
+                            <rs.InputGroupText>
+                                <FontAwesomeIcon icon={icon.faSearch}/>
+                            </rs.InputGroupText>
+                        </rs.InputGroup>
+                        <br/>
                         {showLoader ? <Loader /> :
                             <rs.Form>
-                                <rs.FormGroup>
-                                    <rs.FormGroup>
-                                        <rs.Table responsive className='styled-table'>
-                                            <thead>
-                                                <tr>
-                                                    <th>
-                                                        Codigo
-                                                    </th>
-                                                    <th>
-                                                        Nombre
-                                                    </th>
-                                                    <th>
-                                                        Cant. productos
-                                                    </th>
-                                                    <th>
-                                                        Acción
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {categorias}
-                                            </tbody>
-                                        </rs.Table>
-                                        {categorias.length === 0 ?
-                                            <h5 className="noData">
-                                                No data.
-                                            </h5>
-                                        : <hr/>}
-                                    </rs.FormGroup>
-                                </rs.FormGroup>
+                                <rs.Table className='fl-table' responsive>
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                CODIGO
+                                            </th>
+                                            <th>
+                                                NOMBRE
+                                            </th>
+                                            <th>
+                                                CANT. PRODUCTOS
+                                            </th>
+                                            <th>
+                                                
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {categorias}
+                                    </tbody>
+                                </rs.Table>
+                                {categorias.length === 0 ?
+                                    <h5 className="noData">
+                                        No data.
+                                    </h5>
+                                : <span/>}
                             </rs.Form>
                         }
                     </rs.CardBody>

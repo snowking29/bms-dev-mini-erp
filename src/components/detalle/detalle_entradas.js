@@ -426,7 +426,7 @@ function Detalle_Entrada(props){
                             </rs.FormGroup>
                         </rs.Row>
                         <rs.FormGroup>
-                            <rs.Table responsive className='styled-table'>
+                            <rs.Table responsive>
                                 <thead>
                                     <tr>
                                         <th style={{width: "0%"}}>

@@ -3,14 +3,8 @@
 }
 
 .pos-list-header{
-    /*background: #1a1a1a;
-    color: #fff;
-    */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.20);
-}
-
-.pos-list-header span{
-    font-size: 20px;
+    margin-top:10px;
+    margin-bottom: 0px;
 }
 
 .pos-list-header h4{
@@ -18,3 +12,32 @@
     font-size: 26px;
 }
 
+.title {
+    text-align: center;
+    font-size: 30px;
+    background-color: #1467db;
+    color:#fff;
+}
+
+.inline-buttons{
+    display:flex;
+    justify-content: center;
+}
+
+.inline-button{
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.separator{
+    padding-bottom: 5px;
+}
+
+@media only screen and (max-width: 575px),(min-device-width: 575px) and (max-device-width: 575px) {
+    .inline-buttons{
+        padding: 10px 2px;
+    }
+    
+}

@@ -46,17 +46,16 @@ function Registro_Entrada(props){
     const [modalFooter, setModalFooter] = useState("");
     const [modalConfirmation, setModalConfirmation] = useState(false);
     
-    var date = new Date().toLocaleDateString('es-PE')
+    var date = new Date().toLocaleDateString('es-PE');
     const user = props.currentUser.name;
 
     function deleteEntryFromTable(key){
-        console.log(key)
         setEntriesTable(entriesTable.filter((item) => item[0].key !== key));
         setEntriesData(entriesData.filter((item) => item.key !== key));
     }
 
     function checkDuplicity(){
-        if (entriesTable.some(e => e[0].key === codeProduct))return true;
+        if (entriesTable.some(e => e[0].key === keyProduct)) return true;
     }
 
     function saveProductData (e) {
@@ -467,7 +466,7 @@ function Registro_Entrada(props){
                             </rs.FormGroup>
                         </rs.Row>
                         <rs.FormGroup>
-                            <rs.Table responsive className='styled-table'>
+                            <rs.Table className='fl-table' responsive>
                                 <thead>
                                     <tr>
                                         <th style={{width: "0%"}}>

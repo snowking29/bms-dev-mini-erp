@@ -2,21 +2,19 @@ import React, { useState, useEffect } from 'react';
 import * as rs from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
-import * as product_service from '../../api/services/product-services';
-import * as category_service from '../../api/services/category-services';
+import * as employee_services from '../../api/services/employee-services';
 import CustomModal from "../utils/modal";
 import Alerta from "../utils/alerta";
 import Loader from "../utils/loader";
 import {removeEmptyData} from "../utils/RemoveEmptyData";
 
-function Detalle_Producto(props){
+function Detalle_Empleado(props){
     
-    const [code, setCode] = useState("");
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [category, setCategory] = useState("");
-    const [keyCategory, setKeyCategory] = useState("");
-    const [categories, setCategories] = useState([]);
+    const [identifyID, setIdentifyID] = useState("");
+    const [password, setPassword] = useState("");
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
     const [msjAlert, setMsjAlert] = useState("");
     const [mostrarAlert, setMostrarAlert] = useState(false);
     const [color, setColor] = useState("secondary");
@@ -28,43 +26,19 @@ function Detalle_Producto(props){
     const [modalBody, setModalBody] = useState("");
     const [modalFooter, setModalFooter] = useState("");
     const [modalConfirmation, setModalConfirmation] = useState(false);
+        
     var date = new Date().toLocaleDateString('es-PE')
 
     function clearFields(){
-        setCode("")
-        setName("")
-        setDescription("")
-        setCategory("")
+        setFullName("")
+        setPassword("")
+        setEmail("")
+        setPhone("")
     }
 
     function ocultarAlerta(){
         setMostrarAlert(false);
     }
-
-    function saveCategoryData (e) {
-        setCategory(e.target.value)
-        categories.forEach(c=>{
-            if (c.props.value === e.target.value){
-                setKeyCategory(c.key)
-            }
-        })
-    }
-
-    useEffect(() => {
-        category_service.getCategories().then((response) => {
-            if (response){
-                if (response.status === 200){
-                    var filas = [];
-                    response.data.data.forEach( c => {
-                        filas.push(
-                            <option key={c.key} value={c.name}>{c.name}</option>
-                        )
-                    })
-                    setCategories(filas);
-                }
-            }
-        })
-    }, [])
 
     function ocultarModal(){
         setMostrarModal(false);
@@ -80,48 +54,42 @@ function Detalle_Producto(props){
     
     useEffect(() => {
         if (modalConfirmation === true && action === "guardar") {
-
-            var temporaryDataProduct = {
-                "code": code,
-                "name": name,
-                "description": description,
-                "category": category,
+            var temporaryDataEmployee = {
+                "identifyID": identifyID,
+                "password": password,
+                "fullName": fullName,
+                "email": email,
+                "phone": phone,            
                 "modifiedTime": date
             }
-            
-            var dataProduct = removeEmptyData(temporaryDataProduct)
+    
+            var dataEmployee = removeEmptyData(temporaryDataEmployee)
     
             setShowLoader(true);
-            product_service.putProducts(props.dataProducto.key, dataProduct)
-                .then((response => {
-                    setShowLoader (false);
-                    if (response) {
-                        if (response.data.meta.status.code === "00") {
-    
-                            if (category !== "") {
-                                let dataCategory = {
-                                    "products":props.dataProducto.key
-                                }
-                                category_service.putCategories(keyCategory,dataCategory)
+            employee_services.putEmployees(props.dataEmpleado.key, dataEmployee)
+                .then(
+                    (response => {
+                        setShowLoader (false);
+                        if (response) {
+                            if (response.data.meta.status.code === "00") {
+                                setColor("success");
+                                clearFields();
+                                props.actualizaResultados();
+                                props.selectAction("listar")
+                            }else{
+                                setColor("danger");
                             }
-                            setColor("success");
-                            clearFields();
-                            props.actualizaResultados();
-                            props.selectAction("listar")
-                        }else{
-                            setColor("danger");
+                            ocultarModal();
+                            setMsjAlert(response.data.meta.status.message_ilgn[0].value);
+                            setMostrarAlert(true);
                         }
-                        ocultarModal();
-                        setMsjAlert(response.data.meta.status.message_ilgn[0].value);
-                        setMostrarAlert(true);
-                    }
-                }))
+                    })
+                )
             setModalConfirmation("")
             setAction("")
-
         } else if (modalConfirmation === true && action === "eliminar") {
             setShowLoader(true);
-            product_service.deleteProduct(props.dataProducto.key).then((response) => {
+            employee_services.deleteEmployee(props.dataEmpleado.key).then((response) => {
                 if (response) {
                     setShowLoader (false);
                     if ( response.data.meta.status.code === "00" ) {
@@ -139,13 +107,13 @@ function Detalle_Producto(props){
             setAction("")
         }
     },[modalConfirmation, action])
-    
+
     return (
         <rs.Card className='card'>
             <rs.CardHeader className="header">
                 <rs.Row>
                     <rs.Col sm={10}>
-                        <h3><FontAwesomeIcon icon={icon.faFileEdit}/> Detalle Producto: {props.dataProducto.code}</h3>
+                        <h3><FontAwesomeIcon icon={icon.faUserEdit}/> Detalle Empleado: {props.dataEmpleado.fullName}</h3>
                     </rs.Col>
                     <rs.Col sm={2}>
                         <rs.Button 
@@ -164,127 +132,66 @@ function Detalle_Producto(props){
                             <rs.Col sm={3}>
                                 <rs.FormGroup>
                                     <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faBarcode}/> Codigo
+                                        <FontAwesomeIcon icon={icon.faIdCard}/> DNI
                                     </rs.Label>
                                     <rs.Input
-                                        name="txtCode"
-                                        id="txtCode"
-                                        type="text"
-                                        defaultValue={props.dataProducto.code}
+                                        name="txtIdentifyID"
+                                        type="number"
+                                        value={props.dataEmpleado.identifyID}
                                         disabled
-                                        onChange={(e) => setCode(e.target.value)}
+                                        onChange={(e) => setIdentifyID(e.target.value)}
                                     />
                                 </rs.FormGroup>
                             </rs.Col>
                             <rs.Col sm={3}>
+                                <rs.Label>
+                                    <FontAwesomeIcon icon={icon.faFileText}/> Contraseña
+                                </rs.Label>
+                                <rs.InputGroup>
+                                    <rs.Input
+                                        name="txtPassword"
+                                        type="password"
+                                        defaultValue={props.dataEmpleado.password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                    />
+                                </rs.InputGroup>
+                            </rs.Col>
+                            <rs.Col sm={3}>
                                 <rs.FormGroup>
                                     <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faFileText}/> Nombre
+                                        <FontAwesomeIcon icon={icon.faFileText}/> Nombres y Apellidos
                                     </rs.Label>
                                     <rs.Input
-                                        name="txtName"
-                                        id="txtName"
+                                        name="txtFullName"
                                         type="text"
-                                        defaultValue={props.dataProducto.name}
-                                        onChange={(e) => setName(e.target.value)}
+                                        defaultValue={props.dataEmpleado.fullName}
+                                        onChange={(e) => setFullName(e.target.value)}
                                     />
                                 </rs.FormGroup>
                             </rs.Col>
                             <rs.Col sm={3}>
                                 <rs.FormGroup>
                                     <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faComment}/> Descripcion
+                                        <FontAwesomeIcon icon={icon.faPhone}/> Telefono
                                     </rs.Label>
                                     <rs.Input
-                                        name="txtDescription"
-                                        id="txtDescription"
-                                        type="textarea"
-                                        defaultValue={props.dataProducto.description}
-                                        onChange={(e) => setDescription(e.target.value)}
+                                        name="txtPhone"
+                                        type="number"
+                                        defaultValue={props.dataEmpleado.phone}
+                                        onChange={(e) => setPhone(e.target.value)}
                                     />
                                 </rs.FormGroup>
                             </rs.Col>
                             <rs.Col sm={3}>
                                 <rs.FormGroup>
                                     <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faBoxes}/> Categoría
+                                        <FontAwesomeIcon icon={icon.faMailBulk}/> Email
                                     </rs.Label>
                                     <rs.Input
-                                        name="selectCategory"
-                                        id="selectCategory"
-                                        type="select"
-                                        onChange={(e) => saveCategoryData(e)}
-                                    >
-                                        {props.dataProducto.category}
-                                        {categories}
-                                    </rs.Input>
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={3}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faWarehouse}/> Almacén
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtWarehouse"
-                                        id="txtWarehouse"
-                                        type="text"
-                                        defaultValue={props.dataProducto.warehouse}
-                                    />
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={3}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faDollarSign}/> Precio de Compra
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtPriceSale"
-                                        id="txtPriceSale"
-                                        type="text"
-                                        defaultValue={props.dataProducto.priceSale}
-                                        disabled
-                                    />
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={3}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faMoneyBillTransfer}/> Precio de Venta
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtPriceCost"
-                                        id="txtPriceCost"
-                                        type="text"
-                                        defaultValue={props.dataProducto.priceCost}
-                                        disabled
-                                    />
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={3}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faSortNumericAsc}/> Stock
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtStock"
-                                        id="txtStock"
-                                        type="text"
-                                        defaultValue={props.dataProducto.stock}
-                                        disabled
-                                    />
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={3}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faUser}/> Registrado por:
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtUser"
-                                        type="text"
-                                        defaultValue={props.dataProducto.user}
-                                        disabled
+                                        name="txtEmail"
+                                        type="email"
+                                        defaultValue={props.dataEmpleado.email}
+                                        onChange={(e) => setEmail(e.target.value)}
                                     />
                                 </rs.FormGroup>
                             </rs.Col>
@@ -296,7 +203,7 @@ function Detalle_Producto(props){
                                     <rs.Input
                                         name="txtCreationTime"
                                         type="text"
-                                        defaultValue={props.dataProducto.creationTime}
+                                        defaultValue={props.dataEmpleado.creationTime}
                                         disabled
                                     />
                                 </rs.FormGroup>
@@ -309,14 +216,14 @@ function Detalle_Producto(props){
                                     <rs.Input
                                         name="txtModifiedTime"
                                         type="text"
-                                        defaultValue={props.dataProducto.modifiedTime ? props.dataProducto.modifiedTime : date}
+                                        defaultValue={props.dataEmpleado.modifiedTime ? props.dataEmpleado.modifiedTime : date}
                                         disabled
                                     />
                                 </rs.FormGroup>
                             </rs.Col>
                             <rs.FormGroup className='actions'>
                                 <rs.Button color='success' className='left' onClick={() =>
-                                    buildingModal("Confirmación",`¿Desea guardar los nuevos datos del item: ${props.dataProducto.code}?`,
+                                    buildingModal("Confirmación",`¿Desea guardar los nuevos datos del item: ${props.dataEmpleado.identifyID}?`,
                                         <>
                                             <rs.Button color="primary"
                                                 onClick={()=> setModalConfirmation(true)}
@@ -334,7 +241,7 @@ function Detalle_Producto(props){
                                     <FontAwesomeIcon icon={icon.faSave}/>{' '}Guardar
                                 </rs.Button>
                                 <rs.Button color='danger' className='right' onClick={() => 
-                                        buildingModal("Confirmación",`¿Desea eliminar el item: ${props.dataProducto.code}?`,
+                                        buildingModal("Confirmación",`¿Desea eliminar el item: ${props.dataEmpleado.identifyID}?`,
                                             <>
                                                 <rs.Button color="primary"
                                                     onClick={()=> setModalConfirmation(true)}
@@ -363,4 +270,4 @@ function Detalle_Producto(props){
     )
 }
 
-export default Detalle_Producto;
+export default Detalle_Empleado;

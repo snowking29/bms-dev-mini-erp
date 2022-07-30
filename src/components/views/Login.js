@@ -43,8 +43,7 @@ const Login = () => {
   }
   function ocultarModal(){
     setMostrarModal(false);
-    window.location.reload(false);
-    //navigate("/dashboard")
+    navigate("/dashboard")
   }
 
   const onSubmit = async(event) => {

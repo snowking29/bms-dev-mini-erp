@@ -9,6 +9,7 @@ import AuthService from "../../api/services/auth-services";
 import "../../css/Sidebar.css";
 
 function SideBar ({isOpen, toggle}) {
+  const navigate = useNavigate();
   const [user, setUser] = useState("");
   const [role, setRole] = useState("");
   const [roles, setRoles] = useState([]);
@@ -27,10 +28,9 @@ function SideBar ({isOpen, toggle}) {
 
   const logOutHandler = async() => {
     await AuthService.logout();
-    window.location.reload(false);
+    navigate("/dashboard")
   }
-  const navigate = useNavigate();
-
+  
   return (
     <div className={classNames("sidebar", { "is-open": isOpen })}>
       <div className="sidebar-header">
@@ -40,11 +40,11 @@ function SideBar ({isOpen, toggle}) {
         <h3>VisionSW</h3>
       </div>
       <div className="d-flex flex-nowrap">
-        <div className="sidebar-user-pic" onClick={() => navigate("/perfil") }>
+        <div className="sidebar-user-pic" onClick={() => navigate("/dashboard") }>
           <img className="img-responsive img-rounded" src={defaultUser} alt={defaultUser} />
         </div>
         <div className="sidebar-user-info">
-          <div><span className='user-name' onClick={() => navigate("/perfil") }>{user} <FontAwesomeIcon icon={icon.faGear}/></span></div>
+          <div><span className='user-name' onClick={() => navigate("/dashboard") }>{user} <FontAwesomeIcon icon={icon.faGear}/></span></div>
           <div><span className='user-role'>{role}</span></div>
         </div>
       </div>

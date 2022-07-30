@@ -11,7 +11,7 @@ function Clientes (props) {
     
     const [action, setAction] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
-    const [searchCust, setSearchCust] = useState("");
+    const [search, setSearch] = useState("");
     const [clientes, setClientes] = useState([]);
     const initialFormState = {}
     const [currentCustomer , setCurrentCustomer] = useState(initialFormState)
@@ -29,7 +29,7 @@ function Clientes (props) {
 
     useEffect(() => {
         getCustomers();
-    },[])
+    },[search])
 
     function getCustomers () {
         setShowLoader(true);
@@ -39,7 +39,16 @@ function Clientes (props) {
                 var filas = [];
                 let body = response.data.data
                 if (Array.isArray(body)) {
-                    body.forEach( a => {
+                    body.filter(val => {
+                        if(search === ''){
+                            return val;
+                        } else if (val.identifyID.toLowerCase().includes(search.toLocaleLowerCase())
+                            || val.fullName.toLowerCase().includes(search.toLocaleLowerCase())
+                            || val.phone.toLowerCase().includes(search.toLocaleLowerCase())
+                            || val.email.toLowerCase().includes(search.toLocaleLowerCase())){
+                            return val
+                        }
+                    }).forEach( a => {
                         filas.push(
                             <tr key= {a.key}>
                                 <td>{a.identifyID}</td>
@@ -47,7 +56,7 @@ function Clientes (props) {
                                 <td>{a.phone.replace(/\s/g, '')}</td>
                                 <td>{a.email}</td>
                                 <td>
-                                    <FontAwesomeIcon icon={icon.faCheckSquare}
+                                    <FontAwesomeIcon icon={icon.faEdit}
                                         className= 'select-button'
                                         type="button" 
                                         title="Seleccionar"
@@ -67,10 +76,6 @@ function Clientes (props) {
                 console.log("NOT AUTHORIZED, AUTH AGAIN OR REDIRECT TO LOGIN")
             }
         })
-    }
-
-    function getCustomerSearched(value){
-        setSearchCust(value)
     }
 
     function selectAction(value){
@@ -99,84 +104,53 @@ function Clientes (props) {
                         </rs.Row>
                     </rs.CardHeader>
                     <rs.CardBody className='body'>
-                        <rs.Row>
-                            <rs.Col sm={4}>
-                                <rs.FormGroup row>
-                                    <rs.Label for="customerFromDate" sm={4}>
-                                        Fecha Inicio
-                                    </rs.Label>
-                                    <rs.Col sm={8}>
-                                        <rs.Input
-                                            id="customerFromDate"
-                                            name="date"
-                                            placeholder="date placeholder"
-                                            type="date"
-                                        />
-                                    </rs.Col>
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={4}>
-                                <rs.FormGroup row>
-                                    <rs.Label for="customerToDate" sm={4}>
-                                        Fecha Fin
-                                    </rs.Label>
-                                    <rs.Col sm={8}>
-                                        <rs.Input
-                                            id="customerToDate"
-                                            name="date"
-                                            placeholder="date placeholder"
-                                            type="date"
-                                        />
-                                    </rs.Col>
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={4}>
-                                <rs.InputGroup>
-                                    <rs.Input
-                                        id="searchCustomer"
-                                        name="Search"
-                                        placeholder="Buscar"
-                                        type="search"
-                                    />
-                                    <rs.InputGroupText>
-                                        <FontAwesomeIcon icon={icon.faSearch}/>
-                                    </rs.InputGroupText>
-                                </rs.InputGroup>
-                            </rs.Col>
-                        </rs.Row>
+                        <rs.InputGroup>
+                            <rs.Input
+                                id="searchCustomer"
+                                name="Search"
+                                placeholder="Buscar por dni/ruc, nombres, telefono o email"
+                                type="search"
+                                style={{ textAlign: 'center'}}
+                                onChange={(e)=>{
+                                    setSearch(e.target.value)
+                                }}
+                            />
+                            <rs.InputGroupText>
+                                <FontAwesomeIcon icon={icon.faSearch}/>
+                            </rs.InputGroupText>
+                        </rs.InputGroup>
+                        <br/>
                         {showLoader ? <Loader /> :
                             <rs.Form>
-                                <rs.FormGroup>
-                                    <rs.Table responsive className='styled-table'>
-                                        <thead>
-                                            <tr>
-                                                <th>
-                                                    Nro de Documento
-                                                </th>
-                                                <th>
-                                                    Nombres
-                                                </th>
-                                                <th>
-                                                    Telefono
-                                                </th>
-                                                <th>
-                                                    Email
-                                                </th>
-                                                <th>
-                                                    Acción
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {clientes}
-                                        </tbody>
-                                    </rs.Table>
-                                    {clientes.length === 0 ?
-                                        <h5 className="noData">
-                                            No data.
-                                        </h5>
-                                    : <hr/>}
-                                </rs.FormGroup>
+                                <rs.Table className='fl-table' responsive>
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                NRO. DOCUMENTO
+                                            </th>
+                                            <th>
+                                                NOMBRES
+                                            </th>
+                                            <th>
+                                                TELEFONO
+                                            </th>
+                                            <th>
+                                                EMAIL
+                                            </th>
+                                            <th>
+                                                
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {clientes}
+                                    </tbody>
+                                </rs.Table>
+                                {clientes.length === 0 ?
+                                    <h5 className="noData">
+                                        No data.
+                                    </h5>
+                                : <span/>}
                             </rs.Form>
                         }
                     </rs.CardBody>

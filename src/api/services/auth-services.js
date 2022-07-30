@@ -2,6 +2,7 @@ import axios from "axios";
 
 const headers = {
   "Access-Control-Allow-Origin": "*",
+  "Content-type":"application/json"
 }
 const login = (email, password) => {
   let config = {

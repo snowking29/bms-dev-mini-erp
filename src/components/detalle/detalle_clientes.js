@@ -120,7 +120,7 @@ function Detalle_Cliente(props){
             <rs.CardHeader className="header">
                 <rs.Row>
                     <rs.Col sm={10}>
-                        <h3><FontAwesomeIcon icon={icon.faUserEdit}/> Detalle Cliente: {props.dataCliente.identifyID}</h3>
+                        <h3><FontAwesomeIcon icon={icon.faUserEdit}/> Detalle Cliente: {props.dataCliente.fullName}</h3>
                     </rs.Col>
                     <rs.Col sm={2}>
                         <rs.Button 

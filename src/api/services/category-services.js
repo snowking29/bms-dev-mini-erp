@@ -4,6 +4,7 @@ const RESOURCE_URL = "categories/";
 
 const headers = {
     "Access-Control-Allow-Origin": "*",
+    "Content-type":"application/json"
 }
 
 export const getCategories = () => {

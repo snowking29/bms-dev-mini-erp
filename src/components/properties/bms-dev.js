@@ -14,6 +14,11 @@ export const properties = {
     "error.form.customer.address": "Ingrese la dirección del cliente.",
     "error.form.customer.phone" : "Ingrese un número de teléfono valido.",
 
+    //Employees
+    "error.form.employee.fullName" : "Ingrese nombre del empleado.",
+    "error.form.employee.identifyID" : "Ingrese documento del empleado.",
+    "error.form.employee.email" : "Ingrese email del empleado.",
+
     //Providers
     "error.form.provider.id" : "Ingrese el documento del proveedor",
     "error.form.provider.fullName" : "Ingrese nombre del proveedor.",

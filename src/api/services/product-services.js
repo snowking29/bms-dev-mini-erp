@@ -4,6 +4,7 @@ const RESOURCE_URL = "products/";
 
 const headers = {
     "Access-Control-Allow-Origin": "*",
+    "Content-type":"application/json"
 }
 
 export const getProducts = () => {

@@ -8,6 +8,12 @@ export const SideBarData = [
     disabled: false
   },
   {
+    title: 'Punto De Venta',
+    path: '/pos',
+    icon: icon.faCalculator,
+    disabled: false
+  },
+  {
     title: 'Salidas',
     path: '/salidas',
     icon: icon.faTruckRampBox,
@@ -19,12 +25,12 @@ export const SideBarData = [
     icon: icon.faBoxOpen,
     disabled: false
   },
-  {
+  /*{
     title: 'Control de Caja',
     path: '/caja',
     icon: icon.faCalculator,
     disabled: true
-  },
+  },*/
   {
     title: 'Clientes',
     path: '/clientes',
@@ -54,12 +60,12 @@ export const SideBarData = [
     title: 'Inventario',
     path: '/inventario',
     icon: icon.faBoxes,
-    disabled: true
+    disabled: false
   },
   {
     title: 'Empleados',
     path: '/empleados',
     icon: icon.faUserGroup,
-    disabled: true
+    disabled: false
   }
 ];

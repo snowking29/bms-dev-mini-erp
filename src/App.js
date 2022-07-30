@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Routes, Route,  } from "react-router-dom";
 import Dashboard from './components/views/Dashboard';
@@ -11,6 +11,9 @@ import Entradas from './components/views/Entradas';
 import PrivateRoute from './components/utils/PrivateRoute';
 import Perfil from './components/views/Perfil';
 import PuntoDeVentas from './components/views/PuntoDeVentas';
+import Empleados from './components/views/Empleados';
+import Salidas from './components/views/Salidas';
+import Inventario from './components/views/Inventario';
 import './App.css';
 
 const App =() => {
@@ -18,6 +21,7 @@ const App =() => {
     return (
         <Router>
             <Routes>
+                <Route path ="/" element={<Login />} exact/>
                 <Route path ="/login" element={<Login />} exact/>
                 <Route element={<PrivateRoute component={Dashboard} />}>
                     <Route path="/dashboard" element={<Dashboard />}/>
@@ -41,7 +45,16 @@ const App =() => {
                     <Route path="/perfil" element={<Perfil />}/>
                 </Route>
                 <Route element={<PrivateRoute component={PuntoDeVentas} exact/>}>
-                    <Route path="/salidas" element={<PuntoDeVentas />}/>
+                    <Route path="/pos" element={<PuntoDeVentas />}/>
+                </Route>
+                <Route element={<PrivateRoute component={Empleados} exact/>}>
+                    <Route path="/empleados" element={<Empleados />}/>
+                </Route>
+                <Route element={<PrivateRoute component={Salidas} exact/>}>
+                    <Route path="/salidas" element={<Salidas />}/>
+                </Route>
+                <Route element={<PrivateRoute component={Inventario} exact/>}>
+                    <Route path="/inventario" element={<Inventario />}/>
                 </Route>
             </Routes>
         </Router>

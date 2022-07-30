@@ -2,43 +2,49 @@ import React, { useState, useEffect } from 'react';
 import * as rs from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
-import RegistroProveedores from "../registro/registro_proveedores";
-import * as provider_services from '../../api/services/provider-services';
+import RegistroEmpleado from "../registro/registro_empleados";
+import * as employee_services from '../../api/services/employee-services';
 import Loader from "../utils/loader";
-import DetalleProveedor from "../detalle/detalle_proveedores";
+import DetalleEmpleado from "../detalle/detalle_empleados";
 
-function Proveedores (props) {
+function Empleados (props) {
     
     const [action, setAction] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
-    const [proveedores, setProveedores] = useState([]);
-    const initialFormState = {}
-    const [currentProvider , setCurrentProvider] = useState(initialFormState)
     const [search, setSearch] = useState("");
+    const [empleados, setEmpleados] = useState([]);
+    const initialFormState = {}
+    const [currentEmployee , setCurrentEmployee] = useState(initialFormState)
 
-    function showRegistroProveedores(){
+    function showRegistroEmpleados(){
         setAction("registrar")
     }
 
+    function actualizarTabla () {
+        if (empleados.length !== 0 || typeof(empleados) !== 'undefined'){
+            getEmployees()
+        }
+    }
+
     useEffect(() => {
-        getProviders();
+        getEmployees();
     },[search])
 
-    function getProviders () {
+    function getEmployees () {
         setShowLoader(true);
-        provider_services.getProviders().then( (response) => {
+        employee_services.getEmployees().then( (response) => {
             setShowLoader(false);
             if (response.status === 200) {
                 var filas = [];
                 let body = response.data.data
                 if (Array.isArray(body)) {
-                    body.filter(val=>{
+                    body.filter(val => {
                         if(search === ''){
                             return val;
                         } else if (val.identifyID.toLowerCase().includes(search.toLocaleLowerCase())
                             || val.fullName.toLowerCase().includes(search.toLocaleLowerCase())
-                            || val.email.toLowerCase().includes(search.toLocaleLowerCase())
-                            || val.phone.toLowerCase().includes(search.toLocaleLowerCase())){
+                            || val.phone.toLowerCase().includes(search.toLocaleLowerCase())
+                            || val.email.toLowerCase().includes(search.toLocaleLowerCase())){
                             return val
                         }
                     }).forEach( a => {
@@ -46,8 +52,8 @@ function Proveedores (props) {
                             <tr key= {a.key}>
                                 <td>{a.identifyID}</td>
                                 <td>{a.fullName}</td>
-                                <td>{a.email}</td>
                                 <td>{a.phone.replace(/\s/g, '')}</td>
+                                <td>{a.email}</td>
                                 <td>
                                     <FontAwesomeIcon icon={icon.faEdit}
                                         className= 'select-button'
@@ -55,7 +61,7 @@ function Proveedores (props) {
                                         title="Seleccionar"
                                         onClick = { () => {
                                             setAction("detalle")
-                                            setCurrentProvider(a)
+                                            setCurrentEmployee(a)
                                         }}
                                     />
                                     
@@ -64,17 +70,11 @@ function Proveedores (props) {
                         )
                     })
                 }
-                setProveedores(filas);
+                setEmpleados(filas);
             } else if(response.status === 401) {
                 console.log("NOT AUTHORIZED, AUTH AGAIN OR REDIRECT TO LOGIN")
             }
         })
-    }
-
-    function actualizarTabla () {
-        if (proveedores.length !== 0 || typeof(proveedores) !== 'undefined'){
-            getProviders()
-        }
     }
 
     function selectAction(value){
@@ -83,31 +83,31 @@ function Proveedores (props) {
 
     return (
         <div>
-            {action === "detalle" ? <DetalleProveedor dataProveedor={currentProvider} actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
-            action === "registrar" ? <RegistroProveedores actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
+            {action === "detalle" ? <DetalleEmpleado dataEmpleado={currentEmployee} actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
+            action === "registrar" ? <RegistroEmpleado actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
                 <rs.Card className='card'>
                     <rs.CardHeader className='header'>
                         <rs.Row>
                             <rs.Col sm={10}>
-                                <h3><FontAwesomeIcon icon={icon.faListNumeric}/> Listas Proveedores</h3>
+                                <h3><FontAwesomeIcon icon={icon.faListNumeric}/> Lista Empleados</h3>
                             </rs.Col>
                             <rs.Col sm={2}>
-                                <rs.Button 
-                                    className='button'
-                                    value="Registrar"
-                                    onClick={showRegistroProveedores}
-                                >
-                                    <FontAwesomeIcon icon={icon.faPlusCircle}/> Nuevo
-                                </rs.Button>
+                                    <rs.Button 
+                                        className='button'
+                                        value="Agregar" 
+                                        onClick={showRegistroEmpleados}
+                                    >
+                                       <FontAwesomeIcon icon={icon.faPlusCircle}/> Nuevo
+                                    </rs.Button>
                             </rs.Col>
                         </rs.Row>
                     </rs.CardHeader>
                     <rs.CardBody className='body'>
                         <rs.InputGroup>
                             <rs.Input
-                                id="searchProvider"
+                                id="searchEmployee"
                                 name="Search"
-                                placeholder="Buscar por dni/ruc, nombres, email o telefono..."
+                                placeholder="Buscar por dni, nombres, telefono o email"
                                 type="search"
                                 style={{ textAlign: 'center'}}
                                 onChange={(e)=>{
@@ -131,10 +131,10 @@ function Proveedores (props) {
                                                 NOMBRES
                                             </th>
                                             <th>
-                                                EMAIL
+                                                TELEFONO
                                             </th>
                                             <th>
-                                                TELEFONO
+                                                EMAIL
                                             </th>
                                             <th>
                                                 
@@ -142,14 +142,14 @@ function Proveedores (props) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {proveedores}
+                                        {empleados}
                                     </tbody>
                                 </rs.Table>
-                                {proveedores.length === 0 ?
+                                {empleados.length === 0 ?
                                     <h5 className="noData">
                                         No data.
                                     </h5>
-                                :<span/>}
+                                : <span/>}
                             </rs.Form>
                         }
                     </rs.CardBody>
@@ -159,4 +159,4 @@ function Proveedores (props) {
     )
 }
 
-export default Proveedores;
+export default Empleados;
