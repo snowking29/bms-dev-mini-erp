@@ -10,7 +10,7 @@ const headers = {
 export const getCategories = () => {
     let config = {
         method : "get",
-        url : global.config.API_AWS_URL + RESOURCE_URL,
+        url : global.config.API_AWS_URL + global.config.RESOURCE_ENTITY_AWS + RESOURCE_URL,
         headers: headers,
         validateStatus: function (status) {
             return status >= 200 && status < 400
@@ -33,7 +33,7 @@ export const getCategories = () => {
 export const postCategories = ( dataCategory ) => {
     let config = {
         method : "post",
-        url : global.config.API_AWS_URL + RESOURCE_URL,
+        url : global.config.API_AWS_URL + global.config.RESOURCE_ENTITY_AWS + RESOURCE_URL,
         headers: headers,
         data : dataCategory,
         validateStatus: function (status) {
@@ -58,7 +58,7 @@ export const postCategories = ( dataCategory ) => {
 export const putCategories = ( key, dataCategory ) => {
     let config = {
         method : "put",
-        url : global.config.API_AWS_URL + RESOURCE_URL,
+        url : global.config.API_AWS_URL + global.config.RESOURCE_ENTITY_AWS + RESOURCE_URL,
         headers: headers,
         params: {
             "key": key
@@ -86,7 +86,7 @@ export const putCategories = ( key, dataCategory ) => {
 export const deleteCategories = (key) => {
     let config = {
         method : "delete",
-        url : global.config.API_AWS_URL + RESOURCE_URL,
+        url : global.config.API_AWS_URL + global.config.RESOURCE_ENTITY_AWS + RESOURCE_URL,
         params: {
             "key": key
         },

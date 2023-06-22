@@ -10,7 +10,7 @@ const headers = {
 export const getEntries = () => {
     let config = {
         method : "get",
-        url : global.config.API_AWS_URL + RESOURCE_URL,
+        url : global.config.API_AWS_URL + global.config.RESOURCE_ENTITY_AWS + RESOURCE_URL,
         headers: headers,
         validateStatus: function (status) {
             return status >= 200 && status < 400
@@ -33,7 +33,7 @@ export const getEntries = () => {
 export const postEntries = ( dataEntry ) => {
     let config = {
         method : "post",
-        url : global.config.API_AWS_URL + RESOURCE_URL,
+        url : global.config.API_AWS_URL + global.config.RESOURCE_ENTITY_AWS + RESOURCE_URL,
         headers: headers,
         data : dataEntry,
         validateStatus: function (status) {
@@ -57,7 +57,7 @@ export const postEntries = ( dataEntry ) => {
 export const putEntries = ( key, dataEntry, upsert ) => {
     let config = {
         method : "put",
-        url : global.config.API_AWS_URL + RESOURCE_URL,
+        url : global.config.API_AWS_URL + global.config.RESOURCE_ENTITY_AWS + RESOURCE_URL,
         headers: headers,
         params: {
             "key": key,
@@ -85,7 +85,7 @@ export const putEntries = ( key, dataEntry, upsert ) => {
 export const deleteEntry = (key) => {
     let config = {
         method : "delete",
-        url : global.config.API_AWS_URL + RESOURCE_URL,
+        url : global.config.API_AWS_URL + global.config.RESOURCE_ENTITY_AWS + RESOURCE_URL,
         params: {
             "key": key
         },

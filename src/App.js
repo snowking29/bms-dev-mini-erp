@@ -14,6 +14,7 @@ import PuntoDeVentas from './components/views/PuntoDeVentas';
 import Empleados from './components/views/Empleados';
 import Salidas from './components/views/Salidas';
 import Inventario from './components/views/Inventario';
+import GuiaUsuario from './components/views/GuiaUsuario';
 import './App.css';
 
 const App =() => {
@@ -55,6 +56,9 @@ const App =() => {
                 </Route>
                 <Route element={<PrivateRoute component={Inventario} exact/>}>
                     <Route path="/inventario" element={<Inventario />}/>
+                </Route>
+                <Route element={<PrivateRoute component={GuiaUsuario} exact/>}>
+                <Route path="/guia_de_usuario" element={<GuiaUsuario />}/>
                 </Route>
             </Routes>
         </Router>

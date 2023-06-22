@@ -190,7 +190,83 @@
   background: #F8F8F8;
 }
 
+.fl-modal-table {
+  display: block;
+  width: 100%;
+}
+.table-wrapper:before{
+  content: "Scroll horizontally >";
+  display: block;
+  text-align: right;
+  font-size: 11px;
+  color: white;
+  padding: 0 0 10px;
+}
+.fl-modal-table thead, .fl-modal-table tbody, .fl-modal-table thead th {
+  display: block;
+}
+.fl-modal-table thead th:last-child{
+  border-bottom: none;
+}
+.fl-modal-table thead {
+  float: left;
+}
+.fl-modal-table tbody {
+  width: auto;
+  position: relative;
+  overflow-x: auto;
+}
+.fl-modal-table td, .fl-modal-table th {
+  padding: 20px .625em .625em .625em;
+  height: 60px;
+  vertical-align: middle;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 120px;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  text-align: center;
+  padding: 8px;
+}
+.fl-modal-table thead th {
+  text-align: left;
+  border-bottom: 1px solid #f7f7f9;
+}
+.fl-modal-table tbody tr {
+  display: table-cell;
+}
+.fl-modal-table tbody tr:nth-child(odd) {
+  background: none;
+}
+.fl-modal-table tr:nth-child(even) {
+  background: transparent;
+}
+.fl-modal-table tr td:nth-child(odd) {
+  border-right: 1px solid #E6E4E4;
+}
+.fl-modal-table tr td:nth-child(even) {
+  border-right: 1px solid #E6E4E4;
+}
+.fl-modal-table tbody td {
+  display: block;
+  text-align: center;
+}
+
+.fl-modal-table tbody tr:hover {
+background:#eeeeee;
+cursor: pointer;
+}
+.fl-modal-table thead th {
+  color: #ffffff;
+  background: #324960;
+}
+.fl-modal-table thead th:nth-child(odd) {
+  color: #ffffff;
+  background: #324960;
+}
 /* Responsive */
+
 
 @media only screen and (max-width: 760px),(min-device-width: 768px) and (max-device-width: 768px) {
   .fl-table {

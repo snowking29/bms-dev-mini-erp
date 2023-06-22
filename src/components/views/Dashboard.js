@@ -3,18 +3,53 @@ import * as rs from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
 import AuthService from "../../api/services/auth-services";
+import * as product_services from '../../api/services/product-services';
+import * as entry_services from '../../api/services/entry-services';
+import * as customer_services from '../../api/services/customer-services';
+import * as employee_services from '../../api/services/employee-services';
 
 function Dashboard(props){
     const [name, setName] = useState(null);
     const [email, setEmail] = useState(null);
     const [role, setRole] = useState(null);
-
+    const [cantProd, setCantProd] = useState(null);
+    const [cantEntries, setCantEntries] = useState(null);
+    const [cantCustomers, setCantCustomers] = useState(null);
     const defaultUser = require('../../assets/user.png');
+
+    useEffect(() => {
+        getDashboardData();
+    },[])
+
+    function getDashboardData () {
+        product_services.getProducts().then( (response) => {
+            if (response.status === 200){
+                setCantProd(response.data.data.length)
+            }
+        })
+
+        entry_services.getEntries().then( (response) => {
+            if (response.status === 200){
+                setCantEntries(response.data.data.length)
+            }
+        })
+
+        customer_services.getCustomers().then( (response) => {
+            if (response.status === 200) {
+                setCantCustomers(response.data.data.length)
+            }
+        })
+    }
+
+    function putProfile () {
+        
+    }
     
+
     useEffect(() => {
         const currentUser = AuthService.getCurrentUser();
         if (currentUser) {
-            setName(currentUser.name)
+            setName(currentUser.fullName)
             setEmail(currentUser.email)
             setRole(currentUser.role)
         }
@@ -31,7 +66,7 @@ function Dashboard(props){
                 <rs.Col sm={3}>
                     <rs.Card className='dashboard' body>
                         <rs.CardTitle tag="h1">
-                            50 <FontAwesomeIcon className="icon" icon={icon.faBoxes}/> 
+                            <FontAwesomeIcon className="icon" icon={icon.faBoxes}/> {cantProd}
                         </rs.CardTitle>
                         <rs.CardText className="text" tag ="h5">
                             Productos 
@@ -41,7 +76,7 @@ function Dashboard(props){
                 <rs.Col sm={3}>
                     <rs.Card className='dashboard' body>
                         <rs.CardTitle tag="h1">
-                            20 <FontAwesomeIcon className="icon" icon={icon.faLineChart}/>
+                            <FontAwesomeIcon className="icon" icon={icon.faCartPlus}/> 20
                         </rs.CardTitle>
                         <rs.CardText className="text" tag ="h5">
                             Ventas Totales
@@ -51,17 +86,17 @@ function Dashboard(props){
                 <rs.Col sm={3}>
                     <rs.Card className='dashboard' body>
                         <rs.CardTitle tag="h1">
-                            <FontAwesomeIcon icon={icon.faDollar}/> 10
+                            <FontAwesomeIcon className="icon" icon={icon.faCartArrowDown}/> {cantEntries}
                         </rs.CardTitle>
                         <rs.CardText className="text" tag ="h5">
-                            Compras Totales
+                            Entradas Totales
                         </rs.CardText>
                     </rs.Card>
                 </rs.Col>
                 <rs.Col sm={3}>
                     <rs.Card className='dashboard' body>
                         <rs.CardTitle tag="h1">
-                            <FontAwesomeIcon icon={icon.faUsers}/> 10
+                            <FontAwesomeIcon icon={icon.faUsers}/> {cantCustomers}
                         </rs.CardTitle>
                         <rs.CardText className="text" tag ="h5">
                             Nuevos Clientes

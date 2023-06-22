@@ -10,7 +10,7 @@ const headers = {
 export const getProviders = () => {
     let config = {
         method : "get",
-        url : global.config.API_AWS_URL + RESOURCE_URL,
+        url : global.config.API_AWS_URL + global.config.RESOURCE_ENTITY_AWS + RESOURCE_URL,
         headers: headers,
         validateStatus: function (status) {
             return status >= 200 && status < 400
@@ -33,7 +33,7 @@ export const getProviders = () => {
 export const postProviders = ( dataProvider ) => {
     let config = {
         method : "post",
-        url : global.config.API_AWS_URL + RESOURCE_URL,
+        url : global.config.API_AWS_URL + global.config.RESOURCE_ENTITY_AWS + RESOURCE_URL,
         headers: headers,
         data : dataProvider,
         validateStatus: function (status) {
@@ -57,7 +57,7 @@ export const postProviders = ( dataProvider ) => {
 export const putProviders = ( key, dataProvider ) => {
     let config = {
         method : "put",
-        url : global.config.API_AWS_URL + RESOURCE_URL,
+        url : global.config.API_AWS_URL + global.config.RESOURCE_ENTITY_AWS + RESOURCE_URL,
         headers: headers,
         params: {
             "key": key
@@ -84,7 +84,7 @@ export const putProviders = ( key, dataProvider ) => {
 export const deleteProvider = (key) => {
     let config = {
         method : "delete",
-        url : global.config.API_AWS_URL + RESOURCE_URL,
+        url : global.config.API_AWS_URL + global.config.RESOURCE_ENTITY_AWS + RESOURCE_URL,
         params: {
             "key": key
         },

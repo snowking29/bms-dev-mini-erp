@@ -7,12 +7,12 @@ export const SideBarData = [
     icon: icon.faDashboard,
     disabled: false
   },
-  {
+  /*{
     title: 'Punto De Venta',
     path: '/pos',
     icon: icon.faCalculator,
     disabled: false
-  },
+  },*/
   {
     title: 'Salidas',
     path: '/salidas',

@@ -214,25 +214,14 @@ function Detalle_Producto(props){
                                         id="selectCategory"
                                         type="select"
                                         onChange={(e) => saveCategoryData(e)}
+                                        defaultValue={props.dataProducto.category}
                                     >
                                         {props.dataProducto.category}
                                         {categories}
                                     </rs.Input>
                                 </rs.FormGroup>
                             </rs.Col>
-                            <rs.Col sm={3}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faWarehouse}/> Almacén
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtWarehouse"
-                                        id="txtWarehouse"
-                                        type="text"
-                                        defaultValue={props.dataProducto.warehouse}
-                                    />
-                                </rs.FormGroup>
-                            </rs.Col>
+                            
                             <rs.Col sm={3}>
                                 <rs.FormGroup>
                                     <rs.Label>
@@ -364,3 +353,20 @@ function Detalle_Producto(props){
 }
 
 export default Detalle_Producto;
+
+
+/*
+<rs.Col sm={3}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faWarehouse}/> Almacén
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtWarehouse"
+                                        id="txtWarehouse"
+                                        type="text"
+                                        defaultValue={props.dataProducto.warehouse}
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            */

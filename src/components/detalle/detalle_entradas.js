@@ -24,7 +24,7 @@ function Detalle_Entrada(props){
     const [codeProduct, setCodeProduct] = useState("");
     const [nameProduct, setNameProduct] = useState("");
     const [categoryProduct, setCategoryProduct] = useState("");
-    const [warehouse, setWarehouse] = useState("");
+    //const [warehouse, setWarehouse] = useState("");
     const [priceCost, setPriceCost] = useState(0);
     const [priceSale, setPriceSale] = useState(0);
     const [quantity, setQuantity] = useState(0);
@@ -44,7 +44,7 @@ function Detalle_Entrada(props){
     const [modalFooter, setModalFooter] = useState("");
     const [modalConfirmation, setModalConfirmation] = useState(false);
     
-    const user = props.currentUser.name;
+    const user = props.currentUser.fullName;
     var date = new Date().toLocaleDateString('es-PE')
 
     function saveProductData (e) {
@@ -55,7 +55,7 @@ function Detalle_Entrada(props){
                     setCurrentStock(c.stock);
                     setCodeProduct(c.code)
                     setCategoryProduct(c.category)
-                    setWarehouse(c.warehouse)
+                    //setWarehouse(c.warehouse)
                     setNameProduct(c.name)
                 }
             })
@@ -64,7 +64,7 @@ function Detalle_Entrada(props){
             setCurrentStock("");
             setCodeProduct("")
             setCategoryProduct("")
-            setWarehouse("")
+            //setWarehouse("")
             setNameProduct("")
         }
     }
@@ -174,7 +174,7 @@ function Detalle_Entrada(props){
             "code": codeProduct,
             "name": nameProduct,
             "category":categoryProduct,
-            "warehouse":warehouse,
+            //"warehouse":warehouse,
             "priceCost": parseFloat(priceCost),
             "priceSale": parseFloat(priceSale),
             "quantity": parseInt(quantity),
@@ -191,7 +191,7 @@ function Detalle_Entrada(props){
         setCodeProduct("");
         setNameProduct("");
         setCategoryProduct("");
-        setWarehouse("");
+        //setWarehouse("");
         setPriceCost(0);
         setPriceSale(0);
         setQuantity(0);

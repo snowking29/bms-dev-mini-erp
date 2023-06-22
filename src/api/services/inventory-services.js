@@ -10,7 +10,7 @@ const headers = {
 export const getInventory = () => {
     let config = {
         method : "get",
-        url : global.config.API_AWS_URL + RESOURCE_URL,
+        url : global.config.API_AWS_URL + global.config.RESOURCE_ENTITY_AWS + RESOURCE_URL,
         headers: headers,
         validateStatus: function (status) {
             return status >= 200 && status < 400
@@ -33,7 +33,7 @@ export const getInventory = () => {
 export const postInventory = ( dataInventory ) => {
     let config = {
         method : "post",
-        url : global.config.API_AWS_URL + RESOURCE_URL,
+        url : global.config.API_AWS_URL + global.config.RESOURCE_ENTITY_AWS + RESOURCE_URL,
         headers: headers,
         data : dataInventory,
         validateStatus: function (status) {
@@ -57,7 +57,7 @@ export const postInventory = ( dataInventory ) => {
 export const putInventory = ( key, dataSale, upsert ) => {
     let config = {
         method : "put",
-        url : global.config.API_AWS_URL + RESOURCE_URL,
+        url : global.config.API_AWS_URL + global.config.RESOURCE_ENTITY_AWS + RESOURCE_URL,
         headers: headers,
         params: {
             "key": key,
@@ -85,7 +85,7 @@ export const putInventory = ( key, dataSale, upsert ) => {
 export const deleteInventory = (key) => {
     let config = {
         method : "delete",
-        url : global.config.API_AWS_URL + RESOURCE_URL,
+        url : global.config.API_AWS_URL + global.config.RESOURCE_ENTITY_AWS + RESOURCE_URL,
         params: {
             "key": key
         },

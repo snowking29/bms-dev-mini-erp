@@ -14,7 +14,7 @@ function Inventario (props) {
     useEffect(() => {
         getInventoryTable();
     },[search])
-
+    
     function getInventoryTable () {
         setShowLoader(true);
         inventory_services.getInventory().then( (response) => {
@@ -28,8 +28,7 @@ function Inventario (props) {
                         if(search === ''){
                             return val;
                         } else if (val.product.toLowerCase().includes(search.toLocaleLowerCase())
-                            || val.name.toLowerCase().includes(search.toLocaleLowerCase())
-                            || val.warehouse.toLowerCase().includes(search.toLocaleLowerCase())){
+                            || val.name.toLowerCase().includes(search.toLocaleLowerCase())){
                             return val
                         }
                     }).forEach( a => {
@@ -37,7 +36,6 @@ function Inventario (props) {
                             <tr key= {a.key}>
                                 <td>{a.product}</td>
                                 <td>{a.name}</td>
-                                <td>{a.warehouse}</td>
                                 <td>{a.entries}</td>
                                 <td>{a.sales}</td>
                                 <td>{a.stock}</td>

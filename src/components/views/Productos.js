@@ -32,38 +32,35 @@ function Productos (props) {
                 var filas = [];
                 let body = response.data.data
 
-                if (Array.isArray(body)) {
-                    body.filter(val=>{
-                        if(search === ''){
-                            return val;
-                        } else if (val.code.toLowerCase().includes(search.toLocaleLowerCase())
-                            || val.name.toLowerCase().includes(search.toLocaleLowerCase())
-                            || val.category.toLowerCase().includes(search.toLocaleLowerCase())
-                            || val.warehouse.toLowerCase().includes(search.toLocaleLowerCase())){
-                            return val
-                        }
-                    }).forEach( a => {
-                        filas.push(
-                            <tr key= {a.code}>
-                                <td>{a.code}</td>
-                                <td>{a.name}</td>
-                                <td>{a.category}</td>
-                                <td>{a.warehouse}</td>
-                                <td>
-                                    <FontAwesomeIcon icon={icon.faEdit}
-                                        type="button" 
-                                        className= 'select-button'
-                                        title="Seleccionar"
-                                        onClick = { () => {
-                                            setAction("detalle")
-                                            setCurrentProduct(a)
-                                        }}
-                                    />
-                                </td>
-                            </tr>
-                        )
-                    })
-                }
+                body.filter(val=>{
+                    if(search === ''){
+                        return val;
+                    } else if (val.code.toLowerCase().includes(search.toLocaleLowerCase())
+                        || val.name.toLowerCase().includes(search.toLocaleLowerCase())
+                        || val.category.toLowerCase().includes(search.toLocaleLowerCase())){
+                        return val
+                    }
+                }).forEach( a => {
+                    filas.push(
+                        <tr key= {a.code}>
+                            <td>{a.code}</td>
+                            <td>{a.name}</td>
+                            <td>{a.category}</td>
+                            <td>
+                                <FontAwesomeIcon icon={icon.faEdit}
+                                    type="button" 
+                                    className= 'select-button'
+                                    title="Seleccionar"
+                                    onClick = { () => {
+                                        setAction("detalle")
+                                        setCurrentProduct(a)
+                                    }}
+                                />
+                            </td>
+                        </tr>
+                    )
+                })
+                
                 setProductos(filas);
             } else if(response.status === 401) {
                 console.log("NOT AUTHORIZED, AUTH AGAIN OR REDIRECT TO LOGIN")
@@ -132,9 +129,6 @@ function Productos (props) {
                                             </th>
                                             <th>
                                                 CATEGORIA
-                                            </th>
-                                            <th>
-                                                ALMACEN
                                             </th>
                                             <th>
                                             </th>

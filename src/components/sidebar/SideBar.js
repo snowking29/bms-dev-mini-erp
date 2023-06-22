@@ -19,7 +19,7 @@ function SideBar ({isOpen, toggle}) {
   useEffect(() => {
     const currentUser = AuthService.getCurrentUser();
     if (currentUser) {
-      setUser(currentUser.name)
+      setUser(currentUser.fullName)
       //setRole(currentUser.role)
       setRole('Administrador')
       setRoles(['Clientes','Entradas','Proveedores'])
@@ -28,7 +28,7 @@ function SideBar ({isOpen, toggle}) {
 
   const logOutHandler = async() => {
     await AuthService.logout();
-    navigate("/dashboard")
+    navigate("/login")
   }
   
   return (
@@ -76,6 +76,13 @@ function SideBar ({isOpen, toggle}) {
             }
           })}
           {modules}
+          <rs.NavItem key='Manual de Usuario'>
+            <rs.NavLink className='li-a li-a-links_name' tag={Link} to='/guia_de_usuario'>
+              <FontAwesomeIcon icon={icon.faFileLines} className="mr-2"/>
+              &nbsp;&nbsp;
+              Manual de Usuario
+            </rs.NavLink>
+          </rs.NavItem>
           <hr/>
           <rs.NavItem className='logOut'>
             <rs.Button color='danger' onClick={logOutHandler}><FontAwesomeIcon icon={icon.faSignOut} className="mr-2"/> Salir</rs.Button>

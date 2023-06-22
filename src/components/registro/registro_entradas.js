@@ -17,185 +17,40 @@ function Registro_Entrada(props){
     const [dataProviders, setDataProviders] = useState([]);
     const [providers, setProviders] = useState([]);
 
-    const [codeEntry, setCodeEntry] = useState("");
-    const [providerID, setProviderID] = useState("");
-    const [provider, setProvider] = useState("");
+    var date = new Date().toLocaleDateString('es-PE');
+    const user = props.currentUser.fullName;
 
-    const [keyProduct, setKeyProduct] = useState("");
-    const [currentStock, setCurrentStock] = useState(0);
-    const [codeProduct, setCodeProduct] = useState("");
-    const [nameProduct, setNameProduct] = useState("");
-    const [categoryProduct, setCategoryProduct] = useState("");
-    const [warehouse, setWarehouse] = useState("");
-    const [priceCost, setPriceCost] = useState(0);
-    const [priceSale, setPriceSale] = useState(0);
-    const [quantity, setQuantity] = useState(0);
-
-    const [entriesTable, setEntriesTable] = useState([]);
-    const [entriesData, setEntriesData] = useState([]);
-
+    /* LOADER STATES & FUNCTIONS */
     const [msjAlert, setMsjAlert] = useState("");
     const [mostrarAlert, setMostrarAlert] = useState(false);
     const [color, setColor] = useState("secondary");
     const [showLoader, setShowLoader] = useState(false);
-    
+
+    function ocultarAlerta(){
+        setMostrarAlert(false);
+    }
+    /* END LOADER STATES*/
+
+    /* MODAL STATES & FUNCTIONS */
     const [action, setAction] = useState("")
     const [mostrarModal, setMostrarModal] = useState(false);
     const [modalTitle, setModalTitle] = useState("");
     const [modalBody, setModalBody] = useState("");
     const [modalFooter, setModalFooter] = useState("");
     const [modalConfirmation, setModalConfirmation] = useState(false);
-    
-    var date = new Date().toLocaleDateString('es-PE');
-    const user = props.currentUser.name;
 
-    function deleteEntryFromTable(key){
-        setEntriesTable(entriesTable.filter((item) => item[0].key !== key));
-        setEntriesData(entriesData.filter((item) => item.key !== key));
-    }
-
-    function checkDuplicity(){
-        if (entriesTable.some(e => e[0].key === keyProduct)) return true;
-    }
-
-    function saveProductData (e) {
-        if (e.target.value !== "-"){
-            dataProducts.forEach(c=>{
-                if (c.code === e.target.value){
-                    setKeyProduct(c.key);
-                    setCurrentStock(c.stock);
-                    setCodeProduct(c.code);
-                    setCategoryProduct(c.category);
-                    setWarehouse(c.warehouse);
-                    setNameProduct(c.name);
-                }
-            })
-        } else {
-            setKeyProduct("");
-            setCurrentStock("");
-            setCodeProduct("");
-            setCategoryProduct("");
-            setWarehouse("");
-            setNameProduct("");
-        }
-    }
-
-    function saveProviderData (e) {
-        if (e.target.value !== "-"){
-            dataProviders.forEach(c=>{
-                if (c.identifyID === e.target.value){
-                    setProviderID(c.identifyID);
-                    setProvider(c.fullName);
-                }
-            })
-        } else {
-            setProviderID("");
-            setProvider("");
-        }
-    }
-    
-    const validate = () => {
-        var error = "validado"
-        if (!codeEntry) {
-            error = properties['error.form.entry.code'];
-            return error;
-        }
-        if (!providerID) {
-            error = properties['error.form.entry.provider.id'];
-            return error;
-        }
-        if (!codeProduct) {
-            error = properties['error.form.entry.product.code'];
-            return error;
-        }
-        if (!priceCost) {
-            error = properties['error.form.entry.product.priceCost'];
-            return error;
-        }
-        if (!priceSale) {
-            error = properties['error.form.entry.product.priceSale'];
-            return error;
-        }
-        if (!quantity) {
-            error = properties['error.form.entry.product.quantity'];
-            return error;
-        }
-        return error;
-    };
-
-    function setTableItems() {
-        var filas = [];
-        var subTotal = priceCost * quantity;
-        
-        let validateResult = validate();
-
-        if (validateResult !== "validado") {
-            setColor("danger");
-            setMsjAlert(validateResult);
-            setMostrarAlert(true);
-            return;
-        }
-
-        let result = checkDuplicity()
-        
-        if (result){
-            setColor("danger");
-            setMsjAlert("El producto ya esta agregado.");
-            setMostrarAlert(true);
-            return;
-        }
-
-        filas.push(
-            <tr key={keyProduct}>
-                <td><FontAwesomeIcon title="Eliminar" type="button" className= 'select-button'icon={icon.faTrash} onClick={() => deleteEntryFromTable(keyProduct)}/></td>
-                <td>{codeProduct}</td>
-                <td>{nameProduct}</td>
-                <td>{priceCost}</td>
-                <td>{quantity}</td>
-                <td>{subTotal}</td>
-            </tr>
-        )
-        
-        var totalStock = parseInt(quantity) + currentStock;
-
-        var currentEntry = {
-            "key": keyProduct,
-            "code": codeProduct,
-            "name": nameProduct,
-            "category":categoryProduct,
-            "warehouse":warehouse,
-            "priceCost": parseFloat(priceCost),
-            "priceSale": parseFloat(priceSale),
-            "quantity": parseInt(quantity),
-            "stock": parseInt(totalStock),
-            "subTotal": subTotal
-        }
-
-        setEntriesData((prevArr) => ([...prevArr, currentEntry]))
-        setEntriesTable((prevArr) => ([...prevArr, filas]));
-
-        clearCurrentEntry();
-        
-    }
-
-    function clearCurrentEntry(){
-        setCodeProduct("");
-        setNameProduct("");
-        setPriceCost(0);
-        setPriceSale(0);
-        setQuantity(0);
-    }
-
-    function ocultarAlerta(){
-        setMostrarAlert(false);
-    }
+    const [provider, setProvider] = useState("");
+    const [nameProduct, setNameProduct] = useState("");
+    const [stock, setStock] = useState(0);
 
     function ocultarModal(){
         setMostrarModal(false);
     }
+    /* END MODAL STATES */
 
+    /* INVOKE SERVICES FOR FILL COMBOS */
     function buildingModal(title,body,footer,event){
-        if (entriesTable.length === 0 ){
+        if (entries.length === 0 ){
             ocultarModal();
             setColor("danger");
             setMsjAlert("La tabla de entradas está vacía.");
@@ -243,50 +98,166 @@ function Registro_Entrada(props){
             }
         })
     }, [])
+    /* END INVOKE SERVICES FOR FILL COMBOS */
+
+    
+
+    const [entries, setEntries] = useState([]);
+    const [addFormData, setAddFormData] = useState({
+        documentNumber: "",
+        productKey: "",
+        productCode: "",
+        productName: "",
+        category: "",
+        priceCost: "",
+        priceSale: "",
+        quantity: "",
+        stock: "",
+        subTotal: "",
+        provider: "",
+    })
+
+    const handleAddFormChange = (event) => {
+        event.preventDefault();
+        if (event.target.name === "providerId") {
+            if (event.target.value !== "-") {
+                dataProviders.forEach(c=>{
+                    if (c.identifyID === event.target.value) {
+                        setProvider(c.fullName);
+                    }
+                })
+            } else {
+                setProvider("");
+            }
+        } 
+
+        if (event.target.name === "productCode"){
+            if (event.target.value !== "-"){
+                dataProducts.forEach(c=>{
+                    if (c.code === event.target.value){
+                        setNameProduct(c.name);
+                    }
+                })
+            } else {
+                setNameProduct("");
+            }
+        } 
+
+        const fieldName = event.target.getAttribute("name");
+        const fieldValue = event.target.value;
+    
+        const newFormData = { ...addFormData };
+        newFormData[fieldName] = fieldValue;
+
+        var subTotal = parseFloat(newFormData["priceCost"]) * parseInt(newFormData["quantity"]);
+        newFormData["subTotal"] = subTotal;
+        newFormData["provider"] = provider;
+        dataProducts.forEach(c=>{
+            if (c.code === event.target.value) {
+                newFormData["productKey"] = c.key;
+                newFormData["productName"] = c.name;
+                newFormData["category"] = c.category;
+                
+                setStock(parseInt(c.stock))
+                
+            }
+        })
+        var totalStock = parseInt(newFormData["quantity"]) + stock;
+        newFormData["stock"] = parseInt(totalStock);
+        
+        setAddFormData(newFormData);
+    };
+
+    function checkDuplicity(key){    
+        if (entries.some((entry) => entry.productKey === key)) return true;
+    }
+
+    const handleAddFormSubmit = (event) => {
+        event.preventDefault();
+        let result = checkDuplicity(addFormData.productKey)
+        
+        if (result){
+            setColor("danger");
+            setMsjAlert("El producto ya esta agregado.");
+            setMostrarAlert(true);
+            return;
+        }
+
+        const newEntry = {
+            productKey: addFormData.productKey,
+            productCode: addFormData.productCode,
+            productName: addFormData.productName,
+            category: addFormData.category,
+            priceCost: addFormData.priceCost,
+            priceSale: addFormData.priceSale,
+            quantity: addFormData.quantity,
+            stock: addFormData.stock,
+            subTotal: addFormData.subTotal,
+        };
+        const newEntries = [...entries, newEntry];
+        setEntries(newEntries);
+
+        clearFields(event);
+    };
+
+    function clearFields(event) {
+        setProvider("");
+        setNameProduct("");
+        for (var e of event.target) {
+            if (e.name !== "documentNumber") {
+                e.value = ""
+            }
+        }
+    }
+
+    const handleDeleteClick = (key) => {
+        const newEntries = [...entries];
+    
+        const index = entries.findIndex((entry) => entry.productKey === key);
+    
+        newEntries.splice(index, 1);
+    
+        setEntries(newEntries);
+    };
 
     useEffect(() => {
         if (modalConfirmation === true && action === "guardar") {
 
             var subTotals = []
-            entriesData.forEach(c=>{ subTotals.push(c.subTotal)})
+            entries.forEach(e=>{ subTotals.push(e.subTotal)})
             var total = subTotals.reduce((prevValue, curValue) => { return prevValue+curValue});
             
             let dataEntry = {
-                "code": codeEntry,
+                "code": addFormData.documentNumber,
                 "user": user,
                 "total": total,
-                "provider": provider,
-                "entries": entriesData,
+                "provider": addFormData.provider,
+                "entries": entries,
                 "creationTime": date
             }
             
             setShowLoader(true);
             entry_Services.postEntries(dataEntry)
                 .then((response => {
+                    ocultarModal();
                     setShowLoader (false);
                     if (response) {
                         if (response.data.meta.status.code === "00") {
                             
-                            entriesData.forEach( e=> {
+                            entries.forEach( e=> {
                                 let data = {
                                     "priceCost":e.priceCost,
                                     "priceSale": e.priceSale,
                                     "stock": e.stock
                                 }
-                                product_services.putProducts(e.key,data)
+                                product_services.putProducts(e.productKey,data)
                             })
-
+                            setEntries([]);
                             setColor("success");
                             props.actualizaResultados();
-                            setEntriesTable([]);
-                            setProvider("");
-                            setProviderID("");
-                            setCodeEntry("");
-                            clearCurrentEntry();
                         }else{
                             setColor("danger");
                         }
-                        ocultarModal();
                         setMsjAlert(response.data.meta.status.message_ilgn[0].value);
                         setMostrarAlert(true);
                     }
@@ -314,189 +285,209 @@ function Registro_Entrada(props){
                 </rs.Row>
             </rs.CardHeader>
             <rs.CardBody>
-                {showLoader ? <Loader /> : 
-                    <rs.Form>
-                        <rs.Row>
-                            <rs.Col sm={4}>
+                {showLoader ? <Loader /> :
+                    <div>
+                        <rs.Form onSubmit={handleAddFormSubmit} id="entryInput">
+                            <rs.Row>
+                                <rs.Col sm={4}>
+                                    <rs.FormGroup>
+                                        <rs.Label>
+                                            <FontAwesomeIcon icon={icon.faFileText}/> Numero de Guía
+                                        </rs.Label>
+                                        <rs.Input
+                                            name="documentNumber"
+                                            type="text"
+                                            required="required"
+                                            onChange={handleAddFormChange}
+                                        />
+                                    </rs.FormGroup>
+                                </rs.Col>
+                                <rs.Col sm={4}>
+                                    <rs.FormGroup>
+                                        <rs.Label>
+                                            <FontAwesomeIcon icon={icon.faCalendar}/> Fecha de Registro
+                                        </rs.Label>
+                                        <rs.Input
+                                            name="txtCreationTime"
+                                            type="text"
+                                            value={date}
+                                            disabled
+                                        />
+                                    </rs.FormGroup>
+                                </rs.Col>
+                                <rs.Col sm={4}>
+                                    <rs.FormGroup>
+                                        <rs.Label>
+                                            <FontAwesomeIcon icon={icon.faUser}/> Usuario
+                                        </rs.Label>
+                                        <rs.Input
+                                            name="txtUser"
+                                            type="text"
+                                            value={user}
+                                            disabled
+                                        />
+                                    </rs.FormGroup>
+                                </rs.Col>
+                                <rs.Col sm={4}>
+                                    <rs.FormGroup>
+                                        <rs.Label>
+                                            <FontAwesomeIcon icon={icon.faTruckMoving}/> Doc. Proveedor
+                                        </rs.Label>
+                                        <rs.Input
+                                            name="providerId"
+                                            id="selectProvider"
+                                            type="select"
+                                            //value={providerID}
+                                            required="required"
+                                            onChange={handleAddFormChange}
+                                        >
+                                            <option key = "-" value = "-">[Seleccione]</option>
+                                            {providers}
+                                        </rs.Input>
+                                    </rs.FormGroup>
+                                </rs.Col>
+                                <rs.Col sm={4}>
+                                    <rs.FormGroup>
+                                        <rs.Label>
+                                            <FontAwesomeIcon icon={icon.faAlignJustify}/> Nombre Proveedor
+                                        </rs.Label>
+                                        <rs.Input
+                                            name="providerName"
+                                            id="txtProvider"
+                                            type="text"
+                                            value={provider}
+                                            disabled
+                                            onChange={handleAddFormChange}
+                                        />
+                                    </rs.FormGroup>
+                                </rs.Col>
+                                <rs.Col sm={4}>
+                                    <rs.FormGroup>
+                                        <rs.Label>
+                                            <FontAwesomeIcon icon={icon.faBoxArchive}/> Codigo Producto
+                                        </rs.Label>
+                                        <rs.Input
+                                            name="productCode"
+                                            id="selectCodProd"
+                                            type="select"
+                                            //value={codeProduct}
+                                            required="required"
+                                            onChange={handleAddFormChange}
+                                        >
+                                            <option key = "-" value = "-">[Seleccione]</option>
+                                            {products}
+                                        </rs.Input>
+                                    </rs.FormGroup>
+                                </rs.Col>
+                                <rs.Col sm={4}>
+                                    <rs.FormGroup>
+                                        <rs.Label>
+                                            <FontAwesomeIcon icon={icon.faAlignJustify}/> Nombre Producto
+                                        </rs.Label>
+                                        <rs.Input
+                                            name="productName"
+                                            id="txtNameProd"
+                                            type="text"
+                                            value={nameProduct}
+                                            disabled
+                                            required="required"
+                                            onChange={handleAddFormChange}
+                                        />
+                                    </rs.FormGroup>
+                                </rs.Col>
+                                <rs.Col sm={3}>
+                                    <rs.FormGroup>
+                                        <rs.Label>
+                                            <FontAwesomeIcon icon={icon.faMoneyBill}/> Precio Compra
+                                        </rs.Label>
+                                        <rs.Input
+                                            name="priceCost"
+                                            id="txtPriceCost"
+                                            //value={priceCost}
+                                            type="number"
+                                            required="required"
+                                            onChange={handleAddFormChange}
+                                        />
+                                    </rs.FormGroup>
+                                </rs.Col>
+                                <rs.Col sm={3}>
+                                    <rs.FormGroup>
+                                        <rs.Label>
+                                            <FontAwesomeIcon icon={icon.faMoneyBill}/> Precio Venta
+                                        </rs.Label>
+                                        <rs.Input
+                                            name="priceSale"
+                                            id="txtPriceSale"
+                                            //value={priceSale}
+                                            type="number"
+                                            required="required"
+                                            onChange={handleAddFormChange}
+                                        />
+                                    </rs.FormGroup>
+                                </rs.Col>
+                                <rs.Col sm={2}>
+                                    <rs.FormGroup>
+                                        <rs.Label>
+                                            <FontAwesomeIcon icon={icon.faSortNumericAsc}/> Cantidad
+                                        </rs.Label>
+                                        <rs.Input
+                                            name="quantity"
+                                            id="txtQuantity"
+                                            //value={quantity}
+                                            type="number"
+                                            required="required"
+                                            onChange={handleAddFormChange}
+                                        />
+                                    </rs.FormGroup>
+                                </rs.Col>
                                 <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faFileText}/> Numero de Documento
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtName"
-                                        type="text"
-                                        onChange={(e) => setCodeEntry(e.target.value)}
-                                    />
+                                    <div className='actions'>
+                                        <rs.Button className='right' color="primary" type="submit"><FontAwesomeIcon icon={icon.faPlus}/> Agregar</rs.Button>
+                                    </div>
                                 </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={4}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faCalendar}/> Fecha de Registro
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtCreationTime"
-                                        type="text"
-                                        value={date}
-                                        disabled
-                                    />
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={4}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faUser}/> Usuario
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtUser"
-                                        type="text"
-                                        value={user}
-                                        disabled
-                                    />
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={4}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faTruckMoving}/> Doc. Proveedor
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="selectProvider"
-                                        id="selectProvider"
-                                        type="select"
-                                        value={providerID}
-                                        onChange={(e) => saveProviderData(e)}
-                                    >
-                                        <option key = "-" value = "-">[Seleccione]</option>
-                                        {providers}
-                                    </rs.Input>
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={4}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faAlignJustify}/> Nombre Proveedor
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtProvider"
-                                        id="txtProvider"
-                                        type="text"
-                                        value={provider}
-                                        disabled
-                                    />
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={4}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faBoxArchive}/> Codigo Producto
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="selectCodProd"
-                                        id="selectCodProd"
-                                        type="select"
-                                        value={codeProduct}
-                                        onChange={(e) => saveProductData(e)}
-                                    >
-                                        <option key = "-" value = "-">[Seleccione]</option>
-                                        {products}
-                                    </rs.Input>
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={4}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faAlignJustify}/> Nombre Producto
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtNameProd"
-                                        id="txtNameProd"
-                                        type="text"
-                                        value={nameProduct}
-                                        disabled
-                                    />
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={3}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faMoneyBill}/> Precio Compra
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtPriceCost"
-                                        id="txtPriceCost"
-                                        value={priceCost}
-                                        onChange={(e) => setPriceCost(e.target.value)}
-                                        type="number"
-                                    />
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={3}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faMoneyBill}/> Precio Venta
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtPriceSale"
-                                        id="txtPriceSale"
-                                        value={priceSale}
-                                        onChange={(e) => setPriceSale(e.target.value)}
-                                        type="number"
-                                    />
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={2}>
-                                <rs.FormGroup>
-                                    <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faSortNumericAsc}/> Cantidad
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtQuantity"
-                                        id="txtQuantity"
-                                        value={quantity}
-                                        onChange={(e) => setQuantity(e.target.value)}
-                                        type="number"
-                                    />
-                                </rs.FormGroup>
-                            </rs.Col>
+                            </rs.Row>
+                        </rs.Form>
                             <rs.FormGroup>
-                                <div className='actions'>
-                                    <rs.Button className='right' color="primary" onClick={() => setTableItems() }><FontAwesomeIcon icon={icon.faPlus}/> Agregar</rs.Button>
-                                </div>
+                                <rs.Table className='fl-table' responsive>
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                
+                                            </th>
+                                            <th>
+                                                Codigo
+                                            </th>
+                                            <th>
+                                                Descripcion
+                                            </th>
+                                            <th>
+                                                Precio de Compra
+                                            </th>
+                                            <th>
+                                                Cantidad
+                                            </th>
+                                            <th>
+                                                Sub Total
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {entries.map((entry) => (
+                                            <tr>
+                                                <td><FontAwesomeIcon title="Eliminar" type="button" className='select-button' onClick={() => handleDeleteClick(entry.productKey)} icon={icon.faTrash}/></td>
+                                                <td>{entry.productCode}</td>
+                                                <td>{entry.productName}</td>
+                                                <td>{entry.priceCost}</td>
+                                                <td>{entry.quantity}</td>
+                                                <td>{entry.subTotal}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </rs.Table>
                             </rs.FormGroup>
-                        </rs.Row>
-                        <rs.FormGroup>
-                            <rs.Table className='fl-table' responsive>
-                                <thead>
-                                    <tr>
-                                        <th style={{width: "0%"}}>
-                                            
-                                        </th>
-                                        <th style={{width: "10%"}}>
-                                            Codigo
-                                        </th>
-                                        <th style={{width: "30%"}}>
-                                            Descripcion
-                                        </th>
-                                        <th style={{width: "20%"}}>
-                                            Precio de Compra
-                                        </th>
-                                        <th style={{width: "20%"}}>
-                                            Cantidad
-                                        </th>
-                                        <th style={{width: "20%"}}>
-                                            Sub Total
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {entriesTable}
-                                </tbody>
-                            </rs.Table>
-                        </rs.FormGroup>
                         <hr/>
                         <rs.FormGroup className='actions'>
-                            <rs.Button className='right' color='success'onClick={() =>
+                            <rs.Button className='right' color='success' onClick={() =>
                                 buildingModal("Confirmación",`¿Está seguro de guardar la nueva entrada?`,
                                     <>
                                         <rs.Button color="primary"
@@ -515,7 +506,7 @@ function Registro_Entrada(props){
                                 <FontAwesomeIcon icon={icon.faSave}/>{' '}Guardar
                             </rs.Button>
                         </rs.FormGroup>
-                    </rs.Form>
+                    </div>
                 }
                 <CustomModal modalVisible={mostrarModal} ocultar={ocultarModal} modalTitle={modalTitle} modalBody={modalBody} modalFooter={modalFooter}/>
                 <Alerta msj={msjAlert} alertVisible={mostrarAlert} color={color} ocultar={ocultarAlerta}/>

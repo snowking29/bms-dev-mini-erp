@@ -12,13 +12,20 @@ class CustomModal extends Component {
             <div>
                 <rs.Modal isOpen={this.props.modalVisible}  toggle={this.cerrarModal}>
                     <rs.ModalHeader>
-                        {this.props.modalTitle}
+                        {this.props.modalTableTitle}
                     </rs.ModalHeader>
                     <rs.ModalBody>
-                        {this.props.modalBody}
+                        <rs.Table className='fl-modal-table' responsive>
+                            <thead>
+                                {this.props.modalTableHead}
+                            </thead>
+                            <tbody>
+                                {this.props.modalTableBody}
+                            </tbody>
+                        </rs.Table>
                     </rs.ModalBody>
                     <rs.ModalFooter>
-                        {this.props.modalFooter}
+                        {this.props.modalTableFooter}
                     </rs.ModalFooter>
                 </rs.Modal>
             </div>

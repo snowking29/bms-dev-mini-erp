@@ -4,8 +4,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
 import RegistroEntrada from "../registro/registro_entradas";
 import * as entry_services from '../../api/services/entry-services';
+import Alerta from "../utils/alerta";
 import Loader from "../utils/loader";
 import DetalleEntrada from "../detalle/detalle_entradas";
+import CustomTableModal from "../utils/modalTable";
+import CustomModal from "../utils/modal";
 
 function Entradas (props) {
 
@@ -16,10 +19,37 @@ function Entradas (props) {
     const [currentEntry , setCurrentEntry] = useState(initialFormState)
     const [search, setSearch] = useState("");
 
+    /* MODAL STATES & FUNCTIONS */
+    const [mostrarModal, setMostrarModal] = useState(false);
+    const [mostrarTableModal, setMostrarTableModal] = useState(false);
+    const [modalTitle, setModalTitle] = useState("");
+    const [modalBody, setModalBody] = useState("");
+    const [modalFooter, setModalFooter] = useState(false);
+    const [modalTableTitle, setModalTableTitle] = useState("");
+    const [modalTableHead, setModalTableHead] = useState("");
+    const [modalTableBody, setModalTableBody] = useState("");
+    const [modalTableFooter, setModalTableFooter] = useState(false);
+    const [modalConfirmation, setModalConfirmation] = useState(false);
+    const [msjAlert, setMsjAlert] = useState("");
+    const [mostrarAlert, setMostrarAlert] = useState(false);
+    const [color, setColor] = useState("secondary");
+
+    function ocultarAlerta(){
+        setMostrarAlert(false);
+    }
+
     function showRegistroEntradas(){
         setAction("registrar")
     }
+    
+    function ocultarTableModal(){
+        setMostrarTableModal(false);
+    }
 
+    function ocultarModal(){
+        setMostrarModal(false);
+    }
+    
     useEffect(() => {
         getEntryTable();
     },[search])
@@ -42,25 +72,55 @@ function Entradas (props) {
                             return val
                         }
                     }).forEach( a => {
-                        a.entries.forEach( e => {
-                            filas.push(
-                                <tr key= {a.code.concat(e.code)}>
-                                    <td>{a.creationTime}</td>
-                                    <td>{a.code}</td>
-                                    <td>{a.user}</td>
-                                    <td>S/.{a.total}</td>
-                                    <td>{a.provider}</td>
-                                    <td>{e.code}</td>
-                                    <td>{e.name}</td>
-                                    <td>{e.category}</td>
-                                    <td>{e.warehouse}</td>
-                                    <td>S/.{e.priceCost}</td>
-                                    <td>S/.{e.priceSale}</td>
-                                    <td>{e.quantity}</td>
-                                    <td>S/.{e.subTotal}</td>
-                                </tr>
-                            )
-                        })
+                        setCurrentEntry(a.key);
+                        filas.push(
+                            <tr key= {a.code} onClick = { () => {
+                                var entryTitle = <><rs.Label className='left'>Entrada: {a.code}</rs.Label></>;
+                                var entryHead = <><thead><th>CODIGO</th><th>ITEM</th><th>CATEGORIA</th><th>COSTO</th><th>PRECIO</th><th>CANTIDAD</th><th>SUBTOTAL</th></thead></>
+                                var entryBody = []
+                                a.entries.forEach( e => {
+                                    entryBody.push(
+                                    <tr>
+                                        <td>{e.productCode}</td>
+                                        <td>{e.productName}</td>
+                                        <td>{e.category}</td>
+                                        <td>S/.{e.priceCost}</td>
+                                        <td>S/.{e.priceSale}</td>
+                                        <td>{e.quantity}</td>
+                                        <td>S/.{e.subTotal}</td>
+                                    </tr>)
+                                }) 
+                                var entryFooter = <><rs.Button color='danger' className='right' onClick={() =>
+                                    buildingModal("Confirmación",`¿Desea eliminar la entrada: ${a.code}?`,
+                                        <>
+                                            <rs.Button color="primary" className='left'
+                                                onClick={()=> setModalConfirmation(true)}
+                                            >
+                                                Aceptar
+                                            </rs.Button>
+                                            <rs.Button color="danger"  className='right'
+                                                onClick={()=> ocultarModal()}
+                                            >
+                                                Cancelar
+                                            </rs.Button>
+                                        </>
+                                        , "eliminar"
+                                    )
+                                    }>
+                                    <FontAwesomeIcon icon={icon.faTrash}/>{' '}Eliminar
+                                </rs.Button></>
+                                
+                                buildingTableModal(entryTitle,entryHead,entryBody,entryFooter)
+                                }}
+                                
+                            >
+                            <td>{a.creationTime}</td>
+                            <td>{a.code}</td>
+                            <td>{a.user}</td>
+                            <td>S/.{a.total}</td>
+                            <td>{a.provider}</td>
+                            </tr>
+                        )
                     })
                 }
                 setEntradas(filas);
@@ -79,6 +139,42 @@ function Entradas (props) {
     function selectAction(value){
         setAction(value)
     }
+
+    function buildingTableModal(title,head,body,footer){
+        setModalTableTitle(title)
+        setModalTableHead(head)
+        setModalTableBody(body)
+        setMostrarTableModal(true)
+        setModalTableFooter(footer)
+    }
+
+    function buildingModal(title,body,footer,event){
+        setAction(event)
+        setModalTitle(title)
+        setModalBody(body)
+        setMostrarModal(true)
+        setModalFooter(footer)
+    }
+
+    useEffect(() => {
+        if (modalConfirmation === true && action === "eliminar") {
+            setShowLoader(true);
+            setMostrarModal(false)
+            setMostrarTableModal(false)
+            entry_services.deleteEntry(currentEntry).then((response) => {
+                if (response) {
+                    setShowLoader (false);
+                    if ( response.data.meta.status.code === "00" ) {
+                        actualizarTabla();
+                    }else{
+                        setColor("danger");
+                        setMsjAlert(response.data.meta.status.message_ilgn[0].value);
+                    }
+                }
+            })
+            setModalConfirmation("")
+        }
+    },[modalConfirmation, action])
 
     /*
     <td>
@@ -152,30 +248,6 @@ function Entradas (props) {
                                             <th>
                                                 PROVEEDOR
                                             </th>
-                                            <th>
-                                                ITEM
-                                            </th>
-                                            <th>
-                                                NOMBRE
-                                            </th>
-                                            <th>
-                                                CATEGORIA
-                                            </th>
-                                            <th>
-                                                ALAMACEN
-                                            </th>
-                                            <th>
-                                                COMPRA
-                                            </th>
-                                            <th>
-                                                VENTA
-                                            </th>
-                                            <th>
-                                                CANT
-                                            </th>
-                                            <th>
-                                                SUB. TOTAL
-                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -189,6 +261,9 @@ function Entradas (props) {
                                 : <span/>}
                             </rs.Form>
                         }
+                        <CustomTableModal modalVisible={mostrarTableModal} ocultar={ocultarTableModal} modalTableTitle={modalTableTitle} modalTableHead={modalTableHead} modalTableBody={modalTableBody} modalTableFooter={modalTableFooter}/>
+                        <CustomModal modalVisible={mostrarModal} ocultar={ocultarModal} modalTitle={modalTitle} modalBody={modalBody} modalFooter={modalFooter}/>
+                        <Alerta msj={msjAlert} alertVisible={mostrarAlert} color={color} ocultar={ocultarAlerta}/>
                     </rs.CardBody>
                 </rs.Card>
             }

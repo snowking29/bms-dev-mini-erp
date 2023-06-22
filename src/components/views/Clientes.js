@@ -26,7 +26,6 @@ function Clientes (props) {
         }
     }
 
-
     useEffect(() => {
         getCustomers();
     },[search])

@@ -16,7 +16,7 @@ function Registro_Producto(props){
     const [description, setDescription] = useState("");
     const [category, setCategory] = useState("");
     const [keyCategory, setKeyCategory] = useState("");
-    const [warehouse, setWarehouse] = useState("");
+    //const [warehouse, setWarehouse] = useState("");
     const [msjAlert, setMsjAlert] = useState("");
     const [mostrarAlert, setMostrarAlert] = useState(false);
     const [color, setColor] = useState("secondary");
@@ -110,32 +110,45 @@ function Registro_Producto(props){
                 "stock": 0,
                 "priceCost": 0,
                 "priceSale": 0,
-                "warehouse": warehouse,
+                //"warehouse": warehouse,
                 "creationTime": date,
                 "modifiedTime": "-"
             }
             setShowLoader(true);
-            product_service.postProducts(dataProduct)
+            product_service.getProductByCode(dataProduct.code)
                 .then((response => {
-                    setShowLoader (false);
                     if (response) {
                         if (response.data.meta.status.code === "00") {
-                            setColor("success");
-                            let dataCategory = {
-                                "products":[response.data.key]
-                            }
-                            category_service.putCategories(keyCategory,dataCategory)
-                            props.actualizaResultados();
-                        }else{
-                            setColor("danger");
+                            setShowLoader (false);
+                            setColor("warning");
+                            ocultarModal();
+                            setMsjAlert("Ya existe un registro con este codigo de producto.");
+                            setMostrarAlert(true);
+                        } else {
+                            product_service.postProducts(dataProduct)
+                                .then((response => {
+                                    setShowLoader (false);
+                                    if (response) {
+                                        if (response.data.meta.status.code === "00") {
+                                            setColor("success");
+                                            let dataCategory = {
+                                                "products":[response.data.key]
+                                            }
+                                            category_service.putCategories(keyCategory,dataCategory)
+                                            props.actualizaResultados();
+                                        }else{
+                                            setColor("danger");
+                                        }
+                                        ocultarModal();
+                                        setMsjAlert(response.data.meta.status.message_ilgn[0].value);
+                                        setMostrarAlert(true);
+                                    }
+                                }))
                         }
-                        ocultarModal();
-                        setMsjAlert(response.data.meta.status.message_ilgn[0].value);
-                        setMostrarAlert(true);
+                        setModalConfirmation("")
+                        setAction("")
                     }
                 }))
-            setModalConfirmation("")
-            setAction("")
         }
     },[modalConfirmation, action])
 
@@ -218,19 +231,6 @@ function Registro_Producto(props){
                             <rs.Col sm={4}>
                                 <rs.FormGroup>
                                     <rs.Label>
-                                        <FontAwesomeIcon icon={icon.faWarehouse}/> Almacen
-                                    </rs.Label>
-                                    <rs.Input
-                                        name="txtWarehouse"
-                                        id="txtWarehouse"
-                                        type="text"
-                                        onChange={(e) => setWarehouse(e.target.value)}
-                                    />
-                                </rs.FormGroup>
-                            </rs.Col>
-                            <rs.Col sm={4}>
-                                <rs.FormGroup>
-                                    <rs.Label>
                                         <FontAwesomeIcon icon={icon.faCalendar}/> Fecha Registro
                                     </rs.Label>
                                     <rs.Input
@@ -274,3 +274,20 @@ function Registro_Producto(props){
 }
 
 export default Registro_Producto;
+
+
+/*
+<rs.Col sm={4}>
+                                <rs.FormGroup>
+                                    <rs.Label>
+                                        <FontAwesomeIcon icon={icon.faWarehouse}/> Almacen
+                                    </rs.Label>
+                                    <rs.Input
+                                        name="txtWarehouse"
+                                        id="txtWarehouse"
+                                        type="text"
+                                        onChange={(e) => setWarehouse(e.target.value)}
+                                    />
+                                </rs.FormGroup>
+                            </rs.Col>
+                            */

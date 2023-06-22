@@ -7,6 +7,7 @@ import CustomModal from "../utils/modal";
 import Alerta from "../utils/alerta";
 import Loader from "../utils/loader";
 import { properties } from '../properties/bms-dev';
+import AuthService from "../../api/services/auth-services";
 
 function Registro_Empleados(props){
 
@@ -81,18 +82,20 @@ function Registro_Empleados(props){
         if (modalConfirmation === true && action === "guardar") {
             
             let dataEmployee = {
-                "password": password,
-                "fullName": fullName,
-                "phone": phone,
-                "email": email,
                 "identifyID": identifyID,
+                "fullName": fullName,
+                "email": email,
+                "password": password,
+                "phone": phone,
+                "role": "Administrador",
                 "creationTime": date,
                 "modifiedTime": ""
             }
             setShowLoader(true);
-            employee_services.postEmployee(dataEmployee)
+            AuthService.register(dataEmployee)
                 .then((response => {
                     setShowLoader (false);
+                    console.log(response)
                     if (response) {
                         if (response.data.meta.status.code === "00") {
                             setColor("success");

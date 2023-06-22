@@ -2,37 +2,37 @@ import React, { useState, useEffect } from 'react';
 import * as rs from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
-import RegistroEmpleado from "../registro/registro_empleados";
-import * as employee_services from '../../api/services/employee-services';
+import RegistroRoles from "../registro/registro_roles";
+import * as roles_services from '../../api/services/roles-services';
 import Loader from "../utils/loader";
-import DetalleEmpleado from "../detalle/detalle_empleados";
+import DetalleRoles from "../detalle/detalle_roles";
 
-function Empleados (props) {
+function Roles (props) {
     
     const [action, setAction] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
     const [search, setSearch] = useState("");
-    const [empleados, setEmpleados] = useState([]);
+    const [roles, setRoles] = useState([]);
     const initialFormState = {}
-    const [currentEmployee , setCurrentEmployee] = useState(initialFormState)
+    const [currentRol , setCurrentRol] = useState(initialFormState)
 
-    function showRegistroEmpleados(){
+    function showRegistroRoles(){
         setAction("registrar")
     }
 
     function actualizarTabla () {
-        if (empleados.length !== 0 || typeof(empleados) !== 'undefined'){
-            getEmployees()
+        if (roles.length !== 0 || typeof(roles) !== 'undefined'){
+            getRoles()
         }
     }
 
     useEffect(() => {
-        getEmployees();
+        getRoles();
     },[search])
 
-    function getEmployees () {
+    function getRoles () {
         setShowLoader(true);
-        employee_services.getEmployees().then( (response) => {
+        roles_services.getRoles().then( (response) => {
             setShowLoader(false);
             if (response.status === 200) {
                 var filas = [];
@@ -42,19 +42,15 @@ function Empleados (props) {
                     body.filter(val => {
                         if(search === ''){
                             return val;
-                        } else if (val.identifyID.toLowerCase().includes(search.toLocaleLowerCase())
-                            || val.fullName.toLowerCase().includes(search.toLocaleLowerCase())
-                            || val.phone.toLowerCase().includes(search.toLocaleLowerCase())
-                            || val.email.toLowerCase().includes(search.toLocaleLowerCase())){
+                        } else if (val.code.toLowerCase().includes(search.toLocaleLowerCase())
+                            || val.name.toLowerCase().includes(search.toLocaleLowerCase())){
                             return val
                         }
                     }).forEach( a => {
                         filas.push(
                             <tr key= {a.key}>
-                                <td>{a.identifyID}</td>
-                                <td>{a.fullName}</td>
-                                <td>{a.phone}</td>
-                                <td>{a.email}</td>
+                                <td>{a.code}</td>
+                                <td>{a.name}</td>
                                 <td>
                                     <FontAwesomeIcon icon={icon.faEdit}
                                         className= 'select-button'
@@ -62,7 +58,7 @@ function Empleados (props) {
                                         title="Seleccionar"
                                         onClick = { () => {
                                             setAction("detalle")
-                                            setCurrentEmployee(a)
+                                            setCurrentRol(a)
                                         }}
                                     />
                                     
@@ -71,7 +67,7 @@ function Empleados (props) {
                         )
                     })
                 }
-                setEmpleados(filas);
+                setRoles(filas);
             } else if(response.status === 401) {
                 console.log("NOT AUTHORIZED, AUTH AGAIN OR REDIRECT TO LOGIN")
             }
@@ -84,7 +80,7 @@ function Empleados (props) {
 
     return (
         <div>
-            {action === "detalle" ? <DetalleEmpleado dataEmpleado={currentEmployee} actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
+            {action === "detalle" ? <DetalleRoles dataRol={currentEmployee} actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
             action === "registrar" ? <RegistroEmpleado actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
                 <rs.Card className='card'>
                     <rs.CardHeader className='header'>

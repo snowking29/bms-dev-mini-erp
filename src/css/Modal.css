@@ -1,3 +1,10 @@
+.modal-table {
+    border: none;
+    box-shadow: 3px 3px 10px rgba(0 0 0 / 0.5);
+    color: #636363;
+    width: 100vw;
+}
+
 .modal-confirm {		
     color: #636363;
     width: 325px;
@@ -11,7 +18,7 @@
 }
 
 .modal-confirm .modal-header {
-    border-bottom: none;   
+    border-bottom: none; 
     position: relative;
 }
 

@@ -44,7 +44,6 @@ function Salidas (props) {
                                     <td>{e.code}</td>
                                     <td>{e.name}</td>
                                     <td>{e.category}</td>
-                                    <td>{e.warehouse}</td>
                                     <td>S/.{e.priceCost}</td>
                                     <td>S/.{e.priceSale}</td>
                                     <td>{e.quantity}</td>
