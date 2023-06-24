@@ -2,21 +2,21 @@ import React, { useEffect, useState } from 'react';
 import * as rs from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icon from '@fortawesome/free-solid-svg-icons';
-import * as provider_services from '../../api/services/provider-services';
+import * as customer_services from '../../api/services/customer-services';
 import * as product_services from '../../api/services/product-services';
-import * as entry_Services from '../../api/services/entry-services';
+import * as sales_services from '../../api/services/sales-services';
 import * as inventory_services from '../../api/services/inventory-services';
 import CustomModal from "../utils/modal";
 import Alerta from "../utils/alerta";
 import Loader from "../utils/loader";
 import { properties } from '../properties/bms-dev';
 
-function Registro_Entrada(props){
+function Registro_Salida(props){
 
     const [dataProducts, setDataProducts] = useState([]);
     const [products, setProducts] = useState([]);
-    const [dataProviders, setDataProviders] = useState([]);
-    const [providers, setProviders] = useState([]);
+    const [dataCustomers, setDataCustomers] = useState([]);
+    const [customers, setCustomers] = useState([]);
 
     var date = new Date().toLocaleDateString('es-PE');
     const user = props.currentUser.fullName;
@@ -40,23 +40,23 @@ function Registro_Entrada(props){
     const [modalFooter, setModalFooter] = useState("");
     const [modalConfirmation, setModalConfirmation] = useState(false);
 
-    const [provider, setProvider] = useState("");
+    const [customer, setCustomer] = useState("");
     const [nameProduct, setNameProduct] = useState("");
     const [stock, setStock] = useState(0);
+    const [priceProduct, setPriceProduct] = useState(0);
 
-    const [entries, setEntries] = useState([]);
+    const [sales, setSales] = useState([]);
     const [addFormData, setAddFormData] = useState({
         documentNumber: "",
         productKey: "",
         productCode: "",
         productName: "",
         category: "",
-        priceCost: "",
-        priceSale: "",
+        price: "",
         quantity: "",
         stock: "",
         subTotal: "",
-        provider: "",
+        customer: "",
     })
 
     function ocultarModal(){
@@ -66,10 +66,10 @@ function Registro_Entrada(props){
 
     /* INVOKE SERVICES FOR FILL COMBOS */
     function buildingModal(title,body,footer,event){
-        if (entries.length === 0 ){
+        if (sales.length === 0 ){
             ocultarModal();
             setColor("danger");
-            setMsjAlert("La tabla de entradas está vacía.");
+            setMsjAlert("La tabla de salidas está vacía.");
             setMostrarAlert(true);
             return;
         }
@@ -82,7 +82,7 @@ function Registro_Entrada(props){
     }
 
     useEffect(() => {
-        provider_services.getProviders().then((response) => {
+        customer_services.getCustomers().then((response) => {
             if (response){
                 if (response.status === 200){
                     var filas = [];
@@ -91,8 +91,8 @@ function Registro_Entrada(props){
                             <option key={c.indetifiyID} value={c.identifyID}>{c.identifyID}</option>
                         )
                     })
-                    setDataProviders(response.data.data);
-                    setProviders(filas);
+                    setDataCustomers(response.data.data);
+                    setCustomers(filas);
                 }
             }
         })
@@ -116,17 +116,21 @@ function Registro_Entrada(props){
     }, [])
     /* END INVOKE SERVICES FOR FILL COMBOS */
 
+    function validateCustomerRegister() {
+        if (sales.some((sale) => sale.customer !== customer)) return true;
+    }
+
     const handleAddFormChange = (event) => {
         event.preventDefault();
-        if (event.target.name === "providerId") {
+        if (event.target.name === "customerId") {
             if (event.target.value !== "-") {
-                dataProviders.forEach(c=>{
+                dataCustomers.forEach(c=>{
                     if (c.identifyID === event.target.value) {
-                        setProvider(c.fullName);
+                        setCustomer(c.fullName);
                     }
                 })
             } else {
-                setProvider("");
+                setCustomer("");
             }
         } 
 
@@ -135,10 +139,12 @@ function Registro_Entrada(props){
                 dataProducts.forEach(c=>{
                     if (c.code === event.target.value){
                         setNameProduct(c.name);
+                        setPriceProduct(c.priceSale);
                     }
                 })
             } else {
                 setNameProduct("");
+                setPriceProduct("");
             }
         } 
 
@@ -148,9 +154,10 @@ function Registro_Entrada(props){
         const newFormData = { ...addFormData };
         newFormData[fieldName] = fieldValue;
 
-        var subTotal = parseFloat(newFormData["priceCost"]) * parseInt(newFormData["quantity"]);
+        var subTotal = parseFloat(newFormData["price"]) * parseInt(newFormData["quantity"]);
         newFormData["subTotal"] = subTotal;
-        newFormData["provider"] = provider;
+        newFormData["customer"] = customer;
+        newFormData["price"] = priceProduct;
         dataProducts.forEach(c=>{
             if (c.code === event.target.value) {
                 newFormData["productKey"] = c.key;
@@ -161,88 +168,93 @@ function Registro_Entrada(props){
                 
             }
         })
-        var totalStock = parseInt(newFormData["quantity"]) + stock;
-        newFormData["stock"] = parseInt(totalStock);
-        
+        var newStock = stock - parseInt(newFormData["quantity"]);
+        newFormData["stock"] = parseInt(newStock);
         setAddFormData(newFormData);
     };
 
     function checkDuplicity(key){    
-        if (entries.some((entry) => entry.productKey === key)) return true;
+        if (sales.some((sale) => sale.productKey === key)) return true;
     }
 
     const handleAddFormSubmit = (event) => {
         event.preventDefault();
-        let result = checkDuplicity(addFormData.productKey)
+        let resultDuplicity = checkDuplicity(addFormData.productKey)
         
-        if (result){
+        if (resultDuplicity){
             setColor("danger");
             setMsjAlert("El producto ya esta agregado.");
             setMostrarAlert(true);
             return;
         }
 
-        const newEntry = {
+        /*let resultValidate = validateCustomerRegister()
+
+        if (resultValidate) {
+            setColor("danger");
+            setMsjAlert("No es posible agregar más de un cliente en un documento de salida.");
+            setMostrarAlert(true);
+            return;
+        }*/
+
+        const newSale = {
             productKey: addFormData.productKey,
             productCode: addFormData.productCode,
             productName: addFormData.productName,
             category: addFormData.category,
-            priceCost: addFormData.priceCost,
-            priceSale: addFormData.priceSale,
+            price: addFormData.price,
             quantity: addFormData.quantity,
             stock: addFormData.stock,
             subTotal: addFormData.subTotal,
         };
-        const newEntries = [...entries, newEntry];
-        setEntries(newEntries);
+        const newSales = [...sales, newSale];
+        setSales(newSales);
 
         clearFields(event);
     };
 
     function clearFields(event) {
-        setProvider("");
         setNameProduct("");
         for (var e of event.target) {
-            if (e.name !== "documentNumber") {
+            if (e.name !== "documentNumber" && e.name !== "customerId" && e.name !== "customerName") {
                 e.value = ""
             }
         }
     }
 
     const handleDeleteClick = (key) => {
-        const newEntries = [...entries];
+        const newSales = [...sales];
     
-        const index = entries.findIndex((entry) => entry.productKey === key);
+        const index = sales.findIndex((sale) => sale.productKey === key);
     
-        newEntries.splice(index, 1);
+        newSales.splice(index, 1);
     
-        setEntries(newEntries);
+        setSales(newSales);
     };
 
     useEffect(() => {
         if (modalConfirmation === true && action === "guardar") {
 
             var subTotals = []
-            entries.forEach(e=>{ subTotals.push(e.subTotal)})
+            sales.forEach(e=>{ subTotals.push(e.subTotal)})
             var total = subTotals.reduce((prevValue, curValue) => { return prevValue+curValue});
             
-            let dataEntry = {
+            let dataSale = {
                 "code": addFormData.documentNumber,
                 "user": user,
                 "total": total,
-                "provider": addFormData.provider,
-                "entries": entries,
+                "customer": addFormData.customer,
+                "sales": sales,
                 "creationTime": date
             }
             
             setShowLoader(true);
-            entry_Services.postEntries(dataEntry)
+            sales_services.postSales(dataSale)
                 .then((response => {
                     ocultarModal();
                     setShowLoader (false);
                     if (response) {
                         if (response.data.meta.status.code === "00") {
-
                             let dataInventory = {
                                 "creationTime": date,
                                 "products": []
@@ -251,11 +263,8 @@ function Registro_Entrada(props){
                                 "modifiedTime": date,
                                 "products": []
                             }
-
-                            entries.forEach( e=> {
+                            sales.forEach( e=> {
                                 let data = {
-                                    "priceCost":e.priceCost,
-                                    "priceSale": e.priceSale,
                                     "stock": e.stock
                                 }
                                 product_services.putProducts(e.productKey,data)
@@ -263,17 +272,18 @@ function Registro_Entrada(props){
                                 let dataProducts = {
                                     "code": e.productCode,
                                     "name": e.productName,
-                                    "category": e.category
+                                    "category": e.category,
+                                    "sales": e.quantity,
+                                    "totalSales": e.subTotal
                                 }
 
                                 let dataProductsModified = {
-                                    "entries": e.quantity,
-                                    "totalEntries": e.subTotal
+                                    "sales": e.quantity,
+                                    "totalSales": e.subTotal
                                 }
 
                                 dataInventory.products.push(dataProducts)
                                 dataInventoryModified.products.push(dataProductsModified)
-
                             })
 
                             let query = {
@@ -283,7 +293,6 @@ function Registro_Entrada(props){
                             inventory_services.getInventoryBy(query)
                                 .then((response => {
                                     if (response) {
-                                        console.log(response)
                                         if (response.data.meta.status.code === "01") {
                                             inventory_services.postInventory(dataInventory)
                                         } else {
@@ -291,8 +300,8 @@ function Registro_Entrada(props){
                                         }
                                     }
                                 }))
-                                
-                            setEntries([]);
+
+                            setSales([]);
                             setColor("success");
                             props.actualizaResultados();
                         }else{
@@ -312,7 +321,7 @@ function Registro_Entrada(props){
             <rs.CardHeader className="header">
                 <rs.Row>
                     <rs.Col sm={10}>
-                        <h3>&nbsp;Nueva Entrada</h3>
+                        <h3>&nbsp;Nueva Salida</h3>
                     </rs.Col>
                     <rs.Col sm={2}>
                             <rs.Button 
@@ -371,31 +380,30 @@ function Registro_Entrada(props){
                                 <rs.Col sm={4}>
                                     <rs.FormGroup>
                                         <rs.Label>
-                                            <FontAwesomeIcon icon={icon.faTruckMoving}/> Doc. Proveedor
+                                            <FontAwesomeIcon icon={icon.faTruckMoving}/> Doc. Cliente
                                         </rs.Label>
                                         <rs.Input
-                                            name="providerId"
-                                            id="selectProvider"
+                                            name="customerId"
+                                            id="selectCustomer"
                                             type="select"
-                                            //value={providerID}
                                             required="required"
                                             onChange={handleAddFormChange}
                                         >
                                             <option key = "-" value = "-">[Seleccione]</option>
-                                            {providers}
+                                            {customers}
                                         </rs.Input>
                                     </rs.FormGroup>
                                 </rs.Col>
                                 <rs.Col sm={4}>
                                     <rs.FormGroup>
                                         <rs.Label>
-                                            <FontAwesomeIcon icon={icon.faAlignJustify}/> Nombre Proveedor
+                                            <FontAwesomeIcon icon={icon.faAlignJustify}/> Nombre Cliente
                                         </rs.Label>
                                         <rs.Input
-                                            name="providerName"
-                                            id="txtProvider"
+                                            name="customerName"
+                                            id="txtCustomer"
                                             type="text"
-                                            value={provider}
+                                            value={customer}
                                             disabled
                                             onChange={handleAddFormChange}
                                         />
@@ -410,7 +418,6 @@ function Registro_Entrada(props){
                                             name="productCode"
                                             id="selectCodProd"
                                             type="select"
-                                            //value={codeProduct}
                                             required="required"
                                             onChange={handleAddFormChange}
                                         >
@@ -430,23 +437,6 @@ function Registro_Entrada(props){
                                             type="text"
                                             value={nameProduct}
                                             disabled
-                                            required="required"
-                                            onChange={handleAddFormChange}
-                                        />
-                                    </rs.FormGroup>
-                                </rs.Col>
-                                <rs.Col sm={3}>
-                                    <rs.FormGroup>
-                                        <rs.Label>
-                                            <FontAwesomeIcon icon={icon.faMoneyBill}/> Precio Compra
-                                        </rs.Label>
-                                        <rs.Input
-                                            name="priceCost"
-                                            id="txtPriceCost"
-                                            //value={priceCost}
-                                            type="number"
-                                            step="0.01"
-                                            required="required"
                                             onChange={handleAddFormChange}
                                         />
                                     </rs.FormGroup>
@@ -457,12 +447,11 @@ function Registro_Entrada(props){
                                             <FontAwesomeIcon icon={icon.faMoneyBill}/> Precio Venta
                                         </rs.Label>
                                         <rs.Input
-                                            name="priceSale"
-                                            id="txtPriceSale"
-                                            //value={priceSale}
+                                            name="price"
+                                            id="txtPrice"
                                             type="number"
-                                            step="0.01"
-                                            required="required"
+                                            value={priceProduct}
+                                            disabled
                                             onChange={handleAddFormChange}
                                         />
                                     </rs.FormGroup>
@@ -475,7 +464,6 @@ function Registro_Entrada(props){
                                         <rs.Input
                                             name="quantity"
                                             id="txtQuantity"
-                                            //value={quantity}
                                             type="number"
                                             required="required"
                                             onChange={handleAddFormChange}
@@ -503,7 +491,7 @@ function Registro_Entrada(props){
                                                 Descripcion
                                             </th>
                                             <th>
-                                                Precio de Compra
+                                                Precio
                                             </th>
                                             <th>
                                                 Cantidad
@@ -514,14 +502,14 @@ function Registro_Entrada(props){
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {entries.map((entry) => (
+                                        {sales.map((sale) => (
                                             <tr>
-                                                <td><FontAwesomeIcon title="Eliminar" type="button" className='select-button' onClick={() => handleDeleteClick(entry.productKey)} icon={icon.faTrash}/></td>
-                                                <td>{entry.productCode}</td>
-                                                <td>{entry.productName}</td>
-                                                <td>{entry.priceCost}</td>
-                                                <td>{entry.quantity}</td>
-                                                <td>{entry.subTotal}</td>
+                                                <td><FontAwesomeIcon title="Eliminar" type="button" className='select-button' onClick={() => handleDeleteClick(sale.productKey)} icon={icon.faTrash}/></td>
+                                                <td>{sale.productCode}</td>
+                                                <td>{sale.productName}</td>
+                                                <td>{sale.price}</td>
+                                                <td>{sale.quantity}</td>
+                                                <td>{sale.subTotal}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -530,7 +518,7 @@ function Registro_Entrada(props){
                         <hr/>
                         <rs.FormGroup className='actions'>
                             <rs.Button className='right' color='success' onClick={() =>
-                                buildingModal("Confirmación",`¿Está seguro de guardar la nueva entrada?`,
+                                buildingModal("Confirmación",`¿Está seguro de guardar la nueva salida?`,
                                     <>
                                         <rs.Button color="primary"
                                             onClick={()=> setModalConfirmation(true)}
@@ -557,4 +545,4 @@ function Registro_Entrada(props){
     )
 }
 
-export default Registro_Entrada;
+export default Registro_Salida;

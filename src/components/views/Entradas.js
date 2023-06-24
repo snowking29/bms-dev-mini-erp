@@ -6,7 +6,6 @@ import RegistroEntrada from "../registro/registro_entradas";
 import * as entry_services from '../../api/services/entry-services';
 import Alerta from "../utils/alerta";
 import Loader from "../utils/loader";
-import DetalleEntrada from "../detalle/detalle_entradas";
 import CustomTableModal from "../utils/modalTable";
 import CustomModal from "../utils/modal";
 
@@ -176,24 +175,9 @@ function Entradas (props) {
         }
     },[modalConfirmation, action])
 
-    /*
-    <td>
-                                        <FontAwesomeIcon icon={icon.faCheckSquare}
-                                            type="button" 
-                                            className= 'select-button'
-                                            title="Seleccionar"
-                                            onClick = { () => {
-                                                setAction("detalle")
-                                                setCurrentEntry(a)
-                                            }}
-                                        />
-                                    </td>
-    */
-
     return (
         <div>
-            {action === "detalle" ? <DetalleEntrada currentUser={props.currentUser} dataEntrada={currentEntry} actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
-            action === "registrar" ? <RegistroEntrada currentUser={props.currentUser} actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
+            {action === "registrar" ? <RegistroEntrada currentUser={props.currentUser} actualizaResultados={actualizarTabla} selectAction={selectAction}/> :
                 <rs.Card className='card'>
                     <rs.CardHeader className='header'>
                         <rs.Row>
@@ -234,10 +218,10 @@ function Entradas (props) {
                                     <thead>
                                         <tr>
                                             <th>
-                                                REGISTRO
+                                                FECHA DE REGISTRO
                                             </th>
                                             <th>
-                                                DOCUMENTO
+                                                N° GUIA
                                             </th>
                                             <th>
                                                 USUARIO

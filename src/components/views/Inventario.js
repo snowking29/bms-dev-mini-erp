@@ -32,17 +32,21 @@ function Inventario (props) {
                             return val
                         }
                     }).forEach( a => {
-                        filas.push(
-                            <tr key= {a.key}>
-                                <td>{a.product}</td>
-                                <td>{a.name}</td>
-                                <td>{a.entries}</td>
-                                <td>{a.sales}</td>
-                                <td>{a.stock}</td>
-                                <td>{a.entriesTotal}</td>
-                                <td>{a.salesTotal}</td>
-                            </tr>
-                        )
+                        console.log(a.products)
+                        a.products.forEach( p => {
+                            filas.push(
+                                <tr key= {a.key}>
+                                    <td>{a.creationTime}</td>
+                                    <td>{p.code}</td>
+                                    <td>{p.name}</td>
+                                    <td>{p.category}</td>
+                                    <td>{p.entries}</td>
+                                    <td>{p.sales}</td>
+                                    <td>{p.totalEntries}</td>
+                                    <td>{p.totalSales}</td>
+                                </tr>
+                            )
+                        })
                     })
                 }
                 setInventario(filas);
@@ -81,25 +85,22 @@ function Inventario (props) {
                                 <thead>
                                     <tr>
                                         <th>
-                                            ITEM
+                                            FECHA DE REGISTRO
                                         </th>
                                         <th>
-                                            NOMBRE
+                                            CODIGO DEL ITEM
+                                        </th>
+                                        <th>
+                                            ITEM
                                         </th>
                                         <th>
                                             CATEGORIA
                                         </th>
                                         <th>
-                                            ALMACEN
+                                            CANT. ENTRADAS
                                         </th>
                                         <th>
-                                            ENTRADAS
-                                        </th>
-                                        <th>
-                                            SALIDAS
-                                        </th>
-                                        <th>
-                                            STOCK ACTUAL
+                                            CANT. SALIDAS
                                         </th>
                                         <th>
                                             TOTAL INGRESOS

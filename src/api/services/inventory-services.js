@@ -30,6 +30,30 @@ export const getInventory = () => {
     )
 }
 
+export const getInventoryBy = (params) => {
+    let config = {
+        method : "get",
+        url : global.config.API_AWS_URL + global.config.RESOURCE_ENTITY_AWS + RESOURCE_URL,
+        headers: headers,
+        params: params,
+        validateStatus: function (status) {
+            return status >= 200 && status < 400
+        }
+    }
+    
+    return axios(config).then(
+        function(response){
+            return response
+        }
+    ).catch(
+        function(error){
+            if (!error.response.status !== undefined && !error.response.status === 403){
+                console.log("Error : "+error);
+            }
+        }
+    )
+}
+
 export const postInventory = ( dataInventory ) => {
     let config = {
         method : "post",

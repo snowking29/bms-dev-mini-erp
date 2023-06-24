@@ -7,6 +7,7 @@ import * as product_services from '../../api/services/product-services';
 import * as entry_services from '../../api/services/entry-services';
 import * as customer_services from '../../api/services/customer-services';
 import * as employee_services from '../../api/services/employee-services';
+import * as sales_service from '../../api/services/sales-services';
 
 function Dashboard(props){
     const [name, setName] = useState(null);
@@ -15,6 +16,7 @@ function Dashboard(props){
     const [cantProd, setCantProd] = useState(null);
     const [cantEntries, setCantEntries] = useState(null);
     const [cantCustomers, setCantCustomers] = useState(null);
+    const [cantSales, setCantSales] = useState(null);
     const defaultUser = require('../../assets/user.png');
 
     useEffect(() => {
@@ -37,6 +39,12 @@ function Dashboard(props){
         customer_services.getCustomers().then( (response) => {
             if (response.status === 200) {
                 setCantCustomers(response.data.data.length)
+            }
+        })
+
+        sales_service.getSales().then( (response) => {
+            if (response.status === 200) {
+                setCantSales(response.data.data.length)
             }
         })
     }
@@ -76,7 +84,7 @@ function Dashboard(props){
                 <rs.Col sm={3}>
                     <rs.Card className='dashboard' body>
                         <rs.CardTitle tag="h1">
-                            <FontAwesomeIcon className="icon" icon={icon.faCartPlus}/> 20
+                            <FontAwesomeIcon className="icon" icon={icon.faCartPlus}/> {cantSales}
                         </rs.CardTitle>
                         <rs.CardText className="text" tag ="h5">
                             Ventas Totales
