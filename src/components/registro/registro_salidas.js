@@ -154,7 +154,7 @@ function Registro_Salida(props){
         const newFormData = { ...addFormData };
         newFormData[fieldName] = fieldValue;
 
-        var subTotal = parseFloat(newFormData["price"]) * parseInt(newFormData["quantity"]);
+        var subTotal = parseFloat(priceProduct) * parseInt(newFormData["quantity"]);
         newFormData["subTotal"] = subTotal;
         newFormData["customer"] = customer;
         newFormData["price"] = priceProduct;
@@ -259,10 +259,8 @@ function Registro_Salida(props){
                                 "creationTime": date,
                                 "products": []
                             }
-                            let dataInventoryModified = {
-                                "modifiedTime": date,
-                                "products": []
-                            }
+                            let productsModified = []
+                            
                             sales.forEach( e=> {
                                 let data = {
                                     "stock": e.stock
@@ -273,17 +271,18 @@ function Registro_Salida(props){
                                     "code": e.productCode,
                                     "name": e.productName,
                                     "category": e.category,
-                                    "sales": e.quantity,
+                                    "sales": parseFloat(e.quantity),
                                     "totalSales": e.subTotal
                                 }
 
                                 let dataProductsModified = {
+                                    "code": e.productCode,
                                     "sales": e.quantity,
                                     "totalSales": e.subTotal
                                 }
 
                                 dataInventory.products.push(dataProducts)
-                                dataInventoryModified.products.push(dataProductsModified)
+                                productsModified.push(dataProductsModified)
                             })
 
                             let query = {
@@ -296,7 +295,25 @@ function Registro_Salida(props){
                                         if (response.data.meta.status.code === "01") {
                                             inventory_services.postInventory(dataInventory)
                                         } else {
-                                            inventory_services.putInventory(response.data.data[0].key, dataInventoryModified)
+                                            var currentInventory = response.data.data[0]
+                                            currentInventory["modifiedTime"] = date
+                                            currentInventory.products.forEach(product => {
+                                                productsModified.forEach(productMod => {
+                                                    if (product.code === productMod.code) {
+                                                        if (product.hasOwnProperty("sales")) {
+                                                            var finalEntries = parseFloat(product.entries) + parseFloat(productMod.entries)
+                                                            product["sales"] = finalEntries
+                                                        } else {
+                                                            product["sales"] = productMod.entries
+                                                        }                                                      
+                                                        
+                                                        product["totalSales"] = productMod.totalSales
+                                                    } else {
+                                                        currentInventory.products.push(productMod)
+                                                    }
+                                                })
+                                            })
+                                            inventory_services.putInventory(response.data.data[0].key, currentInventory,"true")
                                         }
                                     }
                                 }))

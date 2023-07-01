@@ -9,7 +9,6 @@ import * as inventory_services from '../../api/services/inventory-services';
 import CustomModal from "../utils/modal";
 import Alerta from "../utils/alerta";
 import Loader from "../utils/loader";
-import { properties } from '../properties/bms-dev';
 
 function Registro_Entrada(props){
 
@@ -247,10 +246,8 @@ function Registro_Entrada(props){
                                 "creationTime": date,
                                 "products": []
                             }
-                            let dataInventoryModified = {
-                                "modifiedTime": date,
-                                "products": []
-                            }
+
+                            let productsModified = []
 
                             entries.forEach( e=> {
                                 let data = {
@@ -263,16 +260,19 @@ function Registro_Entrada(props){
                                 let dataProducts = {
                                     "code": e.productCode,
                                     "name": e.productName,
-                                    "category": e.category
+                                    "category": e.category,
+                                    "entries": parseFloat(e.quantity),
+                                    "totalEntries": e.subTotal
                                 }
 
                                 let dataProductsModified = {
+                                    "code": e.productCode,
                                     "entries": e.quantity,
                                     "totalEntries": e.subTotal
                                 }
 
                                 dataInventory.products.push(dataProducts)
-                                dataInventoryModified.products.push(dataProductsModified)
+                                productsModified.push(dataProductsModified)
 
                             })
 
@@ -283,11 +283,28 @@ function Registro_Entrada(props){
                             inventory_services.getInventoryBy(query)
                                 .then((response => {
                                     if (response) {
-                                        console.log(response)
                                         if (response.data.meta.status.code === "01") {
                                             inventory_services.postInventory(dataInventory)
                                         } else {
-                                            inventory_services.putInventory(response.data.data[0].key, dataInventoryModified)
+                                            var currentInventory = response.data.data[0]
+                                            currentInventory["modifiedTime"] = date
+                                            currentInventory.products.forEach(product => {
+                                                productsModified.forEach(productMod => {
+                                                    if (product.code === productMod.code) {
+                                                        if (product.hasOwnProperty("entries")) {
+                                                            var finalEntries = parseFloat(product.entries) + parseFloat(productMod.entries)
+                                                            product["entries"] = finalEntries
+                                                        } else {
+                                                            product["entries"] = productMod.entries
+                                                        }                                                      
+                                                        
+                                                        product["totalEntries"] = productMod.totalSales
+                                                    } else {
+                                                        currentInventory.products.push(productMod)
+                                                    }
+                                                })
+                                            })
+                                            inventory_services.putInventory(response.data.data[0].key, currentInventory,"true")
                                         }
                                     }
                                 }))

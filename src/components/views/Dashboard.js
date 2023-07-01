@@ -144,6 +144,7 @@ function Dashboard(props){
                                                         name="name"
                                                         placeholder={name}
                                                         type="text"
+                                                        disabled
                                                     />
                                                 </rs.FormGroup>
                                             </rs.Col>
@@ -154,6 +155,7 @@ function Dashboard(props){
                                                         name="email"
                                                         placeholder={email}
                                                         type="email"
+                                                        disabled
                                                     />
                                                 </rs.FormGroup>
                                             </rs.Col>
@@ -164,6 +166,7 @@ function Dashboard(props){
                                                         name="password"
                                                         placeholder=""
                                                         type="password"
+                                                        disabled
                                                     />
                                                 </rs.FormGroup>
                                             </rs.Col>
@@ -174,16 +177,7 @@ function Dashboard(props){
                                                         name="confirmPassword"
                                                         placeholder=""
                                                         type="password"
-                                                    />
-                                                </rs.FormGroup>
-                                            </rs.Col>
-                                            <rs.Col md={12}>
-                                                <rs.FormGroup>
-                                                    <rs.Label><FontAwesomeIcon icon={icon.faClipboardList}/> Rol</rs.Label>
-                                                    <rs.Input
-                                                        name="role"
-                                                        placeholder={role}
-                                                        type="text"
+                                                        disabled
                                                     />
                                                 </rs.FormGroup>
                                             </rs.Col>
